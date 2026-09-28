@@ -69,7 +69,7 @@ export default function MainHeader({
     },
     {
       label: "About",
-      href: "/#about",
+      href: "/about",
     },
   ];
 
