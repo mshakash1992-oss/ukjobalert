@@ -1,26 +1,511 @@
 @import "tailwindcss";
 
+/* =========================================================
+   UKJOBALERT — GLOBAL FOUNDATION
+   ========================================================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f8fa;
+  --surface: #ffffff;
+
+  --foreground: #101828;
+  --muted: #667085;
+  --subtle: #98a2b3;
+
+  --border: #e4e7ec;
+  --border-strong: #d0d5dd;
+
+  --navy: #07182d;
+  --navy-light: #0b1f3a;
+
+  --blue: #175cd3;
+  --blue-hover: #154fb7;
+
+  --red: #e11d48;
+  --red-hover: #be123c;
+
+  --success: #067647;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm:
+    0 1px 2px rgba(16, 24, 40, 0.04);
+
+  --shadow-md:
+    0 8px 24px rgba(16, 24, 40, 0.07);
+
+  --shadow-lg:
+    0 22px 60px rgba(16, 24, 40, 0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  margin: 0;
+  padding: 0;
+
+  background: var(--background);
+
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
+  padding: 0;
+
+  min-height: 100vh;
+
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+
+  letter-spacing: -0.01em;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+
+  font-family: inherit;
+  font-weight: 700;
+
+  line-height: 1.12;
+
+  letter-spacing: -0.035em;
+}
+
+p {
+  margin: 0;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+small {
+  font-size: 0.875rem;
+}
+
+
+/* =========================================================
+   IMPORTANT:
+   DO NOT FORCE GLOBAL HEADING COLOUR
+   Tailwind text-white / text-[#...] now works correctly.
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
+  color: inherit;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+  color: inherit;
+
+  text-decoration: none;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  color: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #98a2b3;
+
+  opacity: 1;
+}
+
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(23, 92, 211, 0.16);
+}
+
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: #dbeafe;
+  color: #07182d;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f2f4f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c7cdd6;
+
+  border: 2px solid #f2f4f7;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #98a2b3;
+}
+
+
+/* =========================================================
+   SITE CONTAINER
+   ========================================================= */
+
+.site-container {
+  width: 100%;
+
+  max-width: 1440px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+
+/* =========================================================
+   SECTION SPACING
+   ========================================================= */
+
+.section-space {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+
+/* =========================================================
+   SURFACE
+   ========================================================= */
+
+.surface {
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+}
+
+.surface-elevated {
+  background: #ffffff;
+
+  border: 1px solid rgba(228, 231, 236, 0.9);
+
+  border-radius: 14px;
+
+  box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.button-primary,
+.button-secondary,
+.button-dark {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-height: 46px;
+
+  padding: 0 20px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  letter-spacing: -0.01em;
+
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.button-primary {
+  background: var(--red);
+  color: #ffffff;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.08);
+}
+
+.button-primary:hover {
+  background: var(--red-hover);
+}
+
+.button-secondary {
+  background: #ffffff;
+  color: #344054;
+
+  border: 1px solid var(--border-strong);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.button-secondary:hover {
+  background: #f9fafb;
+
+  border-color: #b9c0ca;
+}
+
+.button-dark {
+  background: var(--navy-light);
+  color: #ffffff;
+}
+
+.button-dark:hover {
+  background: #102a4c;
+}
+
+.button-primary:active,
+.button-secondary:active,
+.button-dark:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================================================
+   JOB TAG
+   ========================================================= */
+
+.job-tag {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 28px;
+
+  padding: 0 10px;
+
+  background: #f2f4f7;
+
+  border: 1px solid #eaecf0;
+
+  border-radius: 999px;
+
+  color: #475467;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   META
+   ========================================================= */
+
+.meta-text {
+  color: #667085;
+
+  font-size: 14px;
+
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.soft-divider {
+  width: 100%;
+  height: 1px;
+
+  background: #eaecf0;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+  .site-container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  .site-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .section-space {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+  }
 }
