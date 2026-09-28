@@ -19,13 +19,11 @@ export default function AboutPage() {
       <MainHeader />
 
       {/* HERO */}
-
       <section className="relative overflow-hidden bg-[#07182d]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(23,92,211,0.22),transparent_34%)]" />
 
         <div className="relative mx-auto max-w-[1280px] px-6 py-20 sm:px-8 lg:px-10 lg:py-28">
           <div className="max-w-[920px]">
-
             <div className="flex items-center gap-2.5">
               <div className="h-[2px] w-7 bg-[#3b82f6]" />
 
@@ -50,13 +48,12 @@ export default function AboutPage() {
                 color: "rgba(255,255,255,.72)",
               }}
             >
-              UKJobAlert.com is built to make job discovery
-              simpler while giving employers a professional
-              place to publish genuine opportunities.
+              UKJobAlert.com is built to make job discovery simpler while
+              giving employers a professional place to publish genuine
+              opportunities.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3">
-
               <Link
                 href="/jobs"
                 className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] bg-[#e4232a] px-6 text-[14px] font-bold text-white transition hover:bg-[#c91d23]"
@@ -67,21 +64,23 @@ export default function AboutPage() {
 
               <Link
                 href="/post-job"
-                className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] border border-white/20 bg-white/[0.06] px-6 text-[14px] font-semibold text-white transition hover:bg-white/[0.1]"
+                className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] border px-6 text-[14px] font-semibold transition hover:bg-white/[0.12]"
+                style={{
+                  color: "#ffffff",
+                  borderColor: "rgba(255,255,255,0.35)",
+                  backgroundColor: "rgba(255,255,255,0.06)",
+                }}
               >
                 Post a job
               </Link>
-
             </div>
           </div>
         </div>
       </section>
 
       {/* INTRO */}
-
       <section className="border-b border-[#e4e7ec] bg-white">
         <div className="mx-auto grid max-w-[1280px] gap-12 px-6 py-20 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20 lg:px-10 lg:py-24">
-
           <div>
             <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#175cd3]">
               Why we exist
@@ -94,36 +93,29 @@ export default function AboutPage() {
 
           <div className="max-w-[700px] space-y-6 text-[17px] leading-[1.85] text-[#475467]">
             <p>
-              Finding a job can already take time. Job
-              seekers should not also have to navigate
-              unclear listings, confusing application
-              routes or uncertainty about who published a
-              vacancy.
+              Finding a job can already take time. Job seekers should not also
+              have to navigate unclear listings, confusing application routes
+              or uncertainty about who published a vacancy.
             </p>
 
             <p>
-              UKJobAlert.com is being built around a simple
-              principle: make useful UK vacancies easier to
-              discover and give legitimate employers a
-              clear, structured way to reach candidates.
+              UKJobAlert.com is being built around a simple principle: make
+              useful UK vacancies easier to discover and give legitimate
+              employers a clear, structured way to reach candidates.
             </p>
 
             <p>
-              That means focusing on useful job
-              information, employer checks and direct
-              application routes instead of unnecessary
+              That means focusing on useful job information, employer checks
+              and direct application routes instead of unnecessary
               distractions.
             </p>
           </div>
-
         </div>
       </section>
 
       {/* CORE PRINCIPLES */}
-
       <section className="bg-[#f8fafc]">
         <div className="mx-auto max-w-[1280px] px-6 py-20 sm:px-8 lg:px-10 lg:py-24">
-
           <div className="max-w-[650px]">
             <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#175cd3]">
               Our approach
@@ -135,7 +127,6 @@ export default function AboutPage() {
           </div>
 
           <div className="mt-14 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-
             <Principle
               number="01"
               icon={Search}
@@ -156,16 +147,13 @@ export default function AboutPage() {
               title="Platform integrity"
               text="Verification and moderation controls are designed to reduce misuse and help maintain a more dependable job platform."
             />
-
           </div>
         </div>
       </section>
 
       {/* VERIFICATION */}
-
       <section className="bg-white">
         <div className="mx-auto grid max-w-[1280px] items-center gap-14 px-6 py-20 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:gap-24 lg:px-10 lg:py-28">
-
           <div>
             <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#eef4ff]">
               <Building2 className="h-6 w-6 text-[#175cd3]" />
@@ -180,18 +168,16 @@ export default function AboutPage() {
             </h2>
 
             <p className="mt-7 max-w-[670px] text-[16px] leading-8 text-[#475467]">
-              Employer accounts may be asked to provide
-              company information before gaining access to
-              job posting. Where applicable, company details
-              can be checked against publicly available
-              Companies House records.
+              Employer accounts may be asked to provide company information
+              before gaining access to job posting. Where applicable, company
+              details can be checked against publicly available Companies House
+              records.
             </p>
 
             <p className="mt-5 max-w-[670px] text-[16px] leading-8 text-[#475467]">
-              Verification is one part of our platform
-              controls. It helps confirm specified business
-              information, but it is not an endorsement or
-              guarantee of an employer or vacancy.
+              Verification is one part of our platform controls. It helps
+              confirm specified business information, but it is not an
+              endorsement or guarantee of an employer or vacancy.
             </p>
 
             <Link
@@ -204,9 +190,7 @@ export default function AboutPage() {
           </div>
 
           {/* VERIFICATION PANEL */}
-
           <div className="bg-[#07182d] p-8 sm:p-10">
-
             <div className="flex items-center justify-between border-b border-white/10 pb-7">
               <div>
                 <p
@@ -233,7 +217,6 @@ export default function AboutPage() {
             </div>
 
             <div className="mt-8 space-y-7">
-
               <VerificationStep
                 number="1"
                 title="Company details"
@@ -251,20 +234,15 @@ export default function AboutPage() {
                 title="Posting access"
                 text="Approved employers can publish vacancies through their account."
               />
-
             </div>
-
           </div>
         </div>
       </section>
 
       {/* FOR BOTH SIDES */}
-
       <section className="border-y border-[#e4e7ec] bg-[#f8fafc]">
         <div className="mx-auto max-w-[1280px] px-6 py-20 sm:px-8 lg:px-10 lg:py-24">
-
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
-
             <AudienceBlock
               icon={Users}
               eyebrow="For job seekers"
@@ -292,18 +270,14 @@ export default function AboutPage() {
               link="/post-job"
               linkText="Post a job"
             />
-
           </div>
         </div>
       </section>
 
       {/* SAFETY */}
-
       <section className="bg-white">
         <div className="mx-auto max-w-[1280px] px-6 py-20 sm:px-8 lg:px-10 lg:py-24">
-
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-
             <div>
               <ShieldCheck className="h-8 w-8 text-[#175cd3]" />
 
@@ -313,44 +287,34 @@ export default function AboutPage() {
             </div>
 
             <div className="max-w-[700px]">
-
               <p className="text-[17px] leading-8 text-[#475467]">
-                Employer verification can add useful
-                information, but job seekers should still
-                assess each opportunity carefully before
-                sharing personal information or accepting
-                employment terms.
+                Employer verification can add useful information, but job
+                seekers should still assess each opportunity carefully before
+                sharing personal information or accepting employment terms.
               </p>
 
               <div className="mt-8 grid gap-4">
-
                 <SafetyItem>
-                  Review the employer and vacancy details
-                  before applying.
+                  Review the employer and vacancy details before applying.
                 </SafetyItem>
 
                 <SafetyItem>
-                  Be cautious if someone asks you to pay
-                  money to secure a job.
+                  Be cautious if someone asks you to pay money to secure a job.
                 </SafetyItem>
 
                 <SafetyItem>
-                  Check external application websites before
-                  submitting sensitive information.
+                  Check external application websites before submitting
+                  sensitive information.
                 </SafetyItem>
-
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       {/* CTA */}
-
       <section className="bg-[#07182d]">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-6 py-16 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-20">
-
           <div className="max-w-[670px]">
             <p
               className="text-[12px] font-bold uppercase tracking-[0.16em]"
@@ -374,7 +338,6 @@ export default function AboutPage() {
             Find jobs
             <ArrowRight className="h-4 w-4" />
           </Link>
-
         </div>
       </section>
     </main>
@@ -394,7 +357,6 @@ function Principle({
 }) {
   return (
     <div className="border-t border-[#d0d5dd] pt-7">
-
       <div className="flex items-center justify-between">
         <Icon className="h-6 w-6 text-[#175cd3]" />
 
@@ -410,7 +372,6 @@ function Principle({
       <p className="mt-4 max-w-[350px] text-[14px] leading-7 text-[#667085]">
         {text}
       </p>
-
     </div>
   );
 }
@@ -426,7 +387,6 @@ function VerificationStep({
 }) {
   return (
     <div className="flex gap-4">
-
       <div
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-[11px] font-bold"
         style={{ color: "#ffffff" }}
@@ -451,7 +411,6 @@ function VerificationStep({
           {text}
         </p>
       </div>
-
     </div>
   );
 }
@@ -475,7 +434,6 @@ function AudienceBlock({
 }) {
   return (
     <div>
-
       <div className="flex h-11 w-11 items-center justify-center rounded-[9px] bg-[#eef4ff]">
         <Icon className="h-5 w-5 text-[#175cd3]" />
       </div>
@@ -514,7 +472,6 @@ function AudienceBlock({
         {linkText}
         <ArrowRight className="h-4 w-4" />
       </Link>
-
     </div>
   );
 }
@@ -526,13 +483,11 @@ function SafetyItem({
 }) {
   return (
     <div className="flex items-start gap-3 border-t border-[#e4e7ec] py-4">
-
       <CheckCircle2 className="mt-[3px] h-[18px] w-[18px] shrink-0 text-[#175cd3]" />
 
       <p className="text-[14px] leading-6 text-[#475467]">
         {children}
       </p>
-
     </div>
   );
 }
