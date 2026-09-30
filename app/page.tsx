@@ -181,11 +181,19 @@ export default async function Home() {
       />
 
       {/* HERO */}
+      <link
+        rel="preload"
+        as="image"
+        href="/london-hero.webp"
+        type="image/webp"
+        media="(min-width: 640px)"
+        fetchPriority="high"
+      />
       <section className="relative overflow-hidden bg-[#07182d] sm:min-h-[600px] lg:min-h-[720px]">
         <div
           className="absolute inset-0 hidden bg-cover sm:block"
           style={{
-            backgroundImage: "url('/london-hero.jpg')",
+            backgroundImage: "url('/london-hero.webp')",
             backgroundPosition: "center 38%",
           }}
         />
