@@ -213,7 +213,7 @@ function SignupForm() {
                 <ShieldCheck
                   className="h-4 w-4"
                   style={{
-                    color: "#dceaff",
+                    color: "#fde8e8",
                   }}
                 />
 
@@ -309,13 +309,13 @@ function SignupForm() {
 
             {/* SIGNUP CARD */}
 
-            <div className="rounded-[18px] border border-[#e1e5eb] bg-white p-7 shadow-[0_24px_65px_rgba(16,24,40,.08)] sm:p-10">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-7 shadow-[0_8px_24px_rgba(16,24,40,.06)] sm:p-10">
 
               {/* HEADER */}
 
               <div className="text-center">
 
-                <p className="text-[12px] font-semibold text-[#175cd3]">
+                <p className="text-[12px] font-semibold text-[#d71920]">
                   Get started
                 </p>
 
@@ -331,7 +331,7 @@ function SignupForm() {
 
               {/* ACCOUNT TYPE */}
 
-              <div className="mt-8 grid grid-cols-2 rounded-[10px] bg-[#f2f4f7] p-1">
+              <div className="mt-8 grid grid-cols-2 rounded-[8px] bg-[#f2f4f7] p-1">
 
                 <button
                   type="button"
@@ -340,7 +340,7 @@ function SignupForm() {
                   }
                   className={`flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] text-[13px] font-semibold transition ${
                     accountType === "job_seeker"
-                      ? "bg-white text-[#175cd3] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
+                      ? "bg-white text-[#d71920] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
                       : "text-[#667085]"
                   }`}
                 >
@@ -355,7 +355,7 @@ function SignupForm() {
                   }
                   className={`flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] text-[13px] font-semibold transition ${
                     accountType === "employer"
-                      ? "bg-white text-[#175cd3] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
+                      ? "bg-white text-[#d71920] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
                       : "text-[#667085]"
                   }`}
                 >
@@ -368,13 +368,13 @@ function SignupForm() {
               {/* EMPLOYER NOTICE */}
 
               {accountType === "employer" && (
-                <div className="mt-5 flex items-start gap-3 rounded-[10px] border border-[#dbe7fb] bg-[#f2f7ff] p-4">
+                <div className="mt-5 flex items-start gap-3 rounded-[8px] border border-[#f1d2d4] bg-[#fff7f6] p-4">
 
-                  <ShieldCheck className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#175cd3]" />
+                  <ShieldCheck className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#d71920]" />
 
                   <div>
 
-                    <p className="text-[12px] font-semibold text-[#1849a9]">
+                    <p className="text-[12px] font-semibold text-[#b91319]">
                       Employer verification required
                     </p>
 
@@ -390,7 +390,7 @@ function SignupForm() {
               {/* ERROR */}
 
               {error && (
-                <div className="mt-5 flex items-start gap-3 rounded-[10px] border border-[#fecdca] bg-[#fef3f2] p-4">
+                <div className="mt-5 flex items-start gap-3 rounded-[8px] border border-[#fecdca] bg-[#fef3f2] p-4">
 
                   <AlertCircle className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#d92d20]" />
 
@@ -404,7 +404,7 @@ function SignupForm() {
               {/* SUCCESS */}
 
               {success && (
-                <div className="mt-5 flex items-start gap-3 rounded-[10px] border border-[#abefc6] bg-[#ecfdf3] p-4">
+                <div className="mt-5 flex items-start gap-3 rounded-[8px] border border-[#abefc6] bg-[#ecfdf3] p-4">
 
                   <CheckCircle2 className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#067647]" />
 
@@ -430,7 +430,7 @@ function SignupForm() {
                     Full name
                   </label>
 
-                  <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                  <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                     <UserRound className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -459,7 +459,7 @@ function SignupForm() {
                     Email address
                   </label>
 
-                  <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                  <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                     <Mail className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -488,7 +488,7 @@ function SignupForm() {
                     Password
                   </label>
 
-                  <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                  <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                     <LockKeyhole className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -543,7 +543,7 @@ function SignupForm() {
                     Confirm password
                   </label>
 
-                  <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                  <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                     <LockKeyhole className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -610,7 +610,7 @@ function SignupForm() {
 
                     <Link
                       href="/terms"
-                      className="font-semibold text-[#175cd3]"
+                      className="font-semibold text-[#d71920]"
                     >
                       Terms of Service
                     </Link>
@@ -619,7 +619,7 @@ function SignupForm() {
 
                     <Link
                       href="/privacy"
-                      className="font-semibold text-[#175cd3]"
+                      className="font-semibold text-[#d71920]"
                     >
                       Privacy Policy
                     </Link>
@@ -669,7 +669,7 @@ function SignupForm() {
 
                 <Link
                   href="/login"
-                  className="font-semibold text-[#175cd3] transition hover:text-[#154fb7]"
+                  className="font-semibold text-[#d71920] transition hover:text-[#b91319]"
                 >
                   Log in
                 </Link>
@@ -706,7 +706,7 @@ function FeatureCard({
 }) {
   return (
     <div
-      className="rounded-[13px] border p-5 backdrop-blur-[6px]"
+      className="rounded-[8px] border p-5 backdrop-blur-[6px]"
       style={{
         borderColor:
           "rgba(255,255,255,.28)",
@@ -716,7 +716,7 @@ function FeatureCard({
     >
 
       <div
-        className="flex h-10 w-10 items-center justify-center rounded-[9px]"
+        className="flex h-10 w-10 items-center justify-center rounded-[8px]"
         style={{
           backgroundColor:
             "rgba(255,255,255,.16)",

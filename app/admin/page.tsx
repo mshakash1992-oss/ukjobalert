@@ -176,7 +176,7 @@ export default async function AdminPage() {
     );
 
   return (
-    <main className="min-h-screen bg-[#f5f8fc]">
+    <main className="min-h-screen bg-[#f7f8fa]">
       {/* HEADER */}
 
       <header className="border-b border-slate-200 bg-white">
@@ -193,7 +193,7 @@ export default async function AdminPage() {
             />
           </Link>
 
-          <div className="rounded-full bg-[#071b3d] px-4 py-2 text-sm font-bold text-white">
+          <div className="rounded-full bg-[#07182d] px-4 py-2 text-sm font-bold text-white">
             Admin Dashboard
           </div>
 
@@ -205,7 +205,7 @@ export default async function AdminPage() {
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 transition hover:text-[#d71920]"
         >
           <ArrowLeft className="h-4 w-4" />
 
@@ -215,18 +215,18 @@ export default async function AdminPage() {
 
         <div className="mt-7">
 
-          <p className="text-sm font-bold uppercase tracking-wider text-blue-600">
+          <p className="text-sm font-bold uppercase tracking-wider text-[#d71920]">
             UKJOBALERT ADMIN
           </p>
 
-          <h1 className="mt-2 text-4xl font-black tracking-[-1.5px] text-[#071b3d]">
+          <h1 className="mt-2 text-4xl font-black tracking-[-1.5px] text-[#07182d]">
             Employer Verification
           </h1>
 
           <p className="mt-3 text-slate-500">
             Signed in as{" "}
 
-            <span className="font-bold text-[#071b3d]">
+            <span className="font-bold text-[#07182d]">
               {adminUser.email}
             </span>
           </p>
@@ -270,7 +270,7 @@ export default async function AdminPage() {
 
             <ShieldCheck className="h-6 w-6 text-amber-600" />
 
-            <h2 className="text-2xl font-black text-[#071b3d]">
+            <h2 className="text-2xl font-black text-[#07182d]">
               Pending Manual Review
             </h2>
 
@@ -279,11 +279,11 @@ export default async function AdminPage() {
 
           {pending.length === 0 ? (
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center">
+            <div className="rounded-[10px] border border-slate-200 bg-white p-10 text-center">
 
               <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500" />
 
-              <p className="mt-4 font-bold text-[#071b3d]">
+              <p className="mt-4 font-bold text-[#07182d]">
                 No pending employers
               </p>
 
@@ -298,14 +298,14 @@ export default async function AdminPage() {
 
                   <div
                     key={item.id}
-                    className="rounded-[26px] border border-amber-200 bg-white p-6 shadow-sm"
+                    className="rounded-[8px] border border-amber-200 bg-white p-6 shadow-sm"
                   >
 
                     <div className="flex flex-col justify-between gap-5 lg:flex-row">
 
                       <div className="flex items-center gap-4">
 
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-[8px] bg-[#fff5f4] text-[#d71920]">
 
                           <Building2 className="h-6 w-6" />
 
@@ -314,7 +314,7 @@ export default async function AdminPage() {
 
                         <div>
 
-                          <h3 className="text-xl font-black text-[#071b3d]">
+                          <h3 className="text-xl font-black text-[#07182d]">
                             {item.company_name}
                           </h3>
 
@@ -393,7 +393,7 @@ export default async function AdminPage() {
                     </div>
 
 
-                    <div className="mt-5 rounded-xl bg-slate-50 p-4">
+                    <div className="mt-5 rounded-[8px] bg-slate-50 p-4">
 
                       <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
 
@@ -416,7 +416,7 @@ export default async function AdminPage() {
 
                     {item.review_notes && (
 
-                      <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                      <div className="mt-4 rounded-[8px] border border-amber-200 bg-amber-50 p-4">
 
                         <p className="text-xs font-bold uppercase text-amber-700">
                           Current Review Note
@@ -458,7 +458,7 @@ export default async function AdminPage() {
 
             <CheckCircle2 className="h-6 w-6 text-emerald-600" />
 
-            <h2 className="text-2xl font-black text-[#071b3d]">
+            <h2 className="text-2xl font-black text-[#07182d]">
               Verified Employers
             </h2>
 
@@ -467,7 +467,7 @@ export default async function AdminPage() {
 
           {verified.length === 0 ? (
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-7 text-slate-500">
+            <div className="rounded-[10px] border border-slate-200 bg-white p-7 text-slate-500">
               No verified employers yet.
             </div>
 
@@ -480,14 +480,14 @@ export default async function AdminPage() {
 
                   <div
                     key={item.id}
-                    className="flex flex-col justify-between gap-4 rounded-2xl border border-emerald-100 bg-white p-5 sm:flex-row sm:items-center"
+                    className="flex flex-col justify-between gap-4 rounded-[10px] border border-emerald-100 bg-white p-5 sm:flex-row sm:items-center"
                   >
 
                     <div>
 
                       <div className="flex items-center gap-2">
 
-                        <h3 className="font-black text-[#071b3d]">
+                        <h3 className="font-black text-[#07182d]">
                           {item.company_name}
                         </h3>
 
@@ -530,7 +530,7 @@ export default async function AdminPage() {
 
             <XCircle className="h-6 w-6 text-red-600" />
 
-            <h2 className="text-2xl font-black text-[#071b3d]">
+            <h2 className="text-2xl font-black text-[#07182d]">
               Rejected Employers
             </h2>
 
@@ -539,7 +539,7 @@ export default async function AdminPage() {
 
           {rejected.length === 0 ? (
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-7 text-slate-500">
+            <div className="rounded-[10px] border border-slate-200 bg-white p-7 text-slate-500">
               No rejected employers.
             </div>
 
@@ -552,14 +552,14 @@ export default async function AdminPage() {
 
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-red-100 bg-white p-5"
+                    className="rounded-[10px] border border-red-100 bg-white p-5"
                   >
 
                     <div className="flex flex-col justify-between gap-4 sm:flex-row">
 
                       <div>
 
-                        <h3 className="font-black text-[#071b3d]">
+                        <h3 className="font-black text-[#07182d]">
                           {item.company_name}
                         </h3>
 
@@ -578,7 +578,7 @@ export default async function AdminPage() {
 
                     {item.review_notes && (
 
-                      <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">
+                      <p className="mt-4 rounded-[8px] bg-red-50 p-3 text-sm text-red-700">
                         {item.review_notes}
                       </p>
 
@@ -630,19 +630,19 @@ function StatCard({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5">
+    <div className="rounded-[10px] border border-slate-200 bg-white p-5">
 
       <div className="flex items-center gap-4">
 
         <div
-          className={`flex h-12 w-12 items-center justify-center rounded-xl border ${styles[type]}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-[8px] border ${styles[type]}`}
         >
           <Icon className="h-6 w-6" />
         </div>
 
         <div>
 
-          <p className="text-2xl font-black text-[#071b3d]">
+          <p className="text-2xl font-black text-[#07182d]">
             {number}
           </p>
 
@@ -671,7 +671,7 @@ function InfoItem({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+    <div className="rounded-[8px] border border-slate-100 bg-slate-50 p-4">
 
       <div className="flex items-center gap-2 text-slate-400">
 
@@ -683,7 +683,7 @@ function InfoItem({
 
       </div>
 
-      <p className="mt-2 break-words text-sm font-bold text-[#071b3d]">
+      <p className="mt-2 break-words text-sm font-bold text-[#07182d]">
         {value}
       </p>
 

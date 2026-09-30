@@ -77,7 +77,7 @@ export default function SaveJobButton({
         type="button"
         onClick={handleSave}
         disabled={loading}
-        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-[9px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:border-[#98a2b3] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-[8px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:border-[#98a2b3] hover:bg-[#f9fafb] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {saved ? (
           <>

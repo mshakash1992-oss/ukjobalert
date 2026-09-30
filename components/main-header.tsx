@@ -43,7 +43,7 @@ export default function MainHeader({
   const employersHref =
     isEmployer
       ? "/employer/jobs"
-      : "/signup";
+      : "/employers";
 
   const accountHref =
     isEmployer
@@ -56,16 +56,24 @@ export default function MainHeader({
       href: "/jobs",
     },
     {
-      label: "Post a job",
-      href: postJobHref,
+      label: "Companies",
+      href: "/companies",
     },
+    ...(!loggedIn || isEmployer
+      ? [
+          {
+            label: "Post a job",
+            href: postJobHref,
+          },
+        ]
+      : []),
     {
       label: "Employers",
       href: employersHref,
     },
     {
       label: "How it works",
-      href: "/#how-it-works",
+      href: "/how-it-works",
     },
     {
       label: "About",
@@ -84,6 +92,10 @@ export default function MainHeader({
       );
     }
 
+    if (label === "Companies") {
+      return pathname === "/companies";
+    }
+
     if (label === "Post a job") {
       return pathname === "/post-job";
     }
@@ -95,7 +107,15 @@ export default function MainHeader({
         );
       }
 
-      return pathname === "/signup";
+      return pathname === "/employers";
+    }
+
+    if (label === "How it works") {
+      return pathname === "/how-it-works";
+    }
+
+    if (label === "About") {
+      return pathname === "/about";
     }
 
     return false;
@@ -103,10 +123,9 @@ export default function MainHeader({
 
   return (
     <header className="relative z-50 border-b border-[#e4e7ec] bg-white">
-      <div className="mx-auto flex h-[82px] max-w-[1440px] items-center px-6 md:px-10 xl:px-12">
+      <div className="mx-auto flex h-[74px] max-w-[1360px] items-center px-6 md:px-10 xl:px-12">
 
         {/* LOGO */}
-
         <Link
           href="/"
           aria-label="UKJobAlert home"
@@ -118,13 +137,12 @@ export default function MainHeader({
             width={190}
             height={52}
             priority
-            className="h-auto w-[165px] object-contain md:w-[185px]"
+            className="h-auto w-[158px] object-contain md:w-[174px]"
           />
         </Link>
 
         {/* DESKTOP NAV */}
-
-        <nav className="ml-14 hidden h-full items-center gap-9 lg:flex">
+        <nav className="ml-12 hidden h-full items-center gap-8 lg:flex">
           {navigation.map((item) => {
             const active = isActive(
               item.label,
@@ -144,7 +162,7 @@ export default function MainHeader({
                 {item.label}
 
                 {active && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#e11d48]" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d71920]" />
                 )}
               </Link>
             );
@@ -152,7 +170,6 @@ export default function MainHeader({
         </nav>
 
         {/* DESKTOP RIGHT */}
-
         <div className="ml-auto hidden items-center gap-3 lg:flex">
           <Link
             href="/jobs"
@@ -199,29 +216,22 @@ export default function MainHeader({
             </Link>
           )}
 
-          <Link
-            href={postJobHref}
-            className="ml-1 inline-flex min-h-[48px] items-center gap-2.5 rounded-[8px] bg-[#07182d] px-5 text-[14px] font-semibold transition hover:bg-[#102a4c]"
-            style={{
-              color: "#ffffff",
-            }}
-          >
-            <BriefcaseBusiness className="h-[17px] w-[17px]" />
-            Post a job
-          </Link>
+          {(!loggedIn || isEmployer) && (
+            <Link
+              href={postJobHref}
+              className="ml-1 inline-flex min-h-[44px] items-center gap-2 rounded-[7px] bg-[#d71920] px-[18px] text-[13px] font-bold transition hover:bg-[#b91319]"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              <BriefcaseBusiness className="h-[17px] w-[17px]" />
+              Post a job
+            </Link>
+          )}
         </div>
 
         {/* MOBILE */}
-
-        <div className="ml-auto flex items-center gap-1 lg:hidden">
-          <Link
-            href="/jobs"
-            aria-label="Search jobs"
-            className="flex h-[44px] w-[44px] items-center justify-center rounded-full text-[#475467]"
-          >
-            <Search className="h-[20px] w-[20px]" />
-          </Link>
-
+        <div className="ml-auto flex items-center lg:hidden">
           <button
             type="button"
             aria-label={
@@ -246,9 +256,8 @@ export default function MainHeader({
       </div>
 
       {/* MOBILE MENU */}
-
       {menuOpen && (
-        <div className="absolute left-0 right-0 top-full border-t border-[#eaecf0] bg-white shadow-[0_18px_40px_rgba(16,24,40,.10)] lg:hidden">
+        <div className="absolute left-0 right-0 top-full border-t border-[#eaecf0] bg-white shadow-[0_8px_24px_rgba(16,24,40,.08)] lg:hidden">
           <div className="px-5 py-5">
             <nav className="flex flex-col">
               {navigation.map((item) => (
@@ -309,19 +318,21 @@ export default function MainHeader({
                 </Link>
               )}
 
-              <Link
-                href={postJobHref}
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-                className="mt-3 flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] bg-[#07182d] px-4 text-[14px] font-semibold"
-                style={{
-                  color: "#ffffff",
-                }}
-              >
-                <BriefcaseBusiness className="h-[17px] w-[17px]" />
-                Post a job
-              </Link>
+              {(!loggedIn || isEmployer) && (
+                <Link
+                  href={postJobHref}
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
+                  className="mt-3 flex min-h-[48px] items-center justify-center gap-2 rounded-[7px] bg-[#d71920] px-4 text-[14px] font-bold"
+                  style={{
+                    color: "#ffffff",
+                  }}
+                >
+                  <BriefcaseBusiness className="h-[17px] w-[17px]" />
+                  Post a job
+                </Link>
+              )}
             </div>
           </div>
         </div>

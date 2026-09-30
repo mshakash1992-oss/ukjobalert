@@ -416,16 +416,16 @@ export default function VerificationForm({
     status === "verified"
   ) {
     return (
-      <div className="rounded-[30px] border border-emerald-200 bg-white p-8 shadow-sm">
+      <div className="rounded-[8px] border border-emerald-200 bg-white p-8 shadow-sm">
 
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+        <div className="flex h-16 w-16 items-center justify-center rounded-[10px] bg-emerald-50 text-emerald-600">
 
           <CheckCircle2 className="h-8 w-8" />
 
         </div>
 
 
-        <h2 className="mt-6 text-3xl font-black text-[#071b3d]">
+        <h2 className="mt-6 text-3xl font-black text-[#07182d]">
 
           Employer Verified
 
@@ -459,16 +459,16 @@ export default function VerificationForm({
     status === "pending"
   ) {
     return (
-      <div className="rounded-[30px] border border-amber-200 bg-white p-8 shadow-sm">
+      <div className="rounded-[8px] border border-amber-200 bg-white p-8 shadow-sm">
 
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+        <div className="flex h-16 w-16 items-center justify-center rounded-[10px] bg-amber-50 text-amber-600">
 
           <ShieldCheck className="h-8 w-8" />
 
         </div>
 
 
-        <h2 className="mt-6 text-3xl font-black text-[#071b3d]">
+        <h2 className="mt-6 text-3xl font-black text-[#07182d]">
 
           Manual Review
 
@@ -489,7 +489,7 @@ export default function VerificationForm({
         {existingVerification
           ?.review_notes && (
 
-          <p className="mt-5 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
+          <p className="mt-5 rounded-[8px] bg-amber-50 p-4 text-sm text-amber-800">
 
             {
               existingVerification
@@ -509,16 +509,16 @@ export default function VerificationForm({
     status === "rejected"
   ) {
     return (
-      <div className="rounded-[30px] border border-red-200 bg-white p-8 shadow-sm">
+      <div className="rounded-[8px] border border-red-200 bg-white p-8 shadow-sm">
 
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+        <div className="flex h-16 w-16 items-center justify-center rounded-[10px] bg-red-50 text-red-600">
 
           <AlertCircle className="h-8 w-8" />
 
         </div>
 
 
-        <h2 className="mt-6 text-3xl font-black text-[#071b3d]">
+        <h2 className="mt-6 text-3xl font-black text-[#07182d]">
 
           Company Not Eligible
 
@@ -544,7 +544,7 @@ export default function VerificationForm({
       onSubmit={
         submitVerification
       }
-      className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-[0_20px_70px_rgba(16,44,90,.08)] sm:p-9"
+      className="rounded-[8px] border border-slate-200 bg-white p-6 shadow-[0_8px_24px_rgba(16,24,40,.06)] sm:p-9"
     >
 
       {/* COMPANY NUMBER */}
@@ -560,7 +560,7 @@ export default function VerificationForm({
 
         <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
 
-          <div className="flex items-center rounded-xl border border-slate-200 px-4 focus-within:border-blue-500">
+          <div className="flex items-center rounded-[8px] border border-slate-200 px-4 focus-within:border-[#d71920]">
 
             <Building2 className="h-5 w-5 text-slate-400" />
 
@@ -597,7 +597,7 @@ export default function VerificationForm({
             disabled={
               checking
             }
-            className="flex items-center justify-center gap-2 rounded-xl bg-[#071b3d] px-6 py-4 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center justify-center gap-2 rounded-[8px] bg-[#07182d] px-6 py-4 text-sm font-bold text-white transition hover:bg-[#b91319] disabled:opacity-50"
           >
 
             {checking ? (
@@ -620,7 +620,7 @@ export default function VerificationForm({
 
       {error && (
 
-        <div className="mt-5 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
+        <div className="mt-5 flex gap-3 rounded-[8px] border border-red-200 bg-red-50 p-4">
 
           <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
 
@@ -637,9 +637,9 @@ export default function VerificationForm({
 
       {message && (
 
-        <div className="mt-5 flex gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
+        <div className="mt-5 flex gap-3 rounded-[8px] border border-blue-200 bg-blue-50 p-4">
 
-          <ShieldCheck className="h-5 w-5 shrink-0 text-blue-600" />
+          <ShieldCheck className="h-5 w-5 shrink-0 text-[#d71920]" />
 
           <p className="text-sm font-semibold leading-6 text-blue-800">
 
@@ -654,20 +654,20 @@ export default function VerificationForm({
 
       {company && (
 
-        <div className="mt-7 overflow-hidden rounded-2xl border border-blue-100">
+        <div className="mt-7 overflow-hidden rounded-[10px] border border-blue-100">
 
           <div className="flex items-center justify-between bg-blue-50 p-5">
 
             <div>
 
-              <p className="text-xs font-bold uppercase tracking-wider text-blue-500">
+              <p className="text-xs font-bold uppercase tracking-wider text-[#d71920]">
 
                 Companies House Record
 
               </p>
 
 
-              <h2 className="mt-1 text-xl font-black text-[#071b3d]">
+              <h2 className="mt-1 text-xl font-black text-[#07182d]">
 
                 {
                   company.companyName
@@ -678,7 +678,7 @@ export default function VerificationForm({
             </div>
 
 
-            <ShieldCheck className="h-7 w-7 text-blue-600" />
+            <ShieldCheck className="h-7 w-7 text-[#d71920]" />
 
           </div>
 
@@ -794,7 +794,7 @@ export default function VerificationForm({
 
       <div className="mt-8 border-t border-slate-200 pt-8">
 
-        <h3 className="text-xl font-black text-[#071b3d]">
+        <h3 className="text-xl font-black text-[#07182d]">
 
           Business Contact Details
 
@@ -822,7 +822,7 @@ export default function VerificationForm({
             </label>
 
 
-            <div className="flex items-center rounded-xl border border-slate-200 px-4 focus-within:border-blue-500">
+            <div className="flex items-center rounded-[8px] border border-slate-200 px-4 focus-within:border-[#d71920]">
 
               <Mail className="h-5 w-5 text-slate-400" />
 
@@ -857,7 +857,7 @@ export default function VerificationForm({
             </label>
 
 
-            <div className="flex items-center rounded-xl border border-slate-200 px-4 focus-within:border-blue-500">
+            <div className="flex items-center rounded-[8px] border border-slate-200 px-4 focus-within:border-[#d71920]">
 
               <Phone className="h-5 w-5 text-slate-400" />
 
@@ -892,7 +892,7 @@ export default function VerificationForm({
             </label>
 
 
-            <div className="flex items-center rounded-xl border border-slate-200 px-4 focus-within:border-blue-500">
+            <div className="flex items-center rounded-[8px] border border-slate-200 px-4 focus-within:border-[#d71920]">
 
               <Globe2 className="h-5 w-5 text-slate-400" />
 
@@ -927,7 +927,7 @@ export default function VerificationForm({
           submitting ||
           !company
         }
-        className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-4 font-bold text-white shadow-lg shadow-blue-100 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-8 flex w-full items-center justify-center gap-2 rounded-[8px] bg-[#d71920] py-4 font-bold text-white shadow-[0_8px_24px_rgba(16,24,40,.06)] transition hover:bg-[#b91319] disabled:cursor-not-allowed disabled:opacity-50"
       >
 
         {submitting && (

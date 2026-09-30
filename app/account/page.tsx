@@ -207,8 +207,18 @@ export default async function AccountPage() {
     applicationCount ?? 0;
 
   return (
-    <main className="min-h-screen bg-[#f8fafc]">
-      <MainHeader />
+    <main className="min-h-screen bg-[#f7f8fa]">
+      <MainHeader
+        loggedIn
+        displayName={
+          user.user_metadata?.full_name?.trim() ||
+          "Account"
+        }
+        accountType={
+          user.user_metadata?.account_type ||
+          "job_seeker"
+        }
+      />
 
       {/* HERO */}
 
@@ -219,12 +229,12 @@ export default async function AccountPage() {
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <div className="flex items-center gap-2.5">
-                <div className="h-[2px] w-7 bg-[#3b82f6]" />
+                <div className="h-[2px] w-7 bg-[#d71920]" />
 
                 <p
                   className="text-[11px] font-bold uppercase tracking-[0.17em]"
                   style={{
-                    color: "#9ec2ff",
+                    color: "#f3b4bc",
                   }}
                 >
                   Job seeker account
@@ -254,7 +264,7 @@ export default async function AccountPage() {
 
             <Link
               href="/jobs"
-              className="inline-flex min-h-[50px] items-center justify-center gap-2 self-start rounded-[8px] bg-[#e4232a] px-6 text-[14px] font-bold text-white transition hover:bg-[#c91d23] lg:self-auto"
+              className="inline-flex min-h-[50px] items-center justify-center gap-2 self-start rounded-[8px] bg-[#d71920] px-6 text-[14px] font-bold text-white transition hover:bg-[#b91319] lg:self-auto"
             >
               Find jobs
               <ArrowRight className="h-4 w-4" />
@@ -279,8 +289,8 @@ export default async function AccountPage() {
                 <div className="border-b border-[#e4e7ec] px-7 py-6 sm:px-8">
                   <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#eef4ff]">
-                        <UserRound className="h-5 w-5 text-[#175cd3]" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+                        <UserRound className="h-5 w-5 text-[#d71920]" />
                       </div>
 
                       <div>
@@ -296,11 +306,11 @@ export default async function AccountPage() {
 
                     <Link
                       href="/account/settings"
-                      className="group inline-flex min-h-[42px] w-fit items-center justify-center gap-2 rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[12px] font-bold text-[#344054] transition hover:border-[#b2c5e8] hover:bg-[#f5f8ff] hover:text-[#175cd3]"
+                      className="group inline-flex min-h-[42px] w-fit items-center justify-center gap-2 rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[12px] font-bold text-[#344054] transition hover:border-[#e7b8bd] hover:bg-[#f7f8fa] hover:text-[#d71920]"
                     >
-                      <Settings className="h-4 w-4 text-[#667085] transition group-hover:text-[#175cd3]" />
+                      <Settings className="h-4 w-4 text-[#667085] transition group-hover:text-[#d71920]" />
                       Account settings
-                      <ArrowRight className="h-3.5 w-3.5 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#175cd3]" />
+                      <ArrowRight className="h-3.5 w-3.5 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
                     </Link>
                   </div>
                 </div>
@@ -355,8 +365,8 @@ export default async function AccountPage() {
                 {/* JOB SEARCH */}
 
                 <div className="flex min-h-[230px] flex-col border border-[#e4e7ec] bg-white px-7 py-7">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#eef4ff]">
-                    <Search className="h-5 w-5 text-[#175cd3]" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+                    <Search className="h-5 w-5 text-[#d71920]" />
                   </div>
 
                   <h2 className="mt-5 text-[20px] font-bold tracking-[-0.4px] text-[#101828]">
@@ -371,7 +381,7 @@ export default async function AccountPage() {
                   <div className="mt-auto pt-6">
                     <Link
                       href="/jobs"
-                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#175cd3]"
+                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
                     >
                       Browse jobs
                       <ArrowRight className="h-4 w-4" />
@@ -383,11 +393,11 @@ export default async function AccountPage() {
 
                 <div className="flex min-h-[230px] flex-col border border-[#e4e7ec] bg-white px-7 py-7">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#eef4ff]">
-                      <BellRing className="h-5 w-5 text-[#175cd3]" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+                      <BellRing className="h-5 w-5 text-[#d71920]" />
                     </div>
 
-                    <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#eef4ff] px-2.5 text-[11px] font-bold text-[#175cd3]">
+                    <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#fff5f4] px-2.5 text-[11px] font-bold text-[#d71920]">
                       {activeAlerts}
                     </div>
                   </div>
@@ -409,7 +419,7 @@ export default async function AccountPage() {
                   <div className="mt-auto pt-6">
                     <Link
                       href="/account/alerts"
-                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#175cd3]"
+                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
                     >
                       {activeAlerts > 0
                         ? "Manage alerts"
@@ -424,11 +434,11 @@ export default async function AccountPage() {
 
                 <div className="flex min-h-[230px] flex-col border border-[#e4e7ec] bg-white px-7 py-7">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#eef4ff]">
-                      <ClipboardCheck className="h-5 w-5 text-[#175cd3]" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+                      <ClipboardCheck className="h-5 w-5 text-[#d71920]" />
                     </div>
 
-                    <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#eef4ff] px-2.5 text-[11px] font-bold text-[#175cd3]">
+                    <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#fff5f4] px-2.5 text-[11px] font-bold text-[#d71920]">
                       {applications}
                     </div>
                   </div>
@@ -450,7 +460,7 @@ export default async function AccountPage() {
                   <div className="mt-auto pt-6">
                     <Link
                       href="/account/applications"
-                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#175cd3]"
+                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
                     >
                       View applications
                       <ArrowRight className="h-4 w-4" />
@@ -465,9 +475,9 @@ export default async function AccountPage() {
                 <div className="flex flex-col gap-5 border-b border-[#e4e7ec] px-7 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-8">
                   <div>
                     <div className="flex items-center gap-2">
-                      <Bookmark className="h-5 w-5 text-[#175cd3]" />
+                      <Bookmark className="h-5 w-5 text-[#d71920]" />
 
-                      <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#175cd3]">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#d71920]">
                         Saved jobs
                       </p>
                     </div>
@@ -477,7 +487,7 @@ export default async function AccountPage() {
                     </h2>
                   </div>
 
-                  <div className="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#eef4ff] px-3 text-[12px] font-bold text-[#175cd3]">
+                  <div className="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#fff5f4] px-3 text-[12px] font-bold text-[#d71920]">
                     {savedJobs.length}
                   </div>
                 </div>
@@ -501,7 +511,7 @@ export default async function AccountPage() {
                           >
                             <div className="flex items-start justify-between gap-6">
                               <div className="min-w-0">
-                                <p className="text-[17px] font-bold tracking-[-0.3px] text-[#101828] transition group-hover:text-[#175cd3]">
+                                <p className="text-[17px] font-bold tracking-[-0.3px] text-[#101828] transition group-hover:text-[#d71920]">
                                   {job.title}
                                 </p>
 
@@ -528,7 +538,7 @@ export default async function AccountPage() {
                                 )}
                               </div>
 
-                              <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#98a2b3] transition group-hover:translate-x-1 group-hover:text-[#175cd3]" />
+                              <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#98a2b3] transition group-hover:translate-x-1 group-hover:text-[#d71920]" />
                             </div>
                           </Link>
                         );
@@ -553,7 +563,7 @@ export default async function AccountPage() {
 
                     <Link
                       href="/jobs"
-                      className="mt-6 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[7px] bg-[#175cd3] px-5 text-[13px] font-bold text-white"
+                      className="mt-6 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[7px] bg-[#d71920] px-5 text-[13px] font-bold text-white"
                     >
                       Find jobs
                       <ArrowRight className="h-4 w-4" />
@@ -573,7 +583,7 @@ export default async function AccountPage() {
                 <ShieldCheck
                   className="h-7 w-7"
                   style={{
-                    color: "#7fb0ff",
+                    color: "#f3b4bc",
                   }}
                 />
 
@@ -641,7 +651,7 @@ export default async function AccountPage() {
 
                 <div className="grid grid-cols-3">
                   <div className="px-7 py-6">
-                    <Bookmark className="h-4 w-4 text-[#175cd3]" />
+                    <Bookmark className="h-4 w-4 text-[#d71920]" />
 
                     <p className="mt-3 text-[28px] font-bold tracking-[-0.8px] text-[#101828]">
                       {savedJobs.length}
@@ -653,7 +663,7 @@ export default async function AccountPage() {
                   </div>
 
                   <div className="border-l border-[#eaecf0] px-7 py-6">
-                    <BellRing className="h-4 w-4 text-[#175cd3]" />
+                    <BellRing className="h-4 w-4 text-[#d71920]" />
 
                     <p className="mt-3 text-[28px] font-bold tracking-[-0.8px] text-[#101828]">
                       {activeAlerts}
@@ -665,7 +675,7 @@ export default async function AccountPage() {
                   </div>
 
                   <div className="border-l border-[#eaecf0] px-7 py-6">
-                    <ClipboardCheck className="h-4 w-4 text-[#175cd3]" />
+                    <ClipboardCheck className="h-4 w-4 text-[#d71920]" />
 
                     <p className="mt-3 text-[28px] font-bold tracking-[-0.8px] text-[#101828]">
                       {applications}
@@ -681,7 +691,7 @@ export default async function AccountPage() {
               {/* ALERT SHORTCUT */}
 
               <div className="border border-[#e4e7ec] bg-white p-7">
-                <BellRing className="h-5 w-5 text-[#175cd3]" />
+                <BellRing className="h-5 w-5 text-[#d71920]" />
 
                 <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#667085]">
                   Job alerts
@@ -698,7 +708,7 @@ export default async function AccountPage() {
 
                 <Link
                   href="/account/alerts"
-                  className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold text-[#175cd3]"
+                  className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
                 >
                   Manage job alerts
                   <ArrowRight className="h-4 w-4" />
@@ -723,7 +733,7 @@ export default async function AccountPage() {
 
                 <Link
                   href="/contact"
-                  className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-[#175cd3]"
+                  className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-[#d71920]"
                 >
                   Contact UKJobAlert
                   <ArrowRight className="h-4 w-4" />
@@ -767,7 +777,7 @@ function StatusItem({
       <CheckCircle2
         className="h-4 w-4 shrink-0"
         style={{
-          color: "#7fb0ff",
+          color: "#f3b4bc",
         }}
       />
 

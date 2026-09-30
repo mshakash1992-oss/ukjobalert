@@ -91,6 +91,7 @@ type PageProps = {
     location?: string;
     category?: string;
     type?: string;
+    company?: string;
   }>;
 };
 
@@ -150,6 +151,9 @@ export default async function JobsPage({
 
   const type =
     (params?.type || "").trim();
+
+  const company =
+    (params?.company || "").trim();
 
   const supabase =
     await createClient();
@@ -247,6 +251,13 @@ export default async function JobsPage({
       );
   }
 
+  if (company) {
+    query = query.eq(
+      "company_name",
+      company
+    );
+  }
+
   const {
     data,
     error,
@@ -259,16 +270,61 @@ export default async function JobsPage({
   const jobs =
     (data || []) as Job[];
 
+  const { data: filterRows, error: filterError } = await supabase
+    .from("jobs")
+    .select("category, job_type")
+    .eq("status", "published")
+    .gt("expires_at", new Date().toISOString());
+
+  if (filterError) {
+    console.error("Job filter counts error:", filterError);
+  }
+
+  const categoryCounts = new Map<string, number>();
+  const typeCounts = new Map<string, number>();
+
+  for (const row of filterRows || []) {
+    if (row.category) {
+      categoryCounts.set(
+        row.category,
+        (categoryCounts.get(row.category) || 0) + 1
+      );
+    }
+
+    if (row.job_type) {
+      typeCounts.set(
+        row.job_type,
+        (typeCounts.get(row.job_type) || 0) + 1
+      );
+    }
+  }
+
+  function filterHref(
+    key: "category" | "type",
+    value: string
+  ) {
+    const next = new URLSearchParams();
+    if (q) next.set("q", q);
+    if (location) next.set("location", location);
+    if (company) next.set("company", company);
+    if (category && key !== "category") next.set("category", category);
+    if (type && key !== "type") next.set("type", type);
+    if (value) next.set(key, value);
+    const queryString = next.toString();
+    return queryString ? `/jobs?${queryString}` : "/jobs";
+  }
+
   const hasFilters =
     Boolean(
       q ||
         location ||
         category ||
-        type
+        type ||
+        company
     );
 
   return (
-    <main className="min-h-screen bg-[#f7f8fa] text-[#101828]">
+    <main className="min-h-screen bg-[#f4f6f8] text-[#101828]">
       <MainHeader
         loggedIn={loggedIn}
         displayName={displayName}
@@ -276,440 +332,198 @@ export default async function JobsPage({
         isAdmin={isAdmin}
       />
 
-      {/* TOP */}
-
-      <section
-        className="relative overflow-hidden"
-        style={{
-          backgroundColor: "#07182d",
-        }}
-      >
-        <div
-          className="absolute -right-[160px] -top-[260px] h-[620px] w-[620px] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(23,92,211,.22) 0%, rgba(23,92,211,0) 68%)",
-          }}
-        />
-
-        <div className="relative mx-auto max-w-[1440px] px-6 pb-[92px] pt-[74px] md:px-10 xl:px-12">
-          <div className="max-w-[720px]">
-            <div
-              className="flex items-center gap-3 text-[13px] font-semibold"
-              style={{
-                color:
-                  "rgba(255,255,255,.62)",
-              }}
-            >
-              <span className="h-[2px] w-8 bg-[#e11d48]" />
-              UK vacancies
+      <section className="border-b border-[#dfe3e8] bg-[#fbfbfa]">
+        <div className="mx-auto grid max-w-[1360px] gap-10 px-6 py-12 md:px-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end lg:py-16 xl:px-12">
+          <div className="max-w-[820px]">
+            <div className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#d71920]">
+              <span className="h-px w-9 bg-[#d71920]" />
+              Find jobs
             </div>
-
-            <h1
-              className="mt-5 text-[48px] font-bold leading-[1.02] tracking-[-2px] sm:text-[58px]"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Find jobs across
-              <br />
-              the UK.
+            <h1 className="mt-5 text-[42px] font-bold leading-[1.04] tracking-[-1.8px] text-[#07182d] sm:text-[54px] lg:text-[60px]">
+              Search UK jobs that are ready to explore.
             </h1>
+            <p className="mt-5 max-w-[700px] text-[16px] leading-7 text-[#5d6673]">
+              Browse current vacancies by role, location, sector and working pattern. Open a listing to review the details, employer information and application route before you apply.
+            </p>
+          </div>
 
-            <p
-              className="mt-5 max-w-[600px] text-[17px] leading-7"
-              style={{
-                color:
-                  "rgba(255,255,255,.68)",
-              }}
-            >
-              Search current vacancies by
-              role, location, sector and
-              employment type.
+          <div className="border-l-4 border-[#d71920] bg-[#07182d] p-6 sm:p-7">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/45">Current search</p>
+            <p className="mt-3 text-[32px] font-bold tracking-[-1px] text-white">{jobs.length}</p>
+            <p className="mt-1 text-[13px] leading-6 text-white/65">
+              {jobs.length === 1 ? "vacancy matches" : "vacancies match"} the filters currently selected.
             </p>
           </div>
         </div>
       </section>
 
-      {/* SEARCH PANEL */}
-
-      <section className="relative z-10 mx-auto -mt-[42px] max-w-[1440px] px-6 md:px-10 xl:px-12">
-        <form
-          method="GET"
-          action="/jobs"
-          className="overflow-hidden rounded-[16px] border border-[#e4e7ec] bg-white shadow-[0_18px_55px_rgba(16,24,40,.12)]"
-        >
-          <div className="grid lg:grid-cols-[1.15fr_1fr_.85fr_.85fr_180px]">
-            <label className="flex min-h-[82px] items-center gap-4 border-b border-[#eaecf0] px-6 lg:border-b-0 lg:border-r">
-              <Search className="h-[20px] w-[20px] shrink-0 text-[#667085]" />
-
-              <div className="min-w-0 flex-1">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.08em] text-[#98a2b3]">
-                  Keyword
-                </span>
-
-                <input
-                  name="q"
-                  defaultValue={q}
-                  placeholder="Job title or keyword"
-                  className="mt-1 w-full bg-transparent text-[15px] font-medium text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]"
-                />
-              </div>
-            </label>
-
-            <label className="flex min-h-[82px] items-center gap-4 border-b border-[#eaecf0] px-6 lg:border-b-0 lg:border-r">
-              <MapPin className="h-[20px] w-[20px] shrink-0 text-[#667085]" />
-
-              <div className="min-w-0 flex-1">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.08em] text-[#98a2b3]">
-                  Location
-                </span>
-
-                <input
-                  name="location"
-                  defaultValue={location}
-                  placeholder="City or postcode"
-                  className="mt-1 w-full bg-transparent text-[15px] font-medium text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]"
-                />
-              </div>
-            </label>
-
-            <label className="flex min-h-[82px] items-center border-b border-[#eaecf0] px-5 lg:border-b-0 lg:border-r">
-              <div className="w-full">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.08em] text-[#98a2b3]">
-                  Sector
-                </span>
-
-                <select
-                  name="category"
-                  defaultValue={category}
-                  className="mt-1 w-full bg-transparent text-[14px] font-medium text-[#344054] outline-none"
-                >
-                  <option value="">
-                    All sectors
-                  </option>
-
-                  {categories.map(
-                    (item) => (
-                      <option
-                        key={item}
-                        value={item}
-                      >
-                        {item}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
-            </label>
-
-            <label className="flex min-h-[82px] items-center border-b border-[#eaecf0] px-5 lg:border-b-0 lg:border-r">
-              <div className="w-full">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.08em] text-[#98a2b3]">
-                  Job type
-                </span>
-
-                <select
-                  name="type"
-                  defaultValue={type}
-                  className="mt-1 w-full bg-transparent text-[14px] font-medium text-[#344054] outline-none"
-                >
-                  <option value="">
-                    Any type
-                  </option>
-
-                  {jobTypes.map(
-                    (item) => (
-                      <option
-                        key={item}
-                        value={item}
-                      >
-                        {item}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
-            </label>
-
-            <button
-              type="submit"
-              className="flex min-h-[82px] items-center justify-center gap-2.5 bg-[#e11d48] px-6 text-[14px] font-semibold transition hover:bg-[#be123c]"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Search
-              <ArrowRight className="h-[17px] w-[17px]" />
+      <section className="bg-[#07182d]">
+        <div className="mx-auto max-w-[1360px] px-6 py-5 md:px-10 xl:px-12">
+          <form method="GET" action="/jobs" className="grid gap-px overflow-hidden bg-white/15 lg:grid-cols-[1.15fr_1fr_.8fr_.8fr_160px]">
+            <SearchField icon={Search} label="What" className="bg-white">
+              <input name="q" defaultValue={q} placeholder="Job title or keyword" className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]" />
+            </SearchField>
+            <SearchField icon={MapPin} label="Where" className="bg-white">
+              <input name="location" defaultValue={location} placeholder="City or postcode" className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]" />
+            </SearchField>
+            <SearchField label="Sector" className="bg-white">
+              <select name="category" defaultValue={category} className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#344054] outline-none">
+                <option value="">All sectors</option>
+                {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+              </select>
+            </SearchField>
+            <SearchField label="Job type" className="bg-white">
+              <select name="type" defaultValue={type} className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#344054] outline-none">
+                <option value="">Any type</option>
+                {jobTypes.map((item) => <option key={item} value={item}>{item}</option>)}
+              </select>
+            </SearchField>
+            <button type="submit" className="flex min-h-[68px] items-center justify-center gap-2 bg-[#d71920] px-5 text-[14px] font-bold text-white transition hover:bg-[#b9151b]">
+              Search jobs <ArrowRight className="h-4 w-4" />
             </button>
-          </div>
-        </form>
+          </form>
 
-        {hasFilters && (
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="mr-1 text-[12px] font-medium text-[#667085]">
-              Active filters
-            </span>
-
-            {q && (
-              <FilterChip
-                label={`Keyword: ${q}`}
-              />
-            )}
-
-            {location && (
-              <FilterChip
-                label={`Location: ${location}`}
-              />
-            )}
-
-            {category && (
-              <FilterChip
-                label={category}
-              />
-            )}
-
-            {type && (
-              <FilterChip
-                label={type}
-              />
-            )}
-
-            <Link
-              href="/jobs"
-              className="ml-1 inline-flex items-center gap-1.5 px-2 py-2 text-[12px] font-semibold text-[#475467] transition hover:text-[#e11d48]"
-            >
-              <X className="h-[14px] w-[14px]" />
-              Clear all
-            </Link>
-          </div>
-        )}
+          {hasFilters && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">Filtered by</span>
+              {q && <FilterChip label={`Keyword: ${q}`} />}
+              {location && <FilterChip label={`Location: ${location}`} />}
+              {category && <FilterChip label={category} />}
+              {type && <FilterChip label={type} />}
+              {company && <FilterChip label={`Company: ${company}`} />}
+              <Link href="/jobs" className="ml-1 inline-flex items-center gap-1.5 px-2 py-2 text-[12px] font-semibold text-white/70 hover:text-white">
+                <X className="h-3.5 w-3.5" /> Clear all
+              </Link>
+            </div>
+          )}
+        </div>
       </section>
 
-      {/* RESULTS */}
+      <section className="mx-auto max-w-[1360px] px-6 py-12 md:px-10 lg:py-16 xl:px-12">
+        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[240px_minmax(0,1fr)_280px]">
+          <aside className="hidden border-t-4 border-[#d71920] bg-white xl:block">
+            <div className="border-b border-[#e4e7ec] p-5">
+              <div className="flex items-center gap-2 text-[#07182d]">
+                <SlidersHorizontal className="h-4 w-4" />
+                <h2 className="text-[14px] font-bold">Advanced filters</h2>
+              </div>
+              <p className="mt-2 text-[12px] leading-5 text-[#667085]">
+                Refine current vacancies using live sector and job-type counts.
+              </p>
+            </div>
 
-      <section className="mx-auto max-w-[1440px] px-6 pb-[100px] pt-[64px] md:px-10 xl:px-12">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <FilterGroup title="Sector">
+              {categories.map((item) => (
+                <Link
+                  key={item}
+                  href={filterHref("category", category === item ? "" : item)}
+                  className={`flex items-center justify-between gap-3 py-2.5 text-[12px] font-semibold transition ${
+                    category === item
+                      ? "text-[#d71920]"
+                      : "text-[#475467] hover:text-[#07182d]"
+                  }`}
+                >
+                  <span>{item}</span>
+                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3]">
+                    {categoryCounts.get(item) || 0}
+                  </span>
+                </Link>
+              ))}
+            </FilterGroup>
+
+            <FilterGroup title="Job type">
+              {jobTypes.map((item) => (
+                <Link
+                  key={item}
+                  href={filterHref("type", type === item ? "" : item)}
+                  className={`flex items-center justify-between gap-3 py-2.5 text-[12px] font-semibold transition ${
+                    type === item
+                      ? "text-[#d71920]"
+                      : "text-[#475467] hover:text-[#07182d]"
+                  }`}
+                >
+                  <span>{item}</span>
+                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3]">
+                    {typeCounts.get(item) || 0}
+                  </span>
+                </Link>
+              ))}
+            </FilterGroup>
+
+            {hasFilters && (
+              <div className="border-t border-[#e4e7ec] p-5">
+                <Link
+                  href="/jobs"
+                  className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Reset all filters
+                </Link>
+              </div>
+            )}
+          </aside>
+
           <div>
-            <div className="flex items-end justify-between gap-6 border-b border-[#e4e7ec] pb-6">
+            <div className="flex flex-col gap-4 border-b border-[#cfd5dc] pb-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <div className="flex items-center gap-2 text-[12px] font-semibold text-[#175cd3]">
-                  <SlidersHorizontal className="h-[15px] w-[15px]" />
-
-                  {hasFilters
-                    ? "Search results"
-                    : "Current vacancies"}
-                </div>
-
-                <h2 className="mt-2 text-[30px] font-bold tracking-[-1px] text-[#101828]">
-                  {hasFilters
-                    ? "Jobs matching your search"
-                    : "Latest jobs"}
+                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">{hasFilters ? "Search results" : "Latest vacancies"}</p>
+                <h2 className="mt-2 text-[30px] font-bold tracking-[-1px] text-[#07182d] sm:text-[34px]">
+                  {hasFilters ? "Roles matching your search" : "Open roles, newest first"}
                 </h2>
               </div>
-
-              <div className="shrink-0 text-right">
-                <p className="text-[22px] font-bold tracking-[-0.5px] text-[#101828]">
-                  {jobs.length}
-                </p>
-
-                <p className="text-[12px] text-[#98a2b3]">
-                  {jobs.length === 1
-                    ? "vacancy"
-                    : "vacancies"}
-                </p>
-              </div>
+              <p className="text-[13px] font-semibold text-[#667085]">{jobs.length} {jobs.length === 1 ? "vacancy" : "vacancies"}</p>
             </div>
 
             {jobs.length === 0 ? (
-              <div className="mt-6 rounded-[16px] border border-[#e4e7ec] bg-white px-8 py-[80px] text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#f2f4f7]">
-                  <BriefcaseBusiness className="h-6 w-6 text-[#667085]" />
-                </div>
-
-                <h3 className="mt-5 text-[20px] font-semibold text-[#101828]">
-                  No jobs found
-                </h3>
-
-                <p className="mx-auto mt-2 max-w-[420px] text-[14px] leading-6 text-[#667085]">
-                  Try changing your keyword,
-                  location or filters.
-                </p>
-
-                {hasFilters && (
-                  <Link
-                    href="/jobs"
-                    className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-[8px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f9fafb]"
-                  >
-                    Clear filters
-                  </Link>
-                )}
+              <div className="mt-6 border border-[#dfe3e8] bg-white px-7 py-16 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center bg-[#f1f3f5] text-[#667085]"><BriefcaseBusiness className="h-5 w-5" /></div>
+                <h3 className="mt-5 text-[20px] font-bold text-[#07182d]">No vacancies match these filters</h3>
+                <p className="mx-auto mt-2 max-w-[430px] text-[14px] leading-6 text-[#667085]">Try a broader keyword, another location or remove one of the filters to see more current roles.</p>
+                {hasFilters && <Link href="/jobs" className="mt-6 inline-flex min-h-[44px] items-center justify-center border border-[#cfd5dc] bg-white px-5 text-[13px] font-bold text-[#07182d] hover:bg-[#f8f9fa]">Reset search</Link>}
               </div>
             ) : (
-              <div className="mt-6 space-y-4">
+              <div className="divide-y divide-[#e1e5e9] border-b border-[#e1e5e9]">
                 {jobs.map((job) => (
-                  <Link
-                    key={job.id}
-                    href={`/jobs/${job.slug}`}
-                    className="group block rounded-[16px] border border-[#e1e5eb] bg-white p-6 transition duration-200 hover:-translate-y-[1px] hover:border-[#cbd2dc] hover:shadow-[0_14px_35px_rgba(16,24,40,.07)] md:p-7"
-                  >
-                    <div className="flex items-start gap-5">
-                      <div className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-[12px] border border-[#e4e7ec] bg-[#f8fafc] text-[14px] font-bold text-[#344054]">
-                        {initials(
-                          job.company_name
-                        )}
+                  <Link key={job.id} href={`/jobs/${job.slug}`} className="group grid gap-5 bg-white px-5 py-6 transition hover:bg-[#fbfbfa] sm:grid-cols-[56px_minmax(0,1fr)_36px] sm:px-6">
+                    <div className="flex h-14 w-14 items-center justify-center border border-[#dfe3e8] bg-[#f6f7f8] text-[13px] font-bold text-[#07182d]">{initials(job.company_name)}</div>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-[19px] font-bold tracking-[-0.35px] text-[#07182d] group-hover:text-[#d71920]">{job.title}</h3>
+                        <ShieldCheck className="h-4 w-4 shrink-0 text-[#0b6b4b]" />
                       </div>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-5">
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h3 className="truncate text-[20px] font-semibold tracking-[-0.4px] text-[#101828] transition group-hover:text-[#175cd3]">
-                                {job.title}
-                              </h3>
-
-                              <ShieldCheck className="h-[17px] w-[17px] shrink-0 text-[#175cd3]" />
-                            </div>
-
-                            <p className="mt-1.5 text-[14px] font-semibold text-[#475467]">
-                              {job.company_name}
-                            </p>
-                          </div>
-
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f8fafc] text-[#98a2b3] transition group-hover:bg-[#eef4ff] group-hover:text-[#175cd3]">
-                            <ChevronRight className="h-5 w-5" />
-                          </div>
-                        </div>
-
-                        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-                          <span className="flex items-center gap-1.5 text-[13px] text-[#667085]">
-                            <MapPin className="h-4 w-4" />
-                            {job.location}
-                          </span>
-
-                          {job.salary && (
-                            <span className="text-[13px] font-semibold text-[#344054]">
-                              {job.salary}
-                            </span>
-                          )}
-
-                          <span className="rounded-full border border-[#dbe7fb] bg-[#f2f7ff] px-3 py-1.5 text-[11px] font-semibold text-[#175cd3]">
-                            {job.job_type}
-                          </span>
-
-                          <span className="rounded-full bg-[#f2f4f7] px-3 py-1.5 text-[11px] font-semibold text-[#475467]">
-                            {job.category}
-                          </span>
-                        </div>
-
-                        <div className="mt-5 flex items-center justify-between border-t border-[#f0f2f5] pt-4">
-                          <span className="flex items-center gap-1.5 text-[12px] text-[#98a2b3]">
-                            <Clock3 className="h-[14px] w-[14px]" />
-                            Posted{" "}
-                            {timeAgo(
-                              job.created_at
-                            )}
-                          </span>
-
-                          <span className="hidden items-center gap-1.5 text-[12px] font-semibold text-[#175cd3] sm:flex">
-                            View job
-                            <ArrowRight className="h-[14px] w-[14px]" />
-                          </span>
-                        </div>
+                      <p className="mt-1 text-[13px] font-semibold text-[#475467]">{job.company_name}</p>
+                      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#667085]">
+                        <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{job.location}</span>
+                        <span>{job.job_type}</span><span>{job.category}</span>
+                        {job.salary && <span className="font-semibold text-[#344054]">{job.salary}</span>}
                       </div>
+                      <div className="mt-4 flex items-center gap-1.5 text-[11px] text-[#98a2b3]"><Clock3 className="h-3.5 w-3.5" />Posted {timeAgo(job.created_at)}</div>
                     </div>
+                    <div className="hidden h-9 w-9 items-center justify-center self-center border border-[#dfe3e8] text-[#667085] transition group-hover:border-[#d71920] group-hover:text-[#d71920] sm:flex"><ChevronRight className="h-4 w-4" /></div>
                   </Link>
                 ))}
               </div>
             )}
           </div>
 
-          {/* SIDE */}
-
-          <aside className="space-y-4 lg:sticky lg:top-[105px]">
-            <div className="rounded-[16px] border border-[#e4e7ec] bg-white p-6">
-              <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-[#f2f4f7] text-[#344054]">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-
-              <h3 className="mt-6 text-[19px] font-semibold tracking-[-0.3px] text-[#101828]">
-                Employer information
-              </h3>
-
-              <p className="mt-3 text-[13px] leading-6 text-[#667085]">
-                Company information is
-                checked before employer
-                posting access is enabled.
-              </p>
-
-              <div className="mt-6 border-t border-[#eaecf0] pt-5">
-                <InfoRow text="Company details" />
-                <InfoRow text="Current vacancies" />
-                <InfoRow text="Application details" />
+          <aside className="space-y-6 lg:sticky lg:top-[104px]">
+            <div className="border-t-4 border-[#07182d] bg-white p-6">
+              <ShieldCheck className="h-5 w-5 text-[#0b6b4b]" />
+              <h3 className="mt-5 text-[18px] font-bold text-[#07182d]">Before you apply</h3>
+              <p className="mt-3 text-[13px] leading-6 text-[#667085]">Read the full vacancy, confirm the employer and check where the application link or email will take you.</p>
+              <div className="mt-5 border-t border-[#e4e7ec] pt-4">
+                <InfoRow text="Review role and location" />
+                <InfoRow text="Check application method" />
+                <InfoRow text="Never pay to secure a job" />
               </div>
             </div>
 
-            <div
-              className="rounded-[16px] p-6"
-              style={{
-                backgroundColor:
-                  "#07182d",
-              }}
-            >
-              <Building2
-                className="h-6 w-6"
-                style={{
-                  color:
-                    "rgba(255,255,255,.72)",
-                }}
-              />
-
-              <p
-                className="mt-6 text-[12px] font-semibold uppercase tracking-[0.08em]"
-                style={{
-                  color:
-                    "rgba(255,255,255,.48)",
-                }}
-              >
-                Employers
-              </p>
-
-              <h3
-                className="mt-2 text-[22px] font-semibold tracking-[-0.5px]"
-                style={{
-                  color: "#ffffff",
-                }}
-              >
-                Hiring?
-              </h3>
-
-              <p
-                className="mt-3 text-[13px] leading-6"
-                style={{
-                  color:
-                    "rgba(255,255,255,.62)",
-                }}
-              >
-                Create an employer account
-                to publish and manage your
-                vacancies.
-              </p>
-
-              <Link
-                href={
-                  accountType ===
-                  "employer"
-                    ? "/post-job"
-                    : "/signup"
-                }
-                className="mt-6 flex min-h-[46px] items-center justify-center gap-2 rounded-[8px] bg-white px-4 text-[13px] font-semibold"
-                style={{
-                  color: "#07182d",
-                }}
-              >
-                Post a job
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="border-l-4 border-[#d71920] bg-[#07182d] p-6 text-white">
+              <Building2 className="h-5 w-5 text-white/70" />
+              <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">For employers</p>
+              <h3 className="mt-2 text-[21px] font-bold text-white">Recruiting in the UK?</h3>
+              <p className="mt-3 text-[13px] leading-6 text-white/65">Complete the employer checks, publish a clear vacancy and manage it from your account.</p>
+              <Link href={accountType === "employer" ? "/post-job" : "/signup"} className="mt-6 inline-flex items-center gap-2 border border-white/20 px-4 py-3 text-[12px] font-bold text-white hover:bg-white/10">Post a vacancy <ArrowRight className="h-3.5 w-3.5" /></Link>
             </div>
           </aside>
         </div>
@@ -718,27 +532,36 @@ export default async function JobsPage({
   );
 }
 
-function FilterChip({
-  label,
+function FilterGroup({
+  title,
+  children,
 }: {
-  label: string;
+  title: string;
+  children: React.ReactNode;
 }) {
   return (
-    <span className="inline-flex min-h-[34px] items-center rounded-full border border-[#e4e7ec] bg-white px-3.5 text-[12px] font-medium text-[#475467]">
-      {label}
-    </span>
+    <div className="border-b border-[#e4e7ec] p-5">
+      <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#98a2b3]">
+        {title}
+      </p>
+      <div>{children}</div>
+    </div>
   );
 }
 
-function InfoRow({
-  text,
-}: {
-  text: string;
-}) {
+function SearchField({ icon: Icon, label, children, className = "" }: { icon?: typeof Search; label: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className="mt-3 flex first:mt-0 items-center gap-2.5 text-[13px] font-medium text-[#475467]">
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#175cd3]" />
-      {text}
-    </div>
+    <label className={`flex min-h-[68px] items-center gap-3 px-4 ${className}`}>
+      {Icon && <Icon className="h-4 w-4 shrink-0 text-[#667085]" />}
+      <span className="min-w-0 flex-1"><span className="block text-[9px] font-bold uppercase tracking-[0.13em] text-[#98a2b3]">{label}</span>{children}</span>
+    </label>
   );
+}
+
+function FilterChip({ label }: { label: string }) {
+  return <span className="inline-flex min-h-[30px] items-center border border-white/15 bg-white/10 px-3 text-[11px] font-semibold text-white/80">{label}</span>;
+}
+
+function InfoRow({ text }: { text: string }) {
+  return <div className="mt-3 flex first:mt-0 items-center gap-2.5 text-[12px] font-semibold text-[#475467]"><span className="h-1.5 w-1.5 shrink-0 bg-[#d71920]" />{text}</div>;
 }

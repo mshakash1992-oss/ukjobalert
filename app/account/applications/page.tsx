@@ -158,8 +158,18 @@ export default async function ApplicationsPage() {
     );
 
   return (
-    <main className="min-h-screen bg-[#f8fafc]">
-      <MainHeader />
+    <main className="min-h-screen bg-[#f7f8fa]">
+      <MainHeader
+        loggedIn
+        displayName={
+          user.user_metadata?.full_name?.trim() ||
+          "Account"
+        }
+        accountType={
+          user.user_metadata?.account_type ||
+          "job_seeker"
+        }
+      />
 
       {/* HERO */}
 
@@ -169,7 +179,7 @@ export default async function ApplicationsPage() {
         <div className="relative mx-auto max-w-[1180px] px-6 py-14 sm:px-8 lg:px-10 lg:py-16">
           <Link
             href="/account"
-            className="inline-flex items-center gap-2 text-[12px] font-bold text-[#9ec2ff] transition hover:text-white"
+            className="inline-flex items-center gap-2 text-[12px] font-bold text-[#f3b4bc] transition hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to account
@@ -178,9 +188,9 @@ export default async function ApplicationsPage() {
           <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div className="flex items-center gap-2.5">
-                <div className="h-[2px] w-7 bg-[#3b82f6]" />
+                <div className="h-[2px] w-7 bg-[#d71920]" />
 
-                <p className="text-[11px] font-bold uppercase tracking-[0.17em] text-[#9ec2ff]">
+                <p className="text-[11px] font-bold uppercase tracking-[0.17em] text-[#f3b4bc]">
                   Job seeker
                 </p>
               </div>
@@ -243,7 +253,7 @@ export default async function ApplicationsPage() {
                       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-3">
-                            <h3 className="text-[18px] font-bold tracking-[-0.3px] text-[#101828] transition group-hover:text-[#175cd3]">
+                            <h3 className="text-[18px] font-bold tracking-[-0.3px] text-[#101828] transition group-hover:text-[#d71920]">
                               {job.title}
                             </h3>
 
@@ -286,7 +296,7 @@ export default async function ApplicationsPage() {
                           )}
                         </div>
 
-                        <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#98a2b3] transition group-hover:translate-x-1 group-hover:text-[#175cd3]" />
+                        <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#98a2b3] transition group-hover:translate-x-1 group-hover:text-[#d71920]" />
                       </div>
                     </Link>
                   )
@@ -295,8 +305,8 @@ export default async function ApplicationsPage() {
             </div>
           ) : (
             <div className="border border-[#e4e7ec] bg-white px-7 py-16 text-center sm:px-8">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#eef4ff]">
-                <BriefcaseBusiness className="h-6 w-6 text-[#175cd3]" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#fff5f4]">
+                <BriefcaseBusiness className="h-6 w-6 text-[#d71920]" />
               </div>
 
               <h2 className="mt-6 text-[21px] font-bold tracking-[-0.4px] text-[#101828]">
@@ -311,7 +321,7 @@ export default async function ApplicationsPage() {
 
               <Link
                 href="/jobs"
-                className="mt-7 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-[7px] bg-[#175cd3] px-6 text-[13px] font-bold text-white transition hover:bg-[#1849a9]"
+                className="mt-7 inline-flex min-h-[46px] items-center justify-center gap-2 rounded-[7px] bg-[#d71920] px-6 text-[13px] font-bold text-white transition hover:bg-[#b91319]"
               >
                 Find jobs
                 <ArrowRight className="h-4 w-4" />

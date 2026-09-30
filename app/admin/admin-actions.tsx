@@ -147,7 +147,7 @@ export default function AdminActions({
 
   return (
     <div className="mt-6 border-t border-slate-200 pt-6">
-      <h4 className="font-black text-[#071b3d]">
+      <h4 className="font-black text-[#07182d]">
         Admin Decision
       </h4>
 
@@ -165,11 +165,11 @@ export default function AdminActions({
         }
         rows={3}
         placeholder="Rejection reason..."
-        className="mt-4 w-full resize-none rounded-xl border border-slate-200 bg-white p-4 text-sm outline-none transition focus:border-blue-500"
+        className="mt-4 w-full resize-none rounded-[8px] border border-slate-200 bg-white p-4 text-sm outline-none transition focus:border-[#d71920]"
       />
 
       {error && (
-        <div className="mt-4 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
+        <div className="mt-4 flex gap-3 rounded-[8px] border border-red-200 bg-red-50 p-4">
           <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
 
           <p className="text-sm font-semibold text-red-700">
@@ -179,7 +179,7 @@ export default function AdminActions({
       )}
 
       {success && (
-        <div className="mt-4 flex gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+        <div className="mt-4 flex gap-3 rounded-[8px] border border-emerald-200 bg-emerald-50 p-4">
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
 
           <p className="text-sm font-semibold text-emerald-700">
@@ -199,7 +199,7 @@ export default function AdminActions({
               "approve"
             )
           }
-          className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-[8px] bg-emerald-600 px-5 py-3.5 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ===
           "approve" ? (
@@ -221,7 +221,7 @@ export default function AdminActions({
               "reject"
             )
           }
-          className="flex items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-3.5 font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-[8px] bg-red-600 px-5 py-3.5 font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ===
           "reject" ? (

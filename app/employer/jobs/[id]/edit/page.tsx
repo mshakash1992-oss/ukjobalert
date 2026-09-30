@@ -174,7 +174,7 @@ export default async function EditJobPage({
                     "rgba(255,255,255,.58)",
                 }}
               >
-                <span className="h-[2px] w-8 bg-[#e11d48]" />
+                <span className="h-[2px] w-8 bg-[#d71920]" />
                 Employer dashboard
               </div>
 
@@ -201,7 +201,7 @@ export default async function EditJobPage({
             </div>
 
             <div
-              className="flex items-center gap-3 rounded-[10px] border px-4 py-3"
+              className="flex items-center gap-3 rounded-[8px] border px-4 py-3"
               style={{
                 borderColor:
                   "rgba(255,255,255,.12)",
@@ -212,7 +212,7 @@ export default async function EditJobPage({
               <Pencil
                 className="h-[17px] w-[17px]"
                 style={{
-                  color: "#8ab4ff",
+                  color: "#f3b4bc",
                 }}
               />
 
@@ -238,8 +238,8 @@ export default async function EditJobPage({
           {/* FORM */}
 
           <div>
-            <div className="mb-6 flex items-center gap-4 rounded-[14px] border border-[#dce2ea] bg-white p-5">
-              <div className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-[11px] bg-[#f2f4f7] text-[#344054]">
+            <div className="mb-6 flex items-center gap-4 rounded-[8px] border border-[#dce2ea] bg-white p-5">
+              <div className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-[8px] bg-[#f2f4f7] text-[#344054]">
                 <Building2 className="h-[22px] w-[22px]" />
               </div>
 
@@ -249,7 +249,7 @@ export default async function EditJobPage({
                     {verification.company_name}
                   </p>
 
-                  <ShieldCheck className="h-[17px] w-[17px] shrink-0 text-[#175cd3]" />
+                  <ShieldCheck className="h-[17px] w-[17px] shrink-0 text-[#d71920]" />
                 </div>
 
                 <p className="mt-1 text-[12px] text-[#667085]">
@@ -258,14 +258,14 @@ export default async function EditJobPage({
                 </p>
               </div>
 
-              <div className="hidden rounded-full border border-[#dbe7fb] bg-[#f2f7ff] px-3 py-1.5 text-[11px] font-semibold text-[#175cd3] sm:block">
+              <div className="hidden rounded-full border border-[#f1d2d4] bg-[#fff7f6] px-3 py-1.5 text-[11px] font-semibold text-[#d71920] sm:block">
                 Approved
               </div>
             </div>
 
-            <div className="rounded-[16px] border border-[#e1e5eb] bg-white p-6 shadow-[0_4px_18px_rgba(16,24,40,.03)] md:p-8">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-6 shadow-[0_4px_18px_rgba(16,24,40,.03)] md:p-8">
               <div className="border-b border-[#eaecf0] pb-6">
-                <p className="text-[12px] font-semibold text-[#175cd3]">
+                <p className="text-[12px] font-semibold text-[#d71920]">
                   Vacancy details
                 </p>
 
@@ -324,14 +324,14 @@ export default async function EditJobPage({
 
           <aside className="space-y-4 lg:sticky lg:top-[105px]">
             <div
-              className="rounded-[16px] p-7 shadow-[0_24px_55px_rgba(7,24,45,.12)]"
+              className="rounded-[8px] p-7 shadow-[0_24px_55px_rgba(7,24,45,.12)]"
               style={{
                 backgroundColor:
                   "#07182d",
               }}
             >
               <div
-                className="flex h-11 w-11 items-center justify-center rounded-[10px]"
+                className="flex h-11 w-11 items-center justify-center rounded-[8px]"
                 style={{
                   backgroundColor:
                     "rgba(255,255,255,.09)",
@@ -418,7 +418,7 @@ export default async function EditJobPage({
               </div>
             </div>
 
-            <div className="rounded-[16px] border border-[#e4e7ec] bg-white p-6">
+            <div className="rounded-[8px] border border-[#e4e7ec] bg-white p-6">
               <h3 className="text-[16px] font-semibold text-[#101828]">
                 Before saving
               </h3>
@@ -439,7 +439,7 @@ export default async function EditJobPage({
 
             <Link
               href="/employer/jobs"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-[9px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f9fafb]"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-[8px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f9fafb]"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to my jobs
@@ -458,7 +458,7 @@ function CheckItem({
 }) {
   return (
     <div className="mt-3 flex first:mt-0 items-start gap-2.5">
-      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#175cd3]" />
+      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#d71920]" />
 
       <span className="text-[12px] leading-5 text-[#667085]">
         {text}

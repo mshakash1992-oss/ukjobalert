@@ -175,8 +175,8 @@ export default function PostJobForm() {
 
         <FormSection
           number="01"
-          title="Role information"
-          description="Add the main information candidates will see first."
+          title="Role basics"
+          description="Start with the details candidates use to decide whether a role is relevant."
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
@@ -184,7 +184,7 @@ export default function PostJobForm() {
                 Job title
               </FieldLabel>
 
-              <div className="group flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="group flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
                 <BriefcaseBusiness className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <input
@@ -206,7 +206,7 @@ export default function PostJobForm() {
                 Sector
               </FieldLabel>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
                 <Tags className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <select
@@ -250,7 +250,7 @@ export default function PostJobForm() {
                     event.target.value
                   )
                 }
-                className="min-h-[54px] w-full rounded-[9px] border border-[#d0d5dd] bg-white px-4 text-[14px] font-medium text-[#344054] outline-none transition focus:border-[#175cd3] focus:ring-[3px] focus:ring-[#175cd3]/10"
+                className="min-h-[54px] w-full border border-[#cfd5dc] bg-white px-4 text-[14px] font-medium text-[#344054] outline-none transition focus:border-[#d71920] focus:ring-[2px] focus:ring-[#d71920]/10"
               >
                 <option value="">
                   Select job type
@@ -274,7 +274,7 @@ export default function PostJobForm() {
                 Location
               </FieldLabel>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
                 <MapPin className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <input
@@ -302,7 +302,7 @@ export default function PostJobForm() {
                 </span>
               </div>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
                 <Banknote className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <input
@@ -325,7 +325,7 @@ export default function PostJobForm() {
         <FormSection
           number="02"
           title="Job description"
-          description="Explain the role, responsibilities, requirements and other important details."
+          description="Describe the work clearly, including responsibilities, requirements and useful context."
         >
           <FieldLabel>
             Description
@@ -341,7 +341,7 @@ export default function PostJobForm() {
             }
             rows={11}
             placeholder="Describe the role, responsibilities, requirements and benefits..."
-            className="w-full resize-y rounded-[10px] border border-[#d0d5dd] bg-white p-4 text-[14px] leading-7 text-[#344054] outline-none transition placeholder:text-[#98a2b3] focus:border-[#175cd3] focus:ring-[3px] focus:ring-[#175cd3]/10"
+            className="w-full resize-y border border-[#cfd5dc] bg-white p-4 text-[14px] leading-7 text-[#344054] outline-none transition placeholder:text-[#98a2b3] focus:border-[#d71920] focus:ring-[2px] focus:ring-[#d71920]/10"
           />
 
           <div className="mt-2 flex items-center justify-between gap-4">
@@ -360,13 +360,13 @@ export default function PostJobForm() {
         <FormSection
           number="03"
           title="Listing duration"
-          description="Choose how long this vacancy should remain available."
+          description="Set how long the vacancy should remain visible to job seekers."
         >
           <FieldLabel>
             Job expiry
           </FieldLabel>
 
-          <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+          <div className="flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
             <CalendarClock className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
             <select
@@ -412,7 +412,7 @@ export default function PostJobForm() {
         <FormSection
           number="04"
           title="Applications"
-          description="Choose where candidates should send their application."
+          description="Choose the exact route candidates should use when they are ready to apply."
         >
           <FieldLabel>
             Application method
@@ -426,18 +426,18 @@ export default function PostJobForm() {
                   "email"
                 )
               }
-              className={`flex min-h-[64px] items-center gap-3 rounded-[10px] border px-4 text-left transition ${
+              className={`flex min-h-[64px] items-center gap-3 border px-4 text-left transition ${
                 applyMethod ===
                 "email"
-                  ? "border-[#175cd3] bg-[#f2f7ff] shadow-[0_0_0_3px_rgba(23,92,211,.08)]"
+                  ? "border-[#d71920] bg-[#fff6f6] shadow-[0_0_0_2px_rgba(215,25,32,.08)]"
                   : "border-[#d0d5dd] bg-white hover:border-[#98a2b3]"
               }`}
             >
               <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] ${
+                className={`flex h-9 w-9 shrink-0 items-center justify-center  ${
                   applyMethod ===
                   "email"
-                    ? "bg-[#175cd3] text-white"
+                    ? "bg-[#d71920] text-white"
                     : "bg-[#f2f4f7] text-[#667085]"
                 }`}
               >
@@ -463,18 +463,18 @@ export default function PostJobForm() {
                   "url"
                 )
               }
-              className={`flex min-h-[64px] items-center gap-3 rounded-[10px] border px-4 text-left transition ${
+              className={`flex min-h-[64px] items-center gap-3 border px-4 text-left transition ${
                 applyMethod ===
                 "url"
-                  ? "border-[#175cd3] bg-[#f2f7ff] shadow-[0_0_0_3px_rgba(23,92,211,.08)]"
+                  ? "border-[#d71920] bg-[#fff6f6] shadow-[0_0_0_2px_rgba(215,25,32,.08)]"
                   : "border-[#d0d5dd] bg-white hover:border-[#98a2b3]"
               }`}
             >
               <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] ${
+                className={`flex h-9 w-9 shrink-0 items-center justify-center  ${
                   applyMethod ===
                   "url"
-                    ? "bg-[#175cd3] text-white"
+                    ? "bg-[#d71920] text-white"
                     : "bg-[#f2f4f7] text-[#667085]"
                 }`}
               >
@@ -502,7 +502,7 @@ export default function PostJobForm() {
                   Application email
                 </FieldLabel>
 
-                <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                <div className="flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
                   <Mail className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                   <input
@@ -525,7 +525,7 @@ export default function PostJobForm() {
                   Application URL
                 </FieldLabel>
 
-                <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                <div className="flex min-h-[54px] items-center border border-[#cfd5dc] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[2px] focus-within:ring-[#d71920]/10">
                   <Globe2 className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                   <input
@@ -575,19 +575,18 @@ export default function PostJobForm() {
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div>
             <p className="text-[13px] font-semibold text-[#101828]">
-              Ready to publish?
+              Final check before publishing
             </p>
 
             <p className="mt-1 text-[11px] leading-5 text-[#667085]">
-              Review the information above
-              before publishing.
+              Confirm the role details and application route are accurate before the vacancy goes live.
             </p>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="flex min-h-[50px] min-w-[180px] items-center justify-center gap-2.5 rounded-[8px] bg-[#e11d48] px-6 text-[14px] font-semibold transition hover:bg-[#be123c] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[50px] min-w-[180px] items-center justify-center gap-2.5  bg-[#d71920] px-6 text-[14px] font-semibold transition hover:bg-[#b9151b] disabled:cursor-not-allowed disabled:opacity-50"
             style={{
               color: "#ffffff",
             }}
@@ -622,7 +621,7 @@ function FormSection({
   return (
     <section>
       <div className="mb-5 flex items-start gap-4">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#07182d] text-[11px] font-bold text-white">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center bg-[#07182d] text-[11px] font-bold text-white">
           {number}
         </div>
 

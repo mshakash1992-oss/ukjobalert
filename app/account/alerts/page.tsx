@@ -84,8 +84,18 @@ export default async function JobAlertsPage() {
     ).length;
 
   return (
-    <main className="min-h-screen bg-[#f8fafc]">
-      <MainHeader />
+    <main className="min-h-screen bg-[#f7f8fa]">
+      <MainHeader
+        loggedIn
+        displayName={
+          user.user_metadata?.full_name?.trim() ||
+          "Account"
+        }
+        accountType={
+          user.user_metadata?.account_type ||
+          "job_seeker"
+        }
+      />
 
       {/* HERO */}
 
@@ -106,12 +116,12 @@ export default async function JobAlertsPage() {
           </Link>
 
           <div className="mt-9 flex items-center gap-2.5">
-            <div className="h-[2px] w-7 bg-[#3b82f6]" />
+            <div className="h-[2px] w-7 bg-[#d71920]" />
 
             <p
               className="text-[11px] font-bold uppercase tracking-[0.17em]"
               style={{
-                color: "#9ec2ff",
+                color: "#f3b4bc",
               }}
             >
               Job seeker tools
@@ -155,8 +165,8 @@ export default async function JobAlertsPage() {
             <div className="border border-[#e4e7ec] bg-white">
               <div className="border-b border-[#e4e7ec] px-7 py-7 sm:px-8">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-[9px] bg-[#eef4ff]">
-                    <BellRing className="h-5 w-5 text-[#175cd3]" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+                    <BellRing className="h-5 w-5 text-[#d71920]" />
                   </div>
 
                   <div>
@@ -197,7 +207,7 @@ export default async function JobAlertsPage() {
                         type="text"
                         maxLength={100}
                         placeholder="e.g. Software Engineer"
-                        className="min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white py-3 pl-11 pr-4 text-[13px] text-[#101828] outline-none transition placeholder:text-[#98a2b3] focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10"
+                        className="min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white py-3 pl-11 pr-4 text-[13px] text-[#101828] outline-none transition placeholder:text-[#98a2b3] focus:border-[#d71920] focus:ring-2 focus:ring-[#d71920]/10"
                       />
                     </div>
                   </div>
@@ -221,7 +231,7 @@ export default async function JobAlertsPage() {
                         type="text"
                         maxLength={100}
                         placeholder="e.g. London"
-                        className="min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white py-3 pl-11 pr-4 text-[13px] text-[#101828] outline-none transition placeholder:text-[#98a2b3] focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10"
+                        className="min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white py-3 pl-11 pr-4 text-[13px] text-[#101828] outline-none transition placeholder:text-[#98a2b3] focus:border-[#d71920] focus:ring-2 focus:ring-[#d71920]/10"
                       />
                     </div>
                   </div>
@@ -240,7 +250,7 @@ export default async function JobAlertsPage() {
                       id="category"
                       name="category"
                       defaultValue=""
-                      className="mt-2 min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[13px] text-[#344054] outline-none transition focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10"
+                      className="mt-2 min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[13px] text-[#344054] outline-none transition focus:border-[#d71920] focus:ring-2 focus:ring-[#d71920]/10"
                     >
                       <option value="">
                         Any category
@@ -310,7 +320,7 @@ export default async function JobAlertsPage() {
                       id="job_type"
                       name="job_type"
                       defaultValue=""
-                      className="mt-2 min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[13px] text-[#344054] outline-none transition focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10"
+                      className="mt-2 min-h-[50px] w-full rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[13px] text-[#344054] outline-none transition focus:border-[#d71920] focus:ring-2 focus:ring-[#d71920]/10"
                     >
                       <option value="">
                         Any job type
@@ -342,7 +352,7 @@ export default async function JobAlertsPage() {
                 <div className="mt-7 border-t border-[#eaecf0] pt-6">
                   <button
                     type="submit"
-                    className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-[7px] bg-[#175cd3] px-6 text-[13px] font-bold text-white transition hover:bg-[#154fb7]"
+                    className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-[7px] bg-[#d71920] px-6 text-[13px] font-bold text-white transition hover:bg-[#b91319]"
                   >
                     <Bell className="h-4 w-4" />
                     Create job alert
@@ -365,7 +375,7 @@ export default async function JobAlertsPage() {
                   </h2>
                 </div>
 
-                <div className="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#eef4ff] px-3 text-[12px] font-bold text-[#175cd3]">
+                <div className="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#fff5f4] px-3 text-[12px] font-bold text-[#d71920]">
                   {alerts.length}
                 </div>
               </div>
@@ -462,7 +472,7 @@ export default async function JobAlertsPage() {
               <BellRing
                 className="h-7 w-7"
                 style={{
-                  color: "#7fb0ff",
+                  color: "#f3b4bc",
                 }}
               />
 
@@ -551,7 +561,7 @@ function InfoItem({
       <CheckCircle2
         className="h-4 w-4 shrink-0"
         style={{
-          color: "#7fb0ff",
+          color: "#f3b4bc",
         }}
       />
 

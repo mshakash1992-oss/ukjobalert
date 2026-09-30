@@ -10,12 +10,12 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import MainHeader from "@/components/main-header";
+import AuthMainHeader from "@/components/auth-main-header";
 
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-white">
-      <MainHeader />
+      <AuthMainHeader />
 
       {/* HERO */}
 
@@ -26,11 +26,11 @@ export default function ContactPage() {
           <div className="max-w-[820px]">
 
             <div className="flex items-center gap-2.5">
-              <div className="h-[2px] w-7 bg-[#3b82f6]" />
+              <div className="h-[2px] w-7 bg-[#d71920]" />
 
               <p
                 className="text-[12px] font-semibold uppercase tracking-[0.18em]"
-                style={{ color: "#9ec2ff" }}
+                style={{ color: "#f3b4bc" }}
               >
                 Contact
               </p>
@@ -66,7 +66,7 @@ export default function ContactPage() {
           <div className="grid gap-12 lg:grid-cols-[.72fr_1.28fr] lg:gap-24">
 
             <div>
-              <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#175cd3]">
+              <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
                 Get support
               </p>
 
@@ -123,15 +123,15 @@ export default function ContactPage() {
 
       {/* MESSAGE SECTION */}
 
-      <section className="bg-[#f8fafc]">
+      <section className="bg-[#f7f8fa]">
         <div className="mx-auto grid max-w-[1280px] gap-14 px-6 py-20 sm:px-8 lg:grid-cols-[.9fr_1.1fr] lg:gap-24 lg:px-10 lg:py-24">
 
           <div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#eef4ff]">
-              <MessageSquareText className="h-6 w-6 text-[#175cd3]" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+              <MessageSquareText className="h-6 w-6 text-[#d71920]" />
             </div>
 
-            <p className="mt-7 text-[12px] font-bold uppercase tracking-[0.16em] text-[#175cd3]">
+            <p className="mt-7 text-[12px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
               General enquiries
             </p>
 
@@ -153,7 +153,7 @@ export default function ContactPage() {
 
             <Mail
               className="h-7 w-7"
-              style={{ color: "#7fb0ff" }}
+              style={{ color: "#f3b4bc" }}
             />
 
             <p
@@ -224,7 +224,7 @@ export default function ContactPage() {
         <div className="mx-auto grid max-w-[1280px] gap-12 px-6 py-20 sm:px-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-24 lg:px-10 lg:py-24">
 
           <div>
-            <ShieldCheck className="h-8 w-8 text-[#175cd3]" />
+            <ShieldCheck className="h-8 w-8 text-[#d71920]" />
 
             <h2 className="mt-6 text-[34px] font-bold leading-[1.12] tracking-[-1.2px] text-[#101828]">
               Reporting a suspicious job.
@@ -239,7 +239,7 @@ export default function ContactPage() {
               be identified.
             </p>
 
-            <div className="mt-8 border-l-2 border-[#175cd3] pl-6">
+            <div className="mt-8 border-l-2 border-[#d71920] pl-6">
               <p className="max-w-[650px] text-[14px] leading-7 text-[#667085]">
                 If someone claiming to be an employer asks
                 you to send money, banking credentials,
@@ -255,7 +255,7 @@ export default function ContactPage() {
 
       {/* LEGAL LINKS */}
 
-      <section className="border-t border-[#e4e7ec] bg-[#f8fafc]">
+      <section className="border-t border-[#e4e7ec] bg-[#f7f8fa]">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-8 px-6 py-14 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-10">
 
           <div>
@@ -310,7 +310,7 @@ function ContactRoute({
   return (
     <div className="border-t border-[#d0d5dd] py-7">
 
-      <Icon className="h-6 w-6 text-[#175cd3]" />
+      <Icon className="h-6 w-6 text-[#d71920]" />
 
       <h3 className="mt-6 text-[19px] font-bold tracking-[-0.35px] text-[#101828]">
         {title}
@@ -322,7 +322,7 @@ function ContactRoute({
 
       <Link
         href={href}
-        className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-[#175cd3] transition hover:text-[#154fb7]"
+        className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-[#d71920] transition hover:text-[#b91319]"
       >
         {linkText}
         <ArrowRight className="h-4 w-4" />
@@ -340,7 +340,7 @@ function SupportPoint({
   return (
     <div className="flex items-start gap-3">
 
-      <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#7fb0ff]" />
+      <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#f3b4bc]" />
 
       <p
         className="text-[12px] leading-6"

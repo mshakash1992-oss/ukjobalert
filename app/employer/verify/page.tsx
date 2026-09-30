@@ -35,12 +35,12 @@ export default async function EmployerVerificationPage() {
   if (accountType !== "employer") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f7f8fa] px-5">
-        <div className="w-full max-w-[560px] rounded-[18px] border border-[#e1e5eb] bg-white p-8 text-center shadow-[0_20px_60px_rgba(16,24,40,.10)] sm:p-10">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[12px] bg-[#f2f4f7] text-[#344054]">
+        <div className="w-full max-w-[560px] rounded-[8px] border border-[#e1e5eb] bg-white p-8 text-center shadow-[0_8px_24px_rgba(16,24,40,.06)] sm:p-10">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[8px] bg-[#f2f4f7] text-[#344054]">
             <LockKeyhole className="h-6 w-6" />
           </div>
 
-          <p className="mt-7 text-[12px] font-semibold text-[#175cd3]">
+          <p className="mt-7 text-[12px] font-semibold text-[#d71920]">
             Employer verification
           </p>
 
@@ -144,7 +144,7 @@ export default async function EmployerVerificationPage() {
                     "rgba(255,255,255,.58)",
                 }}
               >
-                <span className="h-[2px] w-8 bg-[#e11d48]" />
+                <span className="h-[2px] w-8 bg-[#d71920]" />
 
                 Employer verification
               </div>
@@ -184,15 +184,15 @@ export default async function EmployerVerificationPage() {
           {/* FORM AREA */}
 
           <div>
-            <div className="rounded-[16px] border border-[#e1e5eb] bg-white p-6 shadow-[0_4px_18px_rgba(16,24,40,.03)] md:p-8">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-6 shadow-[0_4px_18px_rgba(16,24,40,.03)] md:p-8">
               <div className="border-b border-[#eaecf0] pb-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#f2f4f7] text-[#344054]">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-[#f2f4f7] text-[#344054]">
                     <Building2 className="h-5 w-5" />
                   </div>
 
                   <div>
-                    <p className="text-[12px] font-semibold text-[#175cd3]">
+                    <p className="text-[12px] font-semibold text-[#d71920]">
                       Company information
                     </p>
 
@@ -224,13 +224,13 @@ export default async function EmployerVerificationPage() {
 
           <aside className="space-y-4 lg:sticky lg:top-[105px]">
             <div
-              className="rounded-[16px] p-7 shadow-[0_24px_55px_rgba(7,24,45,.13)]"
+              className="rounded-[8px] p-7 shadow-[0_8px_24px_rgba(16,24,40,.07)]"
               style={{
                 backgroundColor: "#07182d",
               }}
             >
               <div
-                className="flex h-12 w-12 items-center justify-center rounded-[11px]"
+                className="flex h-12 w-12 items-center justify-center rounded-[8px]"
                 style={{
                   backgroundColor:
                     "rgba(255,255,255,.09)",
@@ -299,8 +299,8 @@ export default async function EmployerVerificationPage() {
               />
             </div>
 
-            <div className="rounded-[16px] border border-[#e1e5eb] bg-white p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-[#f2f4f7] text-[#475467]">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#f2f4f7] text-[#475467]">
                 <SearchCheck className="h-5 w-5" />
               </div>
 
@@ -318,7 +318,7 @@ export default async function EmployerVerificationPage() {
             {status === "verified" && (
               <Link
                 href="/post-job"
-                className="flex min-h-[50px] items-center justify-center gap-2 rounded-[9px] bg-[#e11d48] px-5 text-[13px] font-semibold transition hover:bg-[#be123c]"
+                className="flex min-h-[50px] items-center justify-center gap-2 rounded-[8px] bg-[#d71920] px-5 text-[13px] font-semibold transition hover:bg-[#b91319]"
                 style={{
                   color: "#ffffff",
                 }}
@@ -435,7 +435,7 @@ function CheckItem({
 }) {
   return (
     <div className="mt-3 flex first:mt-0 items-start gap-2.5">
-      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#175cd3]" />
+      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#d71920]" />
 
       <span className="text-[12px] leading-5 text-[#667085]">
         {text}

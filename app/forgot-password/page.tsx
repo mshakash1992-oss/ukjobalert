@@ -134,7 +134,7 @@ export default function ForgotPasswordPage() {
                 <ShieldCheck
                   className="h-4 w-4"
                   style={{
-                    color: "#dceaff",
+                    color: "#fde8e8",
                   }}
                 />
 
@@ -169,7 +169,7 @@ export default function ForgotPasswordPage() {
               </p>
 
               <div
-                className="mt-10 max-w-[570px] rounded-[13px] border p-5 backdrop-blur-[6px]"
+                className="mt-10 max-w-[570px] rounded-[8px] border p-5 backdrop-blur-[6px]"
                 style={{
                   borderColor:
                     "rgba(255,255,255,.28)",
@@ -178,7 +178,7 @@ export default function ForgotPasswordPage() {
                 }}
               >
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-[9px]"
+                  className="flex h-10 w-10 items-center justify-center rounded-[8px]"
                   style={{
                     backgroundColor:
                       "rgba(255,255,255,.16)",
@@ -253,14 +253,14 @@ export default function ForgotPasswordPage() {
 
             {/* CARD */}
 
-            <div className="rounded-[18px] border border-[#e1e5eb] bg-white p-7 shadow-[0_24px_65px_rgba(16,24,40,.08)] sm:p-10">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-7 shadow-[0_8px_24px_rgba(16,24,40,.06)] sm:p-10">
 
-              <div className="mx-auto flex h-[58px] w-[58px] items-center justify-center rounded-[14px] bg-[#f2f7ff]">
-                <KeyRound className="h-6 w-6 text-[#175cd3]" />
+              <div className="mx-auto flex h-[58px] w-[58px] items-center justify-center rounded-[8px] bg-[#fff7f6]">
+                <KeyRound className="h-6 w-6 text-[#d71920]" />
               </div>
 
               <div className="mt-6 text-center">
-                <p className="text-[12px] font-semibold text-[#175cd3]">
+                <p className="text-[12px] font-semibold text-[#d71920]">
                   Account recovery
                 </p>
 
@@ -277,7 +277,7 @@ export default function ForgotPasswordPage() {
               {/* ERROR */}
 
               {error && (
-                <div className="mt-6 rounded-[10px] border border-[#fecdca] bg-[#fef3f2] p-4">
+                <div className="mt-6 rounded-[8px] border border-[#fecdca] bg-[#fef3f2] p-4">
                   <p className="text-[12px] font-medium leading-5 text-[#b42318]">
                     {error}
                   </p>
@@ -287,7 +287,7 @@ export default function ForgotPasswordPage() {
               {/* SUCCESS */}
 
               {success && (
-                <div className="mt-6 flex items-start gap-3 rounded-[10px] border border-[#abefc6] bg-[#ecfdf3] p-4">
+                <div className="mt-6 flex items-start gap-3 rounded-[8px] border border-[#abefc6] bg-[#ecfdf3] p-4">
                   <CheckCircle2 className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#067647]" />
 
                   <div>
@@ -317,7 +317,7 @@ export default function ForgotPasswordPage() {
 
                 {/* EMAIL FIELD */}
 
-                <div className="group flex min-h-[54px] items-center overflow-hidden rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                <div className="group flex min-h-[54px] items-center overflow-hidden rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                   <Mail className="pointer-events-none h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -369,7 +369,7 @@ export default function ForgotPasswordPage() {
 
               <Link
                 href="/login"
-                className="mx-auto flex w-fit items-center gap-2 text-[13px] font-semibold text-[#175cd3] transition hover:text-[#154fb7]"
+                className="mx-auto flex w-fit items-center gap-2 text-[13px] font-semibold text-[#d71920] transition hover:text-[#b91319]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to login

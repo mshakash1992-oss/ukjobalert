@@ -42,8 +42,18 @@ export default async function AccountSettingsPage() {
   const email = user.email || "";
 
   return (
-    <main className="min-h-screen bg-[#f7f9fc]">
-      <MainHeader />
+    <main className="min-h-screen bg-[#f7f8fa]">
+      <MainHeader
+        loggedIn
+        displayName={
+          user.user_metadata?.full_name?.trim() ||
+          "Account"
+        }
+        accountType={
+          user.user_metadata?.account_type ||
+          "job_seeker"
+        }
+      />
 
       {/* HERO */}
 
@@ -63,12 +73,12 @@ export default async function AccountSettingsPage() {
           </Link>
 
           <div className="mt-9 flex items-center gap-2.5">
-            <div className="h-[2px] w-7 bg-[#3b82f6]" />
+            <div className="h-[2px] w-7 bg-[#d71920]" />
 
             <p
               className="text-[11px] font-bold uppercase tracking-[0.17em]"
               style={{
-                color: "#9ec2ff",
+                color: "#f3b4bc",
               }}
             >
               Account settings
@@ -111,8 +121,8 @@ export default async function AccountSettingsPage() {
             <div className="overflow-hidden border border-[#e4e7ec] bg-white">
               <div className="border-b border-[#e4e7ec] px-7 py-6 sm:px-8">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[9px] bg-[#eef4ff]">
-                    <UserRound className="h-5 w-5 text-[#175cd3]" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-[#fff5f4]">
+                    <UserRound className="h-5 w-5 text-[#d71920]" />
                   </div>
 
                   <div>
@@ -152,7 +162,7 @@ export default async function AccountSettingsPage() {
                       maxLength={100}
                       defaultValue={fullName}
                       autoComplete="name"
-                      className="min-h-[52px] w-full rounded-[7px] border border-[#d0d5dd] bg-white py-3 pl-11 pr-4 text-[14px] font-medium text-[#101828] outline-none transition placeholder:text-[#98a2b3] focus:border-[#175cd3] focus:ring-2 focus:ring-[#175cd3]/10"
+                      className="min-h-[52px] w-full rounded-[7px] border border-[#d0d5dd] bg-white py-3 pl-11 pr-4 text-[14px] font-medium text-[#101828] outline-none transition placeholder:text-[#98a2b3] focus:border-[#d71920] focus:ring-2 focus:ring-[#d71920]/10"
                     />
                   </div>
 
@@ -164,7 +174,7 @@ export default async function AccountSettingsPage() {
                   <div className="mt-7 flex items-center gap-4 border-t border-[#eaecf0] pt-6">
                     <button
                       type="submit"
-                      className="inline-flex min-h-[46px] items-center justify-center rounded-[7px] bg-[#175cd3] px-6 text-[13px] font-bold text-white transition hover:bg-[#154fb7]"
+                      className="inline-flex min-h-[46px] items-center justify-center rounded-[7px] bg-[#d71920] px-6 text-[13px] font-bold text-white transition hover:bg-[#b91319]"
                     >
                       Save changes
                     </button>
@@ -184,8 +194,8 @@ export default async function AccountSettingsPage() {
 
             <div className="border border-[#e4e7ec] bg-white px-7 py-7 sm:px-8 sm:py-8">
               <div className="flex items-start gap-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#f5f8ff]">
-                  <Mail className="h-[18px] w-[18px] text-[#175cd3]" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#f7f8fa]">
+                  <Mail className="h-[18px] w-[18px] text-[#d71920]" />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -219,8 +229,8 @@ export default async function AccountSettingsPage() {
 
             <div className="border border-[#e4e7ec] bg-white px-7 py-7 sm:px-8 sm:py-8">
               <div className="flex items-start gap-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#f5f8ff]">
-                  <LockKeyhole className="h-[18px] w-[18px] text-[#175cd3]" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#f7f8fa]">
+                  <LockKeyhole className="h-[18px] w-[18px] text-[#d71920]" />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -252,14 +262,14 @@ export default async function AccountSettingsPage() {
 
           <aside className="space-y-6">
             <div className="relative overflow-hidden bg-[#07182d] p-7">
-              <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-[#175cd3]/10 blur-2xl" />
+              <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-[#d71920]/10 blur-2xl" />
 
               <div className="relative">
                 <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-white/5">
                   <ShieldCheck
                     className="h-5 w-5"
                     style={{
-                      color: "#7fb0ff",
+                      color: "#f3b4bc",
                     }}
                   />
                 </div>
@@ -324,7 +334,7 @@ export default async function AccountSettingsPage() {
 
               <Link
                 href="/account"
-                className="mt-6 inline-flex items-center gap-2 text-[12px] font-bold text-[#175cd3] transition hover:text-[#154fb7]"
+                className="mt-6 inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920] transition hover:text-[#b91319]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 My account
@@ -347,7 +357,7 @@ function SecurityItem({
       <CheckCircle2
         className="h-4 w-4 shrink-0"
         style={{
-          color: "#7fb0ff",
+          color: "#f3b4bc",
         }}
       />
 

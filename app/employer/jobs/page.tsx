@@ -169,7 +169,7 @@ export default async function EmployerJobsPage() {
                     "rgba(255,255,255,.58)",
                 }}
               >
-                <span className="h-[2px] w-8 bg-[#e11d48]" />
+                <span className="h-[2px] w-8 bg-[#d71920]" />
                 Employer dashboard
               </div>
 
@@ -199,7 +199,7 @@ export default async function EmployerJobsPage() {
                     <ShieldCheck
                       className="h-[17px] w-[17px]"
                       style={{
-                        color: "#8ab4ff",
+                        color: "#f3b4bc",
                       }}
                     />
                   )}
@@ -220,7 +220,7 @@ export default async function EmployerJobsPage() {
 
             <Link
               href="/post-job"
-              className="inline-flex min-h-[50px] items-center justify-center gap-2.5 self-start rounded-[8px] bg-[#e11d48] px-6 text-[14px] font-semibold transition hover:bg-[#be123c] md:self-auto"
+              className="inline-flex min-h-[50px] items-center justify-center gap-2.5 self-start rounded-[8px] bg-[#d71920] px-6 text-[14px] font-semibold transition hover:bg-[#b91319] md:self-auto"
               style={{
                 color: "#ffffff",
               }}
@@ -272,7 +272,7 @@ export default async function EmployerJobsPage() {
         <div className="mt-12">
           <div className="flex flex-col justify-between gap-5 border-b border-[#dfe3e8] pb-6 sm:flex-row sm:items-end">
             <div>
-              <p className="text-[12px] font-semibold text-[#175cd3]">
+              <p className="text-[12px] font-semibold text-[#d71920]">
                 Vacancies
               </p>
 
@@ -294,7 +294,7 @@ export default async function EmployerJobsPage() {
           </div>
 
           {jobs.length === 0 ? (
-            <div className="mt-6 rounded-[16px] border border-[#e1e5eb] bg-white px-8 py-[80px] text-center">
+            <div className="mt-6 rounded-[8px] border border-[#e1e5eb] bg-white px-8 py-[80px] text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#f2f4f7]">
                 <BriefcaseBusiness className="h-6 w-6 text-[#667085]" />
               </div>
@@ -323,14 +323,14 @@ export default async function EmployerJobsPage() {
               {jobs.map((job) => (
                 <article
                   key={job.id}
-                  className="overflow-hidden rounded-[16px] border border-[#e1e5eb] bg-white transition hover:border-[#cbd2dc] hover:shadow-[0_12px_32px_rgba(16,24,40,.06)]"
+                  className="overflow-hidden rounded-[8px] border border-[#e1e5eb] bg-white transition hover:border-[#cbd2dc] hover:shadow-[0_12px_32px_rgba(16,24,40,.06)]"
                 >
                   <div className="p-6 md:p-7">
                     <div className="flex flex-col justify-between gap-7 xl:flex-row xl:items-start">
                       {/* JOB INFO */}
 
                       <div className="flex min-w-0 flex-1 items-start gap-5">
-                        <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[11px] border border-[#e4e7ec] bg-[#f8fafc]">
+                        <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[8px] border border-[#e4e7ec] bg-[#f7f8fa]">
                           <BriefcaseBusiness className="h-[22px] w-[22px] text-[#667085]" />
                         </div>
 
@@ -372,7 +372,7 @@ export default async function EmployerJobsPage() {
                           </div>
 
                           <div className="mt-4 flex flex-wrap gap-2">
-                            <span className="rounded-full border border-[#dbe7fb] bg-[#f2f7ff] px-3 py-1.5 text-[11px] font-semibold text-[#175cd3]">
+                            <span className="rounded-full border border-[#f1d2d4] bg-[#fff7f6] px-3 py-1.5 text-[11px] font-semibold text-[#d71920]">
                               {job.job_type}
                             </span>
 
@@ -412,7 +412,7 @@ export default async function EmployerJobsPage() {
                             <Link
                               href={`/jobs/${job.slug}`}
                               target="_blank"
-                              className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-[7px] border border-[#dbe7fb] bg-[#f2f7ff] px-4 text-[12px] font-semibold text-[#175cd3] transition hover:bg-[#eaf2ff]"
+                              className="inline-flex min-h-[40px] items-center justify-center gap-2 rounded-[7px] border border-[#f1d2d4] bg-[#fff7f6] px-4 text-[12px] font-semibold text-[#d71920] transition hover:bg-[#fff5f4]"
                             >
                               <Eye className="h-[14px] w-[14px]" />
                               View
@@ -441,7 +441,7 @@ export default async function EmployerJobsPage() {
                       "published" && (
                       <Link
                         href={`/jobs/${job.slug}`}
-                        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#475467] transition hover:text-[#175cd3]"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#475467] transition hover:text-[#d71920]"
                       >
                         Open listing
                         <ArrowRight className="h-[13px] w-[13px]" />
@@ -470,7 +470,7 @@ function StatCard({
   icon: typeof BriefcaseBusiness;
 }) {
   return (
-    <div className="rounded-[14px] border border-[#e1e5eb] bg-white p-6">
+    <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-6">
       <div className="flex items-start justify-between gap-5">
         <div>
           <p className="text-[32px] font-bold leading-none tracking-[-1.2px] text-[#101828]">
@@ -486,7 +486,7 @@ function StatCard({
           </p>
         </div>
 
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#f2f4f7] text-[#475467]">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-[#f2f4f7] text-[#475467]">
           <Icon className="h-[20px] w-[20px]" />
         </div>
       </div>

@@ -11,12 +11,12 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
-import MainHeader from "@/components/main-header";
+import AuthMainHeader from "@/components/auth-main-header";
 
 export default function TermsPage() {
   return (
     <main className="min-h-screen bg-white">
-      <MainHeader />
+      <AuthMainHeader />
 
       {/* HERO */}
 
@@ -26,11 +26,11 @@ export default function TermsPage() {
         <div className="relative mx-auto max-w-[1280px] px-6 py-20 sm:px-8 lg:px-10 lg:py-24">
           <div className="max-w-[860px]">
             <div className="flex items-center gap-2.5">
-              <div className="h-[2px] w-7 bg-[#3b82f6]" />
+              <div className="h-[2px] w-7 bg-[#d71920]" />
 
               <p
                 className="text-[12px] font-semibold uppercase tracking-[0.18em]"
-                style={{ color: "#9ec2ff" }}
+                style={{ color: "#f3b4bc" }}
               >
                 Legal information
               </p>
@@ -372,8 +372,8 @@ export default function TermsPage() {
 
           <aside className="lg:sticky lg:top-[96px] lg:self-start">
 
-            <div className="border-t-[3px] border-[#175cd3] bg-[#f8fafc] px-6 py-7">
-              <FileText className="h-6 w-6 text-[#175cd3]" />
+            <div className="border-t-[3px] border-[#d71920] bg-[#f7f8fa] px-6 py-7">
+              <FileText className="h-6 w-6 text-[#d71920]" />
 
               <h2 className="mt-5 text-[18px] font-bold tracking-[-0.3px] text-[#101828]">
                 Terms at a glance
@@ -431,7 +431,7 @@ export default function TermsPage() {
 
               <Link
                 href="/privacy"
-                className="mt-4 flex items-center justify-between gap-4 text-[14px] font-semibold text-[#101828] transition hover:text-[#175cd3]"
+                className="mt-4 flex items-center justify-between gap-4 text-[14px] font-semibold text-[#101828] transition hover:text-[#d71920]"
               >
                 Privacy Policy
                 <ArrowUpRight className="h-4 w-4" />
@@ -473,7 +473,7 @@ function LegalSection({
       }
     >
       <div className="flex items-baseline gap-4">
-        <span className="text-[12px] font-bold tracking-[0.08em] text-[#175cd3]">
+        <span className="text-[12px] font-bold tracking-[0.08em] text-[#d71920]">
           {number}
         </span>
 
@@ -496,8 +496,8 @@ function RuleItem({
 }) {
   return (
     <li className="flex items-start gap-3">
-      <div className="mt-[5px] flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-[#eef4ff]">
-        <Check className="h-[12px] w-[12px] text-[#175cd3]" />
+      <div className="mt-[5px] flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full bg-[#fff5f4]">
+        <Check className="h-[12px] w-[12px] text-[#d71920]" />
       </div>
 
       <span>{children}</span>
@@ -516,7 +516,7 @@ function SummaryItem({
 }) {
   return (
     <div className="flex items-start gap-3.5">
-      <Icon className="mt-[2px] h-[18px] w-[18px] shrink-0 text-[#175cd3]" />
+      <Icon className="mt-[2px] h-[18px] w-[18px] shrink-0 text-[#d71920]" />
 
       <div>
         <p className="text-[13px] font-bold text-[#101828]">

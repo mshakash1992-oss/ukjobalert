@@ -191,7 +191,7 @@ export default function EditJobForm({
                 Job title
               </FieldLabel>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
                 <BriefcaseBusiness className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <input
@@ -212,7 +212,7 @@ export default function EditJobForm({
                 Sector
               </FieldLabel>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
                 <Tags className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <select
@@ -252,7 +252,7 @@ export default function EditJobForm({
                     event.target.value
                   )
                 }
-                className="min-h-[54px] w-full rounded-[9px] border border-[#d0d5dd] bg-white px-4 text-[14px] font-medium text-[#344054] outline-none transition focus:border-[#175cd3] focus:ring-[3px] focus:ring-[#175cd3]/10"
+                className="min-h-[54px] w-full rounded-[8px] border border-[#d0d5dd] bg-white px-4 text-[14px] font-medium text-[#344054] outline-none transition focus:border-[#d71920] focus:ring-[3px] focus:ring-[#d71920]/10"
               >
                 {jobTypes.map(
                   (item) => (
@@ -272,7 +272,7 @@ export default function EditJobForm({
                 Location
               </FieldLabel>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
                 <MapPin className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <input
@@ -299,7 +299,7 @@ export default function EditJobForm({
                 </span>
               </div>
 
-              <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+              <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
                 <Banknote className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                 <input
@@ -337,7 +337,7 @@ export default function EditJobForm({
               )
             }
             rows={11}
-            className="w-full resize-y rounded-[10px] border border-[#d0d5dd] bg-white p-4 text-[14px] leading-7 text-[#344054] outline-none transition focus:border-[#175cd3] focus:ring-[3px] focus:ring-[#175cd3]/10"
+            className="w-full resize-y rounded-[8px] border border-[#d0d5dd] bg-white p-4 text-[14px] leading-7 text-[#344054] outline-none transition focus:border-[#d71920] focus:ring-[3px] focus:ring-[#d71920]/10"
           />
 
           <div className="mt-2 flex items-center justify-between gap-4">
@@ -368,16 +368,16 @@ export default function EditJobForm({
               onClick={() =>
                 setApplyMethod("email")
               }
-              className={`flex min-h-[64px] items-center gap-3 rounded-[10px] border px-4 text-left transition ${
+              className={`flex min-h-[64px] items-center gap-3 rounded-[8px] border px-4 text-left transition ${
                 applyMethod === "email"
-                  ? "border-[#175cd3] bg-[#f2f7ff] shadow-[0_0_0_3px_rgba(23,92,211,.08)]"
+                  ? "border-[#d71920] bg-[#fff7f6] shadow-[0_0_0_3px_rgba(23,92,211,.08)]"
                   : "border-[#d0d5dd] bg-white hover:border-[#98a2b3]"
               }`}
             >
               <div
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] ${
                   applyMethod === "email"
-                    ? "bg-[#175cd3] text-white"
+                    ? "bg-[#d71920] text-white"
                     : "bg-[#f2f4f7] text-[#667085]"
                 }`}
               >
@@ -400,16 +400,16 @@ export default function EditJobForm({
               onClick={() =>
                 setApplyMethod("url")
               }
-              className={`flex min-h-[64px] items-center gap-3 rounded-[10px] border px-4 text-left transition ${
+              className={`flex min-h-[64px] items-center gap-3 rounded-[8px] border px-4 text-left transition ${
                 applyMethod === "url"
-                  ? "border-[#175cd3] bg-[#f2f7ff] shadow-[0_0_0_3px_rgba(23,92,211,.08)]"
+                  ? "border-[#d71920] bg-[#fff7f6] shadow-[0_0_0_3px_rgba(23,92,211,.08)]"
                   : "border-[#d0d5dd] bg-white hover:border-[#98a2b3]"
               }`}
             >
               <div
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] ${
                   applyMethod === "url"
-                    ? "bg-[#175cd3] text-white"
+                    ? "bg-[#d71920] text-white"
                     : "bg-[#f2f4f7] text-[#667085]"
                 }`}
               >
@@ -435,7 +435,7 @@ export default function EditJobForm({
                   Application email
                 </FieldLabel>
 
-                <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
                   <Mail className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                   <input
@@ -458,7 +458,7 @@ export default function EditJobForm({
                   Application URL
                 </FieldLabel>
 
-                <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
                   <Globe2 className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
                   <input
@@ -483,7 +483,7 @@ export default function EditJobForm({
       {/* STATUS */}
 
       {error && (
-        <div className="mt-7 flex items-start gap-3 rounded-[10px] border border-[#fecdca] bg-[#fef3f2] p-4">
+        <div className="mt-7 flex items-start gap-3 rounded-[8px] border border-[#fecdca] bg-[#fef3f2] p-4">
           <AlertCircle className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#d92d20]" />
 
           <p className="text-[13px] font-medium leading-5 text-[#b42318]">
@@ -493,7 +493,7 @@ export default function EditJobForm({
       )}
 
       {success && (
-        <div className="mt-7 flex items-start gap-3 rounded-[10px] border border-[#abefc6] bg-[#ecfdf3] p-4">
+        <div className="mt-7 flex items-start gap-3 rounded-[8px] border border-[#abefc6] bg-[#ecfdf3] p-4">
           <CheckCircle2 className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#067647]" />
 
           <p className="text-[13px] font-medium leading-5 text-[#067647]">
@@ -527,7 +527,7 @@ export default function EditJobForm({
             <button
               type="submit"
               disabled={loading}
-              className="flex min-h-[50px] min-w-[170px] items-center justify-center gap-2.5 rounded-[8px] bg-[#e11d48] px-6 text-[14px] font-semibold transition hover:bg-[#be123c] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex min-h-[50px] min-w-[170px] items-center justify-center gap-2.5 rounded-[8px] bg-[#d71920] px-6 text-[14px] font-semibold transition hover:bg-[#b91319] disabled:cursor-not-allowed disabled:opacity-50"
               style={{
                 color: "#ffffff",
               }}

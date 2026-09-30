@@ -112,7 +112,7 @@ export default function ApplyButton({
           `Application for ${title}`
         )}`}
         onClick={handleApply}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-4 font-bold text-white transition hover:bg-blue-500"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-[8px] bg-[#d71920] py-4 font-bold text-white transition hover:bg-[#b91319]"
       >
         <Mail className="h-5 w-5" />
 
@@ -135,7 +135,7 @@ export default function ApplyButton({
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleApply}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-4 font-bold text-white transition hover:bg-blue-500"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-[8px] bg-[#d71920] py-4 font-bold text-white transition hover:bg-[#b91319]"
       >
         <ExternalLink className="h-5 w-5" />
 

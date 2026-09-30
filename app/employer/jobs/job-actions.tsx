@@ -119,7 +119,7 @@ export default function JobActions({
 
       {error && (
 
-        <div className="mb-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
+        <div className="mb-3 rounded-[8px] border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
           {error}
         </div>
 

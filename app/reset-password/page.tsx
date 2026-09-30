@@ -240,7 +240,7 @@ export default function ResetPasswordPage() {
                 <ShieldCheck
                   className="h-4 w-4"
                   style={{
-                    color: "#dceaff",
+                    color: "#fde8e8",
                   }}
                 />
 
@@ -274,7 +274,7 @@ export default function ResetPasswordPage() {
               </p>
 
               <div
-                className="mt-10 max-w-[570px] rounded-[13px] border p-5 backdrop-blur-[6px]"
+                className="mt-10 max-w-[570px] rounded-[8px] border p-5 backdrop-blur-[6px]"
                 style={{
                   borderColor:
                     "rgba(255,255,255,.28)",
@@ -283,7 +283,7 @@ export default function ResetPasswordPage() {
                 }}
               >
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-[9px]"
+                  className="flex h-10 w-10 items-center justify-center rounded-[8px]"
                   style={{
                     backgroundColor:
                       "rgba(255,255,255,.16)",
@@ -363,19 +363,19 @@ export default function ResetPasswordPage() {
 
             {/* CARD */}
 
-            <div className="rounded-[18px] border border-[#e1e5eb] bg-white p-7 shadow-[0_24px_65px_rgba(16,24,40,.08)] sm:p-10">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-7 shadow-[0_8px_24px_rgba(16,24,40,.06)] sm:p-10">
 
-              <div className="mx-auto flex h-[58px] w-[58px] items-center justify-center rounded-[14px] bg-[#f2f7ff]">
+              <div className="mx-auto flex h-[58px] w-[58px] items-center justify-center rounded-[8px] bg-[#fff7f6]">
                 {checkingLink ? (
-                  <LoaderCircle className="h-6 w-6 animate-spin text-[#175cd3]" />
+                  <LoaderCircle className="h-6 w-6 animate-spin text-[#d71920]" />
                 ) : (
-                  <KeyRound className="h-6 w-6 text-[#175cd3]" />
+                  <KeyRound className="h-6 w-6 text-[#d71920]" />
                 )}
               </div>
 
               <div className="mt-6 text-center">
 
-                <p className="text-[12px] font-semibold text-[#175cd3]">
+                <p className="text-[12px] font-semibold text-[#d71920]">
                   Account security
                 </p>
 
@@ -394,7 +394,7 @@ export default function ResetPasswordPage() {
               {/* ERROR */}
 
               {error && (
-                <div className="mt-6 flex items-start gap-3 rounded-[10px] border border-[#fecdca] bg-[#fef3f2] p-4">
+                <div className="mt-6 flex items-start gap-3 rounded-[8px] border border-[#fecdca] bg-[#fef3f2] p-4">
 
                   <AlertCircle className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#d92d20]" />
 
@@ -408,7 +408,7 @@ export default function ResetPasswordPage() {
               {/* SUCCESS */}
 
               {success && (
-                <div className="mt-6 flex items-start gap-3 rounded-[10px] border border-[#abefc6] bg-[#ecfdf3] p-4">
+                <div className="mt-6 flex items-start gap-3 rounded-[8px] border border-[#abefc6] bg-[#ecfdf3] p-4">
 
                   <CheckCircle2 className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#067647]" />
 
@@ -441,7 +441,7 @@ export default function ResetPasswordPage() {
                       New password
                     </label>
 
-                    <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                    <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                       <LockKeyhole className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -496,7 +496,7 @@ export default function ResetPasswordPage() {
                       Confirm new password
                     </label>
 
-                    <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                    <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                       <LockKeyhole className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -594,7 +594,7 @@ export default function ResetPasswordPage() {
 
               <Link
                 href="/login"
-                className="mx-auto flex w-fit items-center gap-2 text-[13px] font-semibold text-[#175cd3] transition hover:text-[#154fb7]"
+                className="mx-auto flex w-fit items-center gap-2 text-[13px] font-semibold text-[#d71920] transition hover:text-[#b91319]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to login

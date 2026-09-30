@@ -10,6 +10,8 @@ import {
   CalendarClock,
   CalendarDays,
   CheckCircle2,
+  ChevronRight,
+  Clock3,
   MapPin,
   ShieldCheck,
 } from "lucide-react";
@@ -373,6 +375,20 @@ export default async function JobDetailsPage({
       Boolean(savedJob);
   }
 
+  const { data: relatedJobs, error: relatedJobsError } = await supabase
+    .from("jobs")
+    .select("id, slug, title, company_name, location, job_type, created_at")
+    .eq("status", "published")
+    .eq("category", job.category)
+    .neq("id", job.id)
+    .gt("expires_at", new Date().toISOString())
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  if (relatedJobsError) {
+    console.error("Related jobs error:", relatedJobsError);
+  }
+
   return (
     <main className="min-h-screen bg-[#f7f8fa] text-[#101828]">
 
@@ -433,7 +449,7 @@ export default async function JobDetailsPage({
 
           <div className="mt-9 flex max-w-[950px] items-start gap-5">
             <div
-              className="flex h-[68px] w-[68px] shrink-0 items-center justify-center rounded-[14px] border text-[16px] font-bold"
+              className="flex h-[68px] w-[68px] shrink-0 items-center justify-center rounded-[8px] border text-[16px] font-bold"
               style={{
                 backgroundColor:
                   "rgba(255,255,255,.08)",
@@ -464,7 +480,7 @@ export default async function JobDetailsPage({
                   className="h-[21px] w-[21px]"
                   style={{
                     color:
-                      "#8ab4ff",
+                      "#f3b4bc",
                   }}
                 />
               </div>
@@ -573,7 +589,7 @@ export default async function JobDetailsPage({
             </div>
 
             {job.salary && (
-              <div className="mt-4 flex items-center justify-between gap-6 rounded-[14px] border border-[#d9e2ef] bg-white px-6 py-5">
+              <div className="mt-4 flex items-center justify-between gap-6 rounded-[8px] border border-[#d9e2ef] bg-white px-6 py-5">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#98a2b3]">
                     Salary
@@ -588,9 +604,9 @@ export default async function JobDetailsPage({
               </div>
             )}
 
-            <article className="mt-6 rounded-[16px] border border-[#e1e5eb] bg-white px-7 py-8 md:px-9 md:py-9">
+            <article className="mt-6 rounded-[8px] border border-[#e1e5eb] bg-white px-7 py-8 md:px-9 md:py-9">
               <div className="border-b border-[#eaecf0] pb-6">
-                <p className="text-[12px] font-semibold text-[#175cd3]">
+                <p className="text-[12px] font-semibold text-[#d71920]">
                   Vacancy details
                 </p>
 
@@ -609,7 +625,7 @@ export default async function JobDetailsPage({
 
           <aside className="space-y-4 lg:sticky lg:top-[105px]">
             <div
-              className="overflow-hidden rounded-[16px] shadow-[0_24px_55px_rgba(7,24,45,.16)]"
+              className="overflow-hidden rounded-[8px] shadow-[0_8px_24px_rgba(16,24,40,.07)]"
               style={{
                 backgroundColor:
                   "#07182d",
@@ -617,7 +633,7 @@ export default async function JobDetailsPage({
             >
               <div className="p-7">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-[11px]"
+                  className="flex h-12 w-12 items-center justify-center rounded-[8px]"
                   style={{
                     backgroundColor:
                       "rgba(255,255,255,.09)",
@@ -737,9 +753,9 @@ export default async function JobDetailsPage({
               />
             )}
 
-            <div className="rounded-[16px] border border-[#e4e7ec] bg-white p-6">
+            <div className="rounded-[8px] border border-[#e4e7ec] bg-white p-6">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-[#f2f4f7]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#f2f4f7]">
                   <Building2 className="h-[18px] w-[18px] text-[#475467]" />
                 </div>
 
@@ -763,7 +779,7 @@ export default async function JobDetailsPage({
 
             <Link
               href="/jobs"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-[9px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f9fafb]"
+              className="flex min-h-[48px] items-center justify-center gap-2 rounded-[8px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f9fafb]"
             >
               <ArrowLeft className="h-4 w-4" />
               Browse more jobs
@@ -771,6 +787,45 @@ export default async function JobDetailsPage({
           </aside>
         </div>
       </section>
+
+      {(relatedJobs || []).length > 0 && (
+        <section className="border-t border-[#e1e5eb] bg-white">
+          <div className="mx-auto max-w-[1440px] px-6 py-14 md:px-10 lg:py-16 xl:px-12">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
+                  More in {job.category}
+                </p>
+                <h2 className="mt-2 font-serif text-[32px] font-semibold tracking-[-.8px] text-[#07182d] md:text-[38px]">
+                  Related vacancies
+                </h2>
+              </div>
+              <Link href={`/jobs?category=${encodeURIComponent(job.category)}`} className="inline-flex items-center gap-2 text-[13px] font-bold text-[#07182d] hover:text-[#d71920]">
+                View all {job.category.toLowerCase()} jobs <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="mt-7 grid gap-px border border-[#dfe3e8] bg-[#dfe3e8] lg:grid-cols-3">
+              {(relatedJobs || []).map((related) => (
+                <Link key={related.id} href={`/jobs/${related.slug}`} className="group bg-white p-6 transition hover:bg-[#fbfbfa]">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-[17px] font-bold text-[#07182d] transition group-hover:text-[#d71920]">{related.title}</h3>
+                      <p className="mt-1.5 text-[13px] font-semibold text-[#475467]">{related.company_name}</p>
+                    </div>
+                    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
+                  </div>
+                  <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#eaecf0] pt-4 text-[11px] text-[#667085]">
+                    <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{related.location}</span>
+                    <span>{related.job_type}</span>
+                    <span className="flex items-center gap-1.5"><Clock3 className="h-3.5 w-3.5" />{formatDate(related.created_at)}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
@@ -785,7 +840,7 @@ function Info({
   value: string;
 }) {
   return (
-    <div className="min-h-[112px] rounded-[14px] border border-[#e1e5eb] bg-white p-5">
+    <div className="min-h-[112px] rounded-[8px] border border-[#e1e5eb] bg-white p-5">
       <div className="flex items-center gap-2 text-[#98a2b3]">
         <Icon className="h-[16px] w-[16px]" />
 
@@ -808,7 +863,7 @@ function CheckItem({
 }) {
   return (
     <div className="mt-3 flex first:mt-0 items-start gap-2.5">
-      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#175cd3]" />
+      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#d71920]" />
 
       <span className="text-[12px] leading-5 text-[#667085]">
         {text}

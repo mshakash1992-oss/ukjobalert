@@ -177,7 +177,7 @@ export default function LoginPage() {
                 <ShieldCheck
                   className="h-4 w-4"
                   style={{
-                    color: "#dceaff",
+                    color: "#fde8e8",
                   }}
                 />
 
@@ -271,11 +271,11 @@ export default function LoginPage() {
 
             {/* LOGIN CARD */}
 
-            <div className="rounded-[18px] border border-[#e1e5eb] bg-white p-7 shadow-[0_24px_65px_rgba(16,24,40,.08)] sm:p-10">
+            <div className="rounded-[8px] border border-[#e1e5eb] bg-white p-7 shadow-[0_8px_24px_rgba(16,24,40,.06)] sm:p-10">
 
               <div className="text-center">
 
-                <p className="text-[12px] font-semibold text-[#175cd3]">
+                <p className="text-[12px] font-semibold text-[#d71920]">
                   Welcome back
                 </p>
 
@@ -291,7 +291,7 @@ export default function LoginPage() {
 
               {/* ACCOUNT TYPE */}
 
-              <div className="mt-8 grid grid-cols-2 rounded-[10px] bg-[#f2f4f7] p-1">
+              <div className="mt-8 grid grid-cols-2 rounded-[8px] bg-[#f2f4f7] p-1">
 
                 <button
                   type="button"
@@ -300,7 +300,7 @@ export default function LoginPage() {
                   }
                   className={`flex min-h-[48px] items-center justify-center gap-2 rounded-[8px] text-[13px] font-semibold transition ${
                     accountType === "job_seeker"
-                      ? "bg-white text-[#175cd3] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
+                      ? "bg-white text-[#d71920] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
                       : "text-[#667085]"
                   }`}
                 >
@@ -315,7 +315,7 @@ export default function LoginPage() {
                   }
                   className={`flex min-h-[48px] items-center justify-center gap-2 rounded-[8px] text-[13px] font-semibold transition ${
                     accountType === "employer"
-                      ? "bg-white text-[#175cd3] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
+                      ? "bg-white text-[#d71920] shadow-[0_1px_3px_rgba(16,24,40,.10)]"
                       : "text-[#667085]"
                   }`}
                 >
@@ -328,9 +328,9 @@ export default function LoginPage() {
               {/* EMPLOYER INFO */}
 
               {accountType === "employer" && (
-                <div className="mt-5 flex items-start gap-3 rounded-[10px] border border-[#dbe7fb] bg-[#f2f7ff] p-4">
+                <div className="mt-5 flex items-start gap-3 rounded-[8px] border border-[#f1d2d4] bg-[#fff7f6] p-4">
 
-                  <ShieldCheck className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#175cd3]" />
+                  <ShieldCheck className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#d71920]" />
 
                   <p className="text-[12px] leading-5 text-[#475467]">
                     Employer accounts require business
@@ -344,7 +344,7 @@ export default function LoginPage() {
               {/* ERROR */}
 
               {error && (
-                <div className="mt-5 flex items-start gap-3 rounded-[10px] border border-[#fecdca] bg-[#fef3f2] p-4">
+                <div className="mt-5 flex items-start gap-3 rounded-[8px] border border-[#fecdca] bg-[#fef3f2] p-4">
 
                   <AlertCircle className="mt-[1px] h-[18px] w-[18px] shrink-0 text-[#d92d20]" />
 
@@ -370,7 +370,7 @@ export default function LoginPage() {
                     Email address
                   </label>
 
-                  <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                  <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                     <Mail className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -399,7 +399,7 @@ export default function LoginPage() {
                     Password
                   </label>
 
-                  <div className="flex min-h-[54px] items-center rounded-[9px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#175cd3] focus-within:ring-[3px] focus-within:ring-[#175cd3]/10">
+                  <div className="flex min-h-[54px] items-center rounded-[8px] border border-[#d0d5dd] bg-white px-4 transition focus-within:border-[#d71920] focus-within:ring-[3px] focus-within:ring-[#d71920]/10">
 
                     <LockKeyhole className="h-[18px] w-[18px] shrink-0 text-[#98a2b3]" />
 
@@ -469,7 +469,7 @@ export default function LoginPage() {
 
                   <Link
                     href="/forgot-password"
-                    className="font-semibold text-[#175cd3] transition hover:text-[#154fb7]"
+                    className="font-semibold text-[#d71920] transition hover:text-[#b91319]"
                   >
                     Forgot password?
                   </Link>
@@ -511,7 +511,7 @@ export default function LoginPage() {
 
                 <Link
                   href="/signup"
-                  className="font-semibold text-[#175cd3] transition hover:text-[#154fb7]"
+                  className="font-semibold text-[#d71920] transition hover:text-[#b91319]"
                 >
                   Create account
                 </Link>
@@ -551,7 +551,7 @@ function FeatureCard({
 }) {
   return (
     <div
-      className="rounded-[13px] border p-5 backdrop-blur-[6px]"
+      className="rounded-[8px] border p-5 backdrop-blur-[6px]"
       style={{
         borderColor:
           "rgba(255,255,255,.28)",
@@ -561,7 +561,7 @@ function FeatureCard({
     >
 
       <div
-        className="flex h-10 w-10 items-center justify-center rounded-[9px]"
+        className="flex h-10 w-10 items-center justify-center rounded-[8px]"
         style={{
           backgroundColor:
             "rgba(255,255,255,.16)",
