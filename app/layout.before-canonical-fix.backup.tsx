@@ -7,7 +7,6 @@ import {
 import "./globals.css";
 
 import SiteFooter from "@/components/site-footer";
-import WhatsAppChat from "@/components/whatsapp-chat";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -27,7 +26,8 @@ export const metadata: Metadata = {
   title: {
     default:
       "UK Jobs & Verified Employer Vacancies | UKJobAlert",
-    template: "%s | UKJobAlert",
+    template:
+      "%s | UKJobAlert",
   },
 
   description:
@@ -80,7 +80,8 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-image-preview": "large",
+      "max-image-preview":
+        "large",
       "max-snippet": -1,
       "max-video-preview": -1,
     },
@@ -102,7 +103,6 @@ export default function RootLayout({
       <body>
         {children}
         <SiteFooter />
-        <WhatsAppChat />
       </body>
     </html>
   );

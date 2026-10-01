@@ -87,7 +87,9 @@ export default async function EditJobPage({
       apply_method,
       apply_email,
       apply_url,
-      status
+      status,
+      company_logo_url,
+      job_image_url
     `)
     .eq("id", id)
     .maybeSingle();
@@ -314,6 +316,12 @@ export default async function EditJobPage({
 
                     status:
                       job.status,
+
+                    companyLogoUrl:
+                      job.company_logo_url || null,
+
+                    jobImageUrl:
+                      job.job_image_url || null,
                   }}
                 />
               </div>

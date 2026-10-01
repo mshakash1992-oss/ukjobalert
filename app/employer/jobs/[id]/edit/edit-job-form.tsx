@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import JobMediaPicker from "@/components/job-media-picker";
+
 import {
   AlertCircle,
   Banknote,
@@ -52,6 +54,8 @@ type Job = {
   applyEmail: string;
   applyUrl: string;
   status: string;
+  companyLogoUrl: string | null;
+  jobImageUrl: string | null;
 };
 
 export default function EditJobForm({
@@ -98,6 +102,11 @@ export default function EditJobForm({
     setApplyUrl,
   ] = useState(job.applyUrl);
 
+  const [companyLogo, setCompanyLogo] = useState<File | null>(null);
+  const [jobImage, setJobImage] = useState<File | null>(null);
+  const [removeCompanyLogo, setRemoveCompanyLogo] = useState(false);
+  const [removeJobImage, setRemoveJobImage] = useState(false);
+
   const [loading, setLoading] =
     useState(false);
 
@@ -118,31 +127,26 @@ export default function EditJobForm({
     setLoading(true);
 
     try {
-      const response =
-        await fetch(
-          "/api/employer/jobs/update",
-          {
-            method: "POST",
+      const formData = new FormData();
+      formData.append("jobId", job.id);
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("jobType", jobType);
+      formData.append("location", location);
+      formData.append("salary", salary);
+      formData.append("description", description);
+      formData.append("applyMethod", applyMethod);
+      formData.append("applyEmail", applyEmail);
+      formData.append("applyUrl", applyUrl);
+      formData.append("removeCompanyLogo", String(removeCompanyLogo));
+      formData.append("removeJobImage", String(removeJobImage));
+      if (companyLogo) formData.append("companyLogo", companyLogo);
+      if (jobImage) formData.append("jobImage", jobImage);
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify({
-              jobId: job.id,
-              title,
-              category,
-              jobType,
-              location,
-              salary,
-              description,
-              applyMethod,
-              applyEmail,
-              applyUrl,
-            }),
-          }
-        );
+      const response = await fetch("/api/employer/jobs/update", {
+        method: "POST",
+        body: formData,
+      });
 
       const result =
         await response.json();
@@ -159,6 +163,10 @@ export default function EditJobForm({
       setSuccess(
         "Job updated successfully."
       );
+      setCompanyLogo(null);
+      setJobImage(null);
+      setRemoveCompanyLogo(false);
+      setRemoveJobImage(false);
 
       router.refresh();
     } catch {
@@ -351,10 +359,40 @@ export default function EditJobForm({
           </div>
         </FormSection>
 
-        {/* APPLICATION */}
+        {/* MEDIA */}
 
         <FormSection
           number="03"
+          title="Company and job photos"
+          description="Replace or remove the images shown on this vacancy."
+        >
+          <div className="grid gap-4 lg:grid-cols-2">
+            <JobMediaPicker
+              label="Company logo"
+              help="JPG, PNG or WebP. Maximum 2 MB. Shown beside the job title."
+              file={companyLogo}
+              onFileChange={setCompanyLogo}
+              existingUrl={job.companyLogoUrl}
+              removed={removeCompanyLogo}
+              onRemovedChange={setRemoveCompanyLogo}
+              compact
+            />
+            <JobMediaPicker
+              label="Workplace / job photo"
+              help="JPG, PNG or WebP. Maximum 4 MB. Shown with the job description."
+              file={jobImage}
+              onFileChange={setJobImage}
+              existingUrl={job.jobImageUrl}
+              removed={removeJobImage}
+              onRemovedChange={setRemoveJobImage}
+            />
+          </div>
+        </FormSection>
+
+        {/* APPLICATION */}
+
+        <FormSection
+          number="04"
           title="Applications"
           description="Choose where candidates should send their application."
         >

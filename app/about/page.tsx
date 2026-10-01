@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, BriefcaseBusiness, Building2, Search, ShieldCheck, Users } from "lucide-react";
-import AuthMainHeader from "@/components/auth-main-header";
+import MainHeader from "@/components/main-header";
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white text-[#101828]">
-      <AuthMainHeader />
+      <MainHeader />
 
       <section className="bg-[#fbfbfa]">
         <div className="mx-auto grid max-w-[1360px] gap-10 px-6 py-14 md:px-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,.9fr)] lg:items-stretch lg:py-20 xl:px-12">
@@ -41,7 +41,7 @@ export default function AboutPage() {
 
       <section className="bg-[#07182d]">
         <div className="mx-auto grid max-w-[1360px] gap-10 px-6 py-14 md:px-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-20 lg:py-18 xl:px-12">
-          <div><ShieldCheck className="h-7 w-7 text-[#f06b70]" /><p className="mt-5 text-[11px] font-bold uppercase tracking-[.16em] text-[#f06b70]">Employer verification</p><h2 className="mt-3 text-[34px] font-bold leading-[1.08] tracking-[-1.1px] text-white">An extra check before an employer starts posting.</h2></div>
+          <div><ShieldCheck className="mb-5 h-9 w-9 text-[#f06b70]" strokeWidth={1.8} /><p className="text-[11px] font-bold uppercase tracking-[.16em] text-[#f06b70]">Employer verification</p><h2 className="mt-3 text-[34px] font-bold leading-[1.08] tracking-[-1.1px] text-white">An extra check before an employer starts posting.</h2></div>
           <div><p className="text-[16px] leading-8 text-white/70">Employer accounts may be asked to provide company information before job-posting access is enabled. Relevant details can be checked against publicly available Companies House information, with some cases requiring additional review.</p><p className="mt-5 text-[13px] leading-7 text-white/50">Verification confirms specified information at the time of the check. It does not constitute an endorsement or guarantee of an employer, vacancy or employment outcome.</p><Link href="/employer/verify" className="mt-7 inline-flex items-center gap-2 text-[13px] font-bold text-[#f06b70]">Read the employer route <ArrowRight className="h-4 w-4" /></Link></div>
         </div>
       </section>
@@ -57,5 +57,5 @@ export default function AboutPage() {
     </main>
   );
 }
-function Value({ number, icon: Icon, title, text }: { number: string; icon: typeof Search; title: string; text: string }) { return <div className="bg-white p-7 sm:p-8"><div className="flex items-center justify-between"><Icon className="h-5 w-5 text-[#d71920]" /><span className="text-[10px] font-bold tracking-[.14em] text-[#98a2b3]">{number}</span></div><h3 className="mt-8 text-[20px] font-bold text-[#07182d]">{title}</h3><p className="mt-3 text-[13px] leading-6 text-[#667085]">{text}</p></div>; }
-function Audience({ icon: Icon, label, title, text, href, linkText }: { icon: typeof Users; label: string; title: string; text: string; href: string; linkText: string }) { return <div className="bg-[#f4f6f8] p-8 sm:p-10 lg:p-12"><Icon className="h-6 w-6 text-[#d71920]" /><p className="mt-6 text-[10px] font-bold uppercase tracking-[.15em] text-[#d71920]">{label}</p><h3 className="mt-3 max-w-[500px] text-[28px] font-bold leading-[1.15] tracking-[-.8px] text-[#07182d]">{title}</h3><p className="mt-4 max-w-[540px] text-[14px] leading-7 text-[#667085]">{text}</p><Link href={href} className="mt-7 inline-flex items-center gap-2 text-[13px] font-bold text-[#07182d]">{linkText} <ArrowRight className="h-4 w-4" /></Link></div>; }
+function Value({ number, icon: Icon, title, text }: { number: string; icon: typeof Search; title: string; text: string }) { return <div className="bg-white p-7 sm:p-8"><div className="flex items-center justify-between"><Icon className="h-7 w-7 text-[#d71920]" strokeWidth={1.8} /><span className="text-[10px] font-bold tracking-[.14em] text-[#98a2b3]">{number}</span></div><h3 className="mt-6 text-[20px] font-bold text-[#07182d]">{title}</h3><p className="mt-3 text-[13px] leading-6 text-[#667085]">{text}</p></div>; }
+function Audience({ icon: Icon, label, title, text, href, linkText }: { icon: typeof Users; label: string; title: string; text: string; href: string; linkText: string }) { return <div className="bg-[#f4f6f8] p-8 sm:p-10 lg:p-12"><Icon className="mb-5 h-8 w-8 text-[#d71920]" strokeWidth={1.8} /><p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#d71920]">{label}</p><h3 className="mt-3 max-w-[500px] text-[28px] font-bold leading-[1.15] tracking-[-.8px] text-[#07182d]">{title}</h3><p className="mt-4 max-w-[540px] text-[14px] leading-7 text-[#667085]">{text}</p><Link href={href} className="mt-7 inline-flex items-center gap-2 text-[13px] font-bold text-[#07182d]">{linkText} <ArrowRight className="h-4 w-4" /></Link></div>; }

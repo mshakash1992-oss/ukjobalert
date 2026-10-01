@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import JobMediaPicker from "@/components/job-media-picker";
+
 import {
   AlertCircle,
   Banknote,
@@ -85,6 +87,12 @@ export default function PostJobForm() {
     setApplyUrl,
   ] = useState("");
 
+  const [companyLogo, setCompanyLogo] =
+    useState<File | null>(null);
+
+  const [jobImage, setJobImage] =
+    useState<File | null>(null);
+
   const [loading, setLoading] =
     useState(false);
 
@@ -105,34 +113,24 @@ export default function PostJobForm() {
     setLoading(true);
 
     try {
-      const response =
-        await fetch(
-          "/api/jobs",
-          {
-            method: "POST",
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("jobType", jobType);
+      formData.append("location", location);
+      formData.append("salary", salary);
+      formData.append("description", description);
+      formData.append("expiryDays", expiryDays);
+      formData.append("applyMethod", applyMethod);
+      formData.append("applyEmail", applyEmail);
+      formData.append("applyUrl", applyUrl);
+      if (companyLogo) formData.append("companyLogo", companyLogo);
+      if (jobImage) formData.append("jobImage", jobImage);
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify({
-              title,
-              category,
-              jobType,
-              location,
-              salary,
-              description,
-
-              expiryDays:
-                Number(expiryDays),
-
-              applyMethod,
-              applyEmail,
-              applyUrl,
-            }),
-          }
-        );
+      const response = await fetch("/api/jobs", {
+        method: "POST",
+        body: formData,
+      });
 
       const result =
         await response.json();
@@ -355,10 +353,34 @@ export default function PostJobForm() {
           </div>
         </FormSection>
 
-        {/* LISTING */}
+        {/* MEDIA */}
 
         <FormSection
           number="03"
+          title="Company and job photos"
+          description="Optional images make the vacancy easier to recognise. Upload your company logo and a real workplace or role photo."
+        >
+          <div className="grid gap-4 lg:grid-cols-2">
+            <JobMediaPicker
+              label="Company logo"
+              help="JPG, PNG or WebP. Maximum 2 MB. Shown beside the job title."
+              file={companyLogo}
+              onFileChange={setCompanyLogo}
+              compact
+            />
+            <JobMediaPicker
+              label="Workplace / job photo"
+              help="JPG, PNG or WebP. Maximum 4 MB. Shown with the job description."
+              file={jobImage}
+              onFileChange={setJobImage}
+            />
+          </div>
+        </FormSection>
+
+        {/* LISTING */}
+
+        <FormSection
+          number="04"
           title="Listing duration"
           description="Set how long the vacancy should remain visible to job seekers."
         >
@@ -410,7 +432,7 @@ export default function PostJobForm() {
         {/* APPLICATION */}
 
         <FormSection
-          number="04"
+          number="05"
           title="Applications"
           description="Choose the exact route candidates should use when they are ready to apply."
         >

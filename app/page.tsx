@@ -46,6 +46,7 @@ type Job = {
   id: string;
   slug: string;
   company_name: string;
+  company_logo_url: string | null;
   company_number: string;
   title: string;
   category: string;
@@ -97,6 +98,11 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+function formatLocation(location: string) {
+  const value = location.trim();
+  return value ? `${value.charAt(0).toUpperCase()}${value.slice(1)}` : location;
+}
+
 export default async function Home() {
   const supabase = await createClient();
   const {
@@ -107,6 +113,13 @@ export default async function Home() {
   const accountType = user?.user_metadata?.account_type;
   const displayName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Account";
+  const adminEmails = (process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+  const isAdmin = Boolean(
+    user?.email && adminEmails.includes(user.email.toLowerCase())
+  );
   const now = new Date().toISOString();
 
   const { data: jobsData, error: jobsError } = await supabase
@@ -115,6 +128,7 @@ export default async function Home() {
       id,
       slug,
       company_name,
+      company_logo_url,
       company_number,
       title,
       category,
@@ -178,6 +192,7 @@ export default async function Home() {
         loggedIn={loggedIn}
         displayName={displayName}
         accountType={accountType}
+        isAdmin={isAdmin}
       />
 
       {/* HERO */}
@@ -189,57 +204,55 @@ export default async function Home() {
         media="(min-width: 640px)"
         fetchPriority="high"
       />
-      <section className="relative overflow-hidden bg-[#07182d] sm:min-h-[600px] lg:min-h-[720px]">
+      <section className="relative isolate overflow-hidden bg-[#07182d]">
         <div
-          className="absolute inset-0 hidden bg-cover sm:block"
-          style={{
-            backgroundImage: "url('/london-hero.webp')",
-            backgroundPosition: "center 38%",
-          }}
+          className="absolute inset-0 hidden bg-cover bg-[center_42%] sm:block"
+          style={{ backgroundImage: "url('/london-hero.webp')" }}
         />
         <div
           className="absolute inset-0 sm:hidden"
           style={{
             background:
-              "radial-gradient(circle at 88% 18%, rgba(38,105,174,.42) 0%, rgba(38,105,174,0) 34%), linear-gradient(135deg, #07182d 0%, #0b2949 58%, #123d68 100%)",
+              "radial-gradient(circle at 82% 12%, rgba(255,159,28,.25) 0%, rgba(255,159,28,0) 31%), linear-gradient(135deg, #061529 0%, #0a2848 58%, #124a78 100%)",
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(90deg, rgba(3,17,34,.78) 0%, rgba(3,17,34,.58) 42%, rgba(3,17,34,.20) 72%, rgba(3,17,34,.06) 100%)",
+              "linear-gradient(90deg, rgba(3,14,29,.91) 0%, rgba(3,14,29,.78) 40%, rgba(3,14,29,.43) 66%, rgba(3,14,29,.20) 100%)",
           }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(0deg, rgba(3,17,34,.42) 0%, rgba(3,17,34,.02) 62%)",
+              "linear-gradient(0deg, rgba(3,14,29,.82) 0%, rgba(3,14,29,.04) 56%, rgba(3,14,29,.16) 100%)",
           }}
         />
+        <div className="absolute -right-32 top-12 h-80 w-80 rounded-full bg-[#ff9f1c]/10 blur-3xl" />
 
-        <div className="relative mx-auto max-w-[1440px] px-6 pt-[50px] sm:pt-[62px] md:px-10 md:pt-[72px] lg:pt-[190px] xl:px-12">
-          <div className="mx-auto w-full max-w-[1260px] pb-10 sm:pb-12 lg:pb-10">
+        <div className="relative mx-auto max-w-[1440px] px-6 pb-12 pt-[64px] sm:pb-16 sm:pt-[86px] md:px-10 lg:pb-14 lg:pt-[124px] xl:px-12">
+          <div className="w-full max-w-[720px] text-left">
             <p
-              className="mb-4 text-[12px] font-extrabold uppercase tracking-[0.22em] sm:text-[13px]"
-              style={{ color: "#f3c4c8" }}
+              className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.17em] backdrop-blur-sm sm:text-[12px]"
+              style={{ color: "rgba(255,255,255,.92)" }}
             >
               Jobs across the United Kingdom
             </p>
 
             <h1
-              className="max-w-[980px] font-serif text-[50px] font-semibold leading-[0.96] tracking-[-1.8px] drop-shadow-[0_4px_18px_rgba(0,0,0,.22)] sm:text-[62px] lg:text-[80px] lg:leading-[0.95] lg:tracking-[-3px]"
+              className="mt-6 font-serif text-[48px] font-semibold leading-[.98] tracking-[-1.7px] drop-shadow-[0_5px_20px_rgba(0,0,0,.3)] sm:text-[66px] sm:tracking-[-2.4px] lg:text-[82px] lg:tracking-[-3.4px]"
               style={{ color: "#ffffff" }}
             >
               Find a better
               <br />
-              job in the UK
+              <span style={{ color: "#ff9f1c" }}>job in the UK</span>
             </h1>
 
             <p
-              className="mt-6 max-w-[760px] text-[16px] font-medium leading-7 sm:text-[18px] sm:leading-8"
-              style={{ color: "rgba(255,255,255,.90)" }}
+              className="mt-5 max-w-[660px] text-[15px] font-medium leading-7 sm:text-[17px] sm:leading-8"
+              style={{ color: "rgba(255,255,255,.84)" }}
             >
               Search current vacancies from verified UK employers. Find roles by
               title, location, sector and employment type.
@@ -249,74 +262,99 @@ export default async function Home() {
           <form
             action="/jobs"
             method="GET"
-            className="mx-auto grid w-full max-w-[1260px] overflow-hidden border border-[#dfe3e8] bg-white shadow-[0_12px_30px_rgba(0,0,0,.20)] sm:mt-12 lg:mt-0 lg:grid-cols-[1.18fr_1fr_.72fr_168px]"
+            className="mt-9 grid w-full max-w-[1040px] overflow-hidden rounded-[18px] border border-white/55 bg-white p-1.5 shadow-[0_22px_55px_rgba(0,0,0,.30)] lg:mt-11 lg:grid-cols-[1.16fr_1fr_.9fr_172px] lg:rounded-[16px]"
           >
-            <label className="flex min-h-[62px] items-center gap-3 border-b border-[#e2e6eb] px-5 lg:border-b-0 lg:border-r">
-              <Search className="h-[18px] w-[18px] shrink-0 text-[#667085]" />
-              <input
-                name="q"
-                placeholder="Job title, skill or keyword"
-                className="w-full bg-transparent text-[14px] font-medium text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]"
-              />
+            <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
+              <Search className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
+                  Keyword
+                </span>
+                <input
+                  name="q"
+                  placeholder="Job title or skill"
+                  className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#667085]"
+                />
+              </span>
             </label>
 
-            <label className="flex min-h-[62px] items-center gap-3 border-b border-[#e2e6eb] px-5 lg:border-b-0 lg:border-r">
-              <MapPin className="h-[18px] w-[18px] shrink-0 text-[#667085]" />
-              <input
-                name="location"
-                placeholder="Location e.g. London"
-                className="w-full bg-transparent text-[14px] font-medium text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]"
-              />
+            <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
+              <MapPin className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
+                  Location
+                </span>
+                <input
+                  name="location"
+                  placeholder="City or postcode"
+                  className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#667085]"
+                />
+              </span>
             </label>
 
-            <label className="flex min-h-[62px] items-center border-b border-[#e2e6eb] px-5 lg:border-b-0 lg:border-r">
-              <select
-                name="type"
-                defaultValue=""
-                className="w-full bg-transparent text-[14px] font-medium text-[#344054] outline-none"
-              >
-                <option value="">Any job type</option>
-                <option value="Full Time">Full Time</option>
-                <option value="Part Time">Part Time</option>
-                <option value="Contract">Contract</option>
-                <option value="Temporary">Temporary</option>
-                <option value="Apprenticeship">Apprenticeship</option>
-                <option value="Internship">Internship</option>
-              </select>
+            <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
+              <BriefcaseBusiness className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
+                  Category
+                </span>
+                <select
+                  name="category"
+                  defaultValue=""
+                  className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-[#344054] outline-none"
+                >
+                  <option value="">All categories</option>
+                  {sectors.map((sector) => (
+                    <option key={sector.name} value={sector.name}>
+                      {sector.name}
+                    </option>
+                  ))}
+                </select>
+              </span>
             </label>
 
             <button
               type="submit"
-              className="flex min-h-[62px] items-center justify-center gap-2 bg-[#d71920] px-5 text-[14px] font-bold transition hover:bg-[#b91319]"
-              style={{ color: "#ffffff" }}
+              className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#ff9f1c] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]"
             >
               Search jobs
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.4} />
             </button>
           </form>
 
-          <div
-            className="mx-auto grid w-full max-w-[1260px] border-x border-b border-white/15 sm:grid-cols-3"
-            style={{ backgroundColor: "rgba(4,24,45,.94)" }}
-          >
-            <TrustItem
-              icon={BriefcaseBusiness}
-              title={`${liveJobsCount} live ${liveJobsCount === 1 ? "job" : "jobs"}`}
-              text="Currently published"
-            />
-            <TrustItem
-              icon={ShieldCheck}
-              title="Employer checks"
-              text="Before posting access"
-            />
-            <TrustItem
-              icon={MapPin}
-              title="United Kingdom"
-              text="Search roles nationwide"
-            />
+          <div className="mt-5 flex max-w-[1040px] flex-wrap items-center gap-x-2 gap-y-2 text-[12px]">
+            <span className="mr-1 font-semibold" style={{ color: "rgba(255,255,255,.82)" }}>
+              Trending keywords:
+            </span>
+            {["Care Assistant", "Driver", "Warehouse", "Cleaner", "Office"].map((keyword) => (
+              <Link
+                key={keyword}
+                href={`/jobs?q=${encodeURIComponent(keyword)}`}
+                className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 font-semibold backdrop-blur-sm transition hover:border-[#ffb347] hover:bg-[#ff9f1c]"
+                style={{ color: "#ffffff" }}
+              >
+                {keyword}
+              </Link>
+            ))}
           </div>
 
-          <div className="h-[24px] sm:h-[60px] lg:h-[28px]" />
+          <div className="mt-10 grid w-full max-w-[1040px] overflow-hidden rounded-[16px] border border-white/15 bg-[#061a30]/75 shadow-[0_12px_32px_rgba(0,0,0,.18)] backdrop-blur-sm sm:grid-cols-3">
+            <HeroStat
+              icon={BriefcaseBusiness}
+              title={`${liveJobsCount} active ${liveJobsCount === 1 ? "job" : "jobs"}`}
+              text="Live vacancies today"
+            />
+            <HeroStat
+              icon={ShieldCheck}
+              title="Verified employers"
+              text="Checks before posting access"
+            />
+            <HeroStat
+              icon={MapPin}
+              title="UK-wide coverage"
+              text="Roles across the country"
+            />
+          </div>
         </div>
       </section>
 
@@ -466,15 +504,25 @@ export default async function Home() {
                     <Link
                       href={`/jobs/${job.slug}`}
                       key={job.id}
-                      className={`group block px-5 py-[18px] transition hover:bg-[#fbfcfd] md:px-6 ${
+                      className={`group relative block px-5 py-[18px] transition-all duration-200 ease-out hover:z-10 hover:-translate-y-[2px] hover:bg-white hover:shadow-[0_10px_28px_rgba(16,24,40,.10)] md:px-6 ${
                         index !== jobs.length - 1
                           ? "border-b border-[#e6e9ed]"
                           : ""
                       }`}
                     >
                       <div className="flex items-start gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#dfe4ea] bg-[#f7f8fa] text-[11px] font-bold text-[#344054]">
-                          {initials(job.company_name)}
+                        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden border border-[#dfe4ea] bg-[#f7f8fa] text-[11px] font-bold text-[#344054]">
+                          {job.company_logo_url ? (
+                            <img
+                              src={job.company_logo_url}
+                              alt={`${job.company_name} logo`}
+                              className="h-full w-full object-contain p-1"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          ) : (
+                            initials(job.company_name)
+                          )}
                         </div>
 
                         <div className="min-w-0 flex-1">
@@ -497,10 +545,14 @@ export default async function Home() {
                           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#667085]">
                             <span className="flex items-center gap-1.5">
                               <MapPin className="h-3.5 w-3.5" />
-                              {job.location}
+                              {formatLocation(job.location)}
                             </span>
                             <span className="font-semibold text-[#344054]">
-                              {job.salary || "Salary not specified"}
+                              {job.salary
+                                ? job.salary.trim().startsWith("\u00A3")
+                                  ? job.salary
+                                  : `\u00A3${job.salary}`
+                                : "Salary not specified"}
                             </span>
                             <span>{job.job_type}</span>
                             <span className="flex items-center gap-1.5 text-[#98a2b3]">
@@ -548,9 +600,9 @@ export default async function Home() {
               </div>
 
               <div className="mt-4 bg-[#07182d] p-6">
-                <ShieldCheck className="h-6 w-6 text-[#f3b4bc]" />
+                <ShieldCheck className="mb-5 h-8 w-8 text-[#f3b4bc]" strokeWidth={1.8} />
                 <h3
-                  className="mt-4 text-[18px] font-bold"
+                  className="text-[18px] font-bold"
                   style={{ color: "#ffffff" }}
                 >
                   Employer verification
@@ -659,7 +711,7 @@ export default async function Home() {
   );
 }
 
-function TrustItem({
+function HeroStat({
   icon: Icon,
   title,
   text,
@@ -669,22 +721,13 @@ function TrustItem({
   text: string;
 }) {
   return (
-    <div className="flex min-h-[70px] items-center gap-3.5 border-b border-white/10 px-5 py-3.5 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0">
-      <Icon
-        className="h-[21px] w-[21px] shrink-0"
-        strokeWidth={1.8}
-        style={{ color: "#f0c36a" }}
-      />
+    <div className="flex min-h-[94px] items-center justify-center gap-3.5 border-b border-white/12 px-5 py-5 text-center last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 sm:text-left">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ffb347]/35 bg-[#ff9f1c]/15">
+        <Icon className="h-5 w-5 text-[#ffb347]" strokeWidth={1.9} />
+      </div>
       <div>
-        <p className="text-[14px] font-bold" style={{ color: "#ffffff" }}>
-          {title}
-        </p>
-        <p
-          className="mt-0.5 text-[11px]"
-          style={{ color: "rgba(255,255,255,.58)" }}
-        >
-          {text}
-        </p>
+        <p className="text-[15px] font-extrabold text-white">{title}</p>
+        <p className="mt-1 text-[12px] text-white/60">{text}</p>
       </div>
     </div>
   );
@@ -706,8 +749,8 @@ function SeekerTool({
       href={href}
       className="group min-h-[190px] bg-[#0a213b] p-6 transition hover:bg-[#0d2948]"
     >
-      <Icon className="h-5 w-5 text-[#f3b4bc]" />
-      <h3 className="mt-7 text-[17px] font-bold text-white">{title}</h3>
+      <Icon className="mb-5 h-7 w-7 text-[#f3b4bc]" strokeWidth={1.8} />
+      <h3 className="text-[17px] font-bold text-white">{title}</h3>
       <p className="mt-2.5 text-[13px] leading-6 text-white/58">{text}</p>
       <span className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold text-white">
         Open tool <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />

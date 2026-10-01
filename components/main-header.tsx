@@ -7,9 +7,12 @@ import { useState } from "react";
 
 import {
   BriefcaseBusiness,
+  ChevronDown,
+  ExternalLink,
   LogOut,
   Menu,
-  Search,
+  Settings,
+  ShieldCheck,
   UserRound,
   X,
 } from "lucide-react";
@@ -25,6 +28,7 @@ export default function MainHeader({
   loggedIn = false,
   displayName = "Account",
   accountType,
+  isAdmin = false,
 }: MainHeaderProps) {
   const pathname = usePathname();
 
@@ -153,13 +157,20 @@ export default function MainHeader({
               <Link
                 key={item.label}
                 href={item.href}
-                className={`relative flex h-full items-center text-[14px] font-semibold transition ${
+                className={`group relative isolate flex h-full items-center text-[14px] font-semibold transition-colors duration-200 ${
                   active
                     ? "text-[#07182d]"
                     : "text-[#475467] hover:text-[#07182d]"
                 }`}
               >
-                {item.label}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-x-3 inset-y-[13px] -z-10 scale-[0.88] rounded-[8px] bg-[#f2f4f7] opacity-0 transition-all duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
+                />
+
+                <span className="relative z-10">
+                  {item.label}
+                </span>
 
                 {active && (
                   <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d71920]" />
@@ -171,42 +182,103 @@ export default function MainHeader({
 
         {/* DESKTOP RIGHT */}
         <div className="ml-auto hidden items-center gap-3 lg:flex">
-          <Link
-            href="/jobs"
-            aria-label="Search jobs"
-            className="flex h-[44px] w-[44px] items-center justify-center rounded-full text-[#475467] transition hover:bg-[#f2f4f7] hover:text-[#07182d]"
-          >
-            <Search className="h-[19px] w-[19px]" />
-          </Link>
-
           {loggedIn ? (
-            <>
-              <Link
-                href={accountHref}
-                className="flex min-h-[44px] items-center gap-2.5 rounded-[8px] px-3 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f2f4f7]"
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f2f4f7]">
-                  <UserRound className="h-[16px] w-[16px] text-[#475467]" />
+            isAdmin ? (
+              <details className="group relative">
+                <summary className="flex min-h-[44px] cursor-pointer list-none items-center gap-2.5 rounded-[8px] px-3 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f2f4f7] [&::-webkit-details-marker]:hidden">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e4e7ec] bg-[#f8fafc]">
+                    <UserRound className="h-[17px] w-[17px] text-[#344054]" />
+                  </div>
+
+                  <span className="max-w-[145px] truncate">
+                    {displayName}
+                  </span>
+
+                  <ChevronDown className="h-[15px] w-[15px] text-[#98a2b3] transition group-open:rotate-180" />
+                </summary>
+
+                <div className="absolute right-0 top-[calc(100%+10px)] w-[250px] overflow-hidden rounded-[10px] border border-[#e4e7ec] bg-white shadow-[0_18px_45px_rgba(16,24,40,.14)]">
+                  <div className="border-b border-[#eaecf0] px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#07182d]">
+                        <ShieldCheck className="h-[19px] w-[19px] text-white" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-[14px] font-bold text-[#101828]">
+                          {displayName}
+                        </p>
+                        <p className="mt-0.5 text-[12px] font-semibold text-[#d71920]">
+                          Owner / Administrator
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-2">
+                    <Link
+                      href="/admin"
+                      className="flex min-h-[42px] items-center gap-3 rounded-[7px] px-3 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f2f4f7]"
+                    >
+                      <ShieldCheck className="h-[16px] w-[16px] text-[#667085]" />
+                      Admin Dashboard
+                    </Link>
+
+                    <Link
+                      href="/account/settings"
+                      className="flex min-h-[42px] items-center gap-3 rounded-[7px] px-3 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f2f4f7]"
+                    >
+                      <Settings className="h-[16px] w-[16px] text-[#667085]" />
+                      Account Settings
+                    </Link>
+
+                    <Link
+                      href="/"
+                      className="flex min-h-[42px] items-center gap-3 rounded-[7px] px-3 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f2f4f7]"
+                    >
+                      <ExternalLink className="h-[16px] w-[16px] text-[#667085]" />
+                      View Website
+                    </Link>
+                  </div>
+
+                  <div className="border-t border-[#eaecf0] p-2">
+                    <form action="/auth/signout" method="POST">
+                      <button
+                        type="submit"
+                        className="flex min-h-[42px] w-full items-center gap-3 rounded-[7px] bg-transparent px-3 text-left text-[13px] font-semibold text-[#667085] transition hover:bg-[#f2f4f7] hover:text-[#07182d]"
+                      >
+                        <LogOut className="h-[16px] w-[16px]" />
+                        Log out
+                      </button>
+                    </form>
+                  </div>
                 </div>
-
-                <span className="max-w-[145px] truncate">
-                  {displayName}
-                </span>
-              </Link>
-
-              <form
-                action="/auth/signout"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  aria-label="Log out"
-                  className="flex h-[44px] w-[44px] items-center justify-center rounded-full bg-transparent text-[#667085] transition hover:bg-[#f2f4f7] hover:text-[#07182d]"
+              </details>
+            ) : (
+              <>
+                <Link
+                  href={accountHref}
+                  className="flex min-h-[44px] items-center gap-2.5 rounded-[8px] px-3 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f2f4f7]"
                 >
-                  <LogOut className="h-[18px] w-[18px]" />
-                </button>
-              </form>
-            </>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f2f4f7]">
+                    <UserRound className="h-[16px] w-[16px] text-[#475467]" />
+                  </div>
+
+                  <span className="max-w-[145px] truncate">
+                    {displayName}
+                  </span>
+                </Link>
+
+                <form action="/auth/signout" method="POST">
+                  <button
+                    type="submit"
+                    aria-label="Log out"
+                    className="flex h-[44px] w-[44px] items-center justify-center rounded-full bg-transparent text-[#667085] transition hover:bg-[#f2f4f7] hover:text-[#07182d]"
+                  >
+                    <LogOut className="h-[18px] w-[18px]" />
+                  </button>
+                </form>
+              </>
+            )
           ) : (
             <Link
               href="/login"
@@ -277,6 +349,29 @@ export default function MainHeader({
             <div className="mt-5 border-t border-[#eaecf0] pt-5">
               {loggedIn ? (
                 <div className="space-y-3">
+                  {isAdmin && (
+                    <div className="flex items-center gap-3 rounded-[8px] bg-[#f8fafc] px-4 py-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#07182d]">
+                        <ShieldCheck className="h-[17px] w-[17px] text-white" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-[14px] font-bold text-[#101828]">{displayName}</p>
+                        <p className="text-[12px] font-semibold text-[#d71920]">Owner / Administrator</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex min-h-[48px] items-center gap-3 rounded-[8px] border border-[#d0d5dd] px-4 text-[14px] font-semibold text-[#344054]"
+                    >
+                      <ShieldCheck className="h-[17px] w-[17px] text-[#667085]" />
+                      Admin Dashboard
+                    </Link>
+                  )}
+
                   <Link
                     href={accountHref}
                     onClick={() =>

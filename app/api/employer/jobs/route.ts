@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { deleteJobMedia } from "@/lib/job-media";
 
 export async function POST(
   request: Request
@@ -96,7 +97,9 @@ export async function POST(
         id,
         employer_id,
         title,
-        status
+        status,
+        company_logo_url,
+        job_image_url
         `
       )
       .eq("id", jobId)
@@ -150,6 +153,9 @@ export async function POST(
           }
         );
       }
+
+      await deleteJobMedia(admin, job.company_logo_url);
+      await deleteJobMedia(admin, job.job_image_url);
 
       return NextResponse.json({
         success: true,

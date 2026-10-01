@@ -7,7 +7,6 @@ import {
 import "./globals.css";
 
 import SiteFooter from "@/components/site-footer";
-import WhatsAppChat from "@/components/whatsapp-chat";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -20,13 +19,10 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    "https://ukjobalert.com"
-  ),
+  metadataBase: new URL("https://ukjobalert.com"),
 
   title: {
-    default:
-      "UK Jobs & Verified Employer Vacancies | UKJobAlert",
+    default: "UK Jobs & Verified Employer Vacancies | UKJobAlert",
     template: "%s | UKJobAlert",
   },
 
@@ -55,20 +51,23 @@ export const metadata: Metadata = {
   creator: "UKJobAlert",
   publisher: "UKJobAlert",
 
+  alternates: {
+    canonical: "/",
+  },
+
   openGraph: {
     type: "website",
     locale: "en_GB",
+    url: "/",
     siteName: "UKJobAlert",
-    title:
-      "UK Jobs & Verified Employer Vacancies | UKJobAlert",
+    title: "UK Jobs & Verified Employer Vacancies | UKJobAlert",
     description:
       "Search UK jobs and current vacancies from verified employers by job title, location, sector and employment type.",
   },
 
   twitter: {
     card: "summary_large_image",
-    title:
-      "UK Jobs & Verified Employer Vacancies | UKJobAlert",
+    title: "UK Jobs & Verified Employer Vacancies | UKJobAlert",
     description:
       "Search UK jobs and current vacancies from verified employers.",
   },
@@ -76,7 +75,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
@@ -102,7 +100,6 @@ export default function RootLayout({
       <body>
         {children}
         <SiteFooter />
-        <WhatsAppChat />
       </body>
     </html>
   );

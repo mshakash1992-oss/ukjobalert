@@ -12,6 +12,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 type CompanyJob = {
   company_name: string;
+  company_logo_url: string | null;
   company_number: string | null;
   location: string;
 };
@@ -19,6 +20,7 @@ type CompanyJob = {
 type Company = {
   name: string;
   number: string | null;
+  logoUrl: string | null;
   count: number;
   locations: string[];
 };
@@ -39,7 +41,7 @@ export default async function CompaniesPage() {
 
   const { data, error } = await admin
     .from("jobs")
-    .select("company_name, company_number, location")
+    .select("company_name, company_logo_url, company_number, location")
     .eq("status", "published")
     .gt("expires_at", now)
     .order("company_name", { ascending: true });
@@ -56,6 +58,9 @@ export default async function CompaniesPage() {
 
     if (current) {
       current.count += 1;
+      if (!current.logoUrl && row.company_logo_url) {
+        current.logoUrl = row.company_logo_url;
+      }
       if (row.location && !current.locations.includes(row.location)) {
         current.locations.push(row.location);
       }
@@ -63,6 +68,7 @@ export default async function CompaniesPage() {
       companiesMap.set(key, {
         name: row.company_name,
         number: row.company_number,
+        logoUrl: row.company_logo_url,
         count: 1,
         locations: row.location ? [row.location] : [],
       });
@@ -122,8 +128,18 @@ export default async function CompaniesPage() {
                 className="group bg-white p-6 transition hover:bg-[#fbfbfa]"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[#dfe3e8] bg-[#f6f7f8] text-[13px] font-bold text-[#07182d]">
-                    {initials(company.name)}
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden border border-[#dfe3e8] bg-[#f6f7f8] text-[13px] font-bold text-[#07182d]">
+                    {company.logoUrl ? (
+                      <img
+                        src={company.logoUrl}
+                        alt={`${company.name} logo`}
+                        className="h-full w-full object-contain p-2"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      initials(company.name)
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">

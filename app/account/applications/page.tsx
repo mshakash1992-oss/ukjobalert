@@ -100,6 +100,15 @@ export default async function ApplicationsPage() {
     redirect("/login");
   }
 
+  const adminEmails = (process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+
+  const isAdmin = Boolean(
+    user.email && adminEmails.includes(user.email.toLowerCase())
+  );
+
   if (
     user.user_metadata?.account_type ===
     "employer"
@@ -169,6 +178,7 @@ export default async function ApplicationsPage() {
           user.user_metadata?.account_type ||
           "job_seeker"
         }
+        isAdmin={isAdmin}
       />
 
       {/* HERO */}

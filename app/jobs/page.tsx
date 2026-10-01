@@ -76,6 +76,7 @@ type Job = {
   id: string;
   slug: string;
   company_name: string;
+  company_logo_url: string | null;
   title: string;
   category: string;
   job_type: string;
@@ -196,6 +197,7 @@ export default async function JobsPage({
         id,
         slug,
         company_name,
+        company_logo_url,
         title,
         category,
         job_type,
@@ -357,41 +359,45 @@ export default async function JobsPage({
         </div>
       </section>
 
-      <section className="bg-[#07182d]">
-        <div className="mx-auto max-w-[1360px] px-6 py-5 md:px-10 xl:px-12">
-          <form method="GET" action="/jobs" className="grid gap-px overflow-hidden bg-white/15 lg:grid-cols-[1.15fr_1fr_.8fr_.8fr_160px]">
-            <SearchField icon={Search} label="What" className="bg-white">
+      <section className="border-b border-[#dfe3e8] bg-[#f4f6f8]">
+        <div className="mx-auto max-w-[1360px] px-6 py-7 md:px-10 xl:px-12">
+          <form
+            method="GET"
+            action="/jobs"
+            className="grid w-full overflow-hidden rounded-[18px] border border-white/55 bg-white p-1.5 shadow-[0_12px_30px_rgba(16,24,40,.10)] lg:grid-cols-[1.15fr_1fr_.8fr_.8fr_168px]"
+          >
+            <SearchField icon={Search} label="What">
               <input name="q" defaultValue={q} placeholder="Job title or keyword" className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]" />
             </SearchField>
-            <SearchField icon={MapPin} label="Where" className="bg-white">
+            <SearchField icon={MapPin} label="Where">
               <input name="location" defaultValue={location} placeholder="City or postcode" className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#98a2b3]" />
             </SearchField>
-            <SearchField label="Sector" className="bg-white">
+            <SearchField label="Sector">
               <select name="category" defaultValue={category} className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#344054] outline-none">
                 <option value="">All sectors</option>
                 {categories.map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
             </SearchField>
-            <SearchField label="Job type" className="bg-white">
+            <SearchField label="Job type">
               <select name="type" defaultValue={type} className="mt-1 w-full bg-transparent text-[14px] font-semibold text-[#344054] outline-none">
                 <option value="">Any type</option>
                 {jobTypes.map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
             </SearchField>
-            <button type="submit" className="flex min-h-[68px] items-center justify-center gap-2 bg-[#d71920] px-5 text-[14px] font-bold text-white transition hover:bg-[#b9151b]">
+            <button type="submit" className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#ff9f1c] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]">
               Search jobs <ArrowRight className="h-4 w-4" />
             </button>
           </form>
 
           {hasFilters && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white/45">Filtered by</span>
+              <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#667085]">Filtered by</span>
               {q && <FilterChip label={`Keyword: ${q}`} />}
               {location && <FilterChip label={`Location: ${location}`} />}
               {category && <FilterChip label={category} />}
               {type && <FilterChip label={type} />}
               {company && <FilterChip label={`Company: ${company}`} />}
-              <Link href="/jobs" className="ml-1 inline-flex items-center gap-1.5 px-2 py-2 text-[12px] font-semibold text-white/70 hover:text-white">
+              <Link href="/jobs" className="ml-1 inline-flex items-center gap-1.5 px-2 py-2 text-[12px] font-semibold text-[#667085] hover:text-[#d71920]">
                 <X className="h-3.5 w-3.5" /> Clear all
               </Link>
             </div>
@@ -417,14 +423,14 @@ export default async function JobsPage({
                 <Link
                   key={item}
                   href={filterHref("category", category === item ? "" : item)}
-                  className={`flex items-center justify-between gap-3 py-2.5 text-[12px] font-semibold transition ${
+                  className={`group -mx-2 flex items-center justify-between gap-3 rounded-sm px-2 py-2.5 text-[12px] font-semibold transition-all duration-300 ease-out hover:translate-x-1 hover:bg-[#fff6f6] hover:shadow-[0_4px_12px_rgba(215,25,32,.08)] motion-reduce:transform-none motion-reduce:transition-none ${
                     category === item
                       ? "text-[#d71920]"
-                      : "text-[#475467] hover:text-[#07182d]"
+                      : "text-[#475467] hover:text-[#d71920]"
                   }`}
                 >
-                  <span>{item}</span>
-                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3]">
+                  <span className="transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transform-none">{item}</span>
+                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3] transition-colors duration-300 group-hover:text-[#d71920]">
                     {categoryCounts.get(item) || 0}
                   </span>
                 </Link>
@@ -436,14 +442,14 @@ export default async function JobsPage({
                 <Link
                   key={item}
                   href={filterHref("type", type === item ? "" : item)}
-                  className={`flex items-center justify-between gap-3 py-2.5 text-[12px] font-semibold transition ${
+                  className={`group -mx-2 flex items-center justify-between gap-3 rounded-sm px-2 py-2.5 text-[12px] font-semibold transition-all duration-300 ease-out hover:translate-x-1 hover:bg-[#fff6f6] hover:shadow-[0_4px_12px_rgba(215,25,32,.08)] motion-reduce:transform-none motion-reduce:transition-none ${
                     type === item
                       ? "text-[#d71920]"
-                      : "text-[#475467] hover:text-[#07182d]"
+                      : "text-[#475467] hover:text-[#d71920]"
                   }`}
                 >
-                  <span>{item}</span>
-                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3]">
+                  <span className="transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transform-none">{item}</span>
+                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3] transition-colors duration-300 group-hover:text-[#d71920]">
                     {typeCounts.get(item) || 0}
                   </span>
                 </Link>
@@ -484,8 +490,20 @@ export default async function JobsPage({
             ) : (
               <div className="divide-y divide-[#e1e5e9] border-b border-[#e1e5e9]">
                 {jobs.map((job) => (
-                  <Link key={job.id} href={`/jobs/${job.slug}`} className="group grid gap-5 bg-white px-5 py-6 transition hover:bg-[#fbfbfa] sm:grid-cols-[56px_minmax(0,1fr)_36px] sm:px-6">
-                    <div className="flex h-14 w-14 items-center justify-center border border-[#dfe3e8] bg-[#f6f7f8] text-[13px] font-bold text-[#07182d]">{initials(job.company_name)}</div>
+                  <Link key={job.id} href={`/jobs/${job.slug}`} className="group relative grid gap-5 bg-white px-5 py-6 transition-all duration-200 ease-out hover:z-10 hover:-translate-y-[2px] hover:bg-white hover:shadow-[0_10px_28px_rgba(16,24,40,.10)] sm:grid-cols-[56px_minmax(0,1fr)_36px] sm:px-6">
+                    <div className="flex h-14 w-14 items-center justify-center overflow-hidden border border-[#dfe3e8] bg-[#f6f7f8] text-[13px] font-bold text-[#07182d]">
+                      {job.company_logo_url ? (
+                        <img
+                          src={job.company_logo_url}
+                          alt={`${job.company_name} logo`}
+                          className="h-full w-full object-contain p-2"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        initials(job.company_name)
+                      )}
+                    </div>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="text-[19px] font-bold tracking-[-0.35px] text-[#07182d] group-hover:text-[#d71920]">{job.title}</h3>
@@ -495,7 +513,7 @@ export default async function JobsPage({
                       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#667085]">
                         <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{job.location}</span>
                         <span>{job.job_type}</span><span>{job.category}</span>
-                        {job.salary && <span className="font-semibold text-[#344054]">{job.salary}</span>}
+                        {job.salary && <span className="font-semibold text-[#344054]">{job.salary.trim().startsWith("┬ú") ? job.salary : `┬ú${job.salary}`}</span>}
                       </div>
                       <div className="mt-4 flex items-center gap-1.5 text-[11px] text-[#98a2b3]"><Clock3 className="h-3.5 w-3.5" />Posted {timeAgo(job.created_at)}</div>
                     </div>
@@ -551,15 +569,15 @@ function FilterGroup({
 
 function SearchField({ icon: Icon, label, children, className = "" }: { icon?: typeof Search; label: string; children: React.ReactNode; className?: string }) {
   return (
-    <label className={`flex min-h-[68px] items-center gap-3 px-4 ${className}`}>
-      {Icon && <Icon className="h-4 w-4 shrink-0 text-[#667085]" />}
-      <span className="min-w-0 flex-1"><span className="block text-[9px] font-bold uppercase tracking-[0.13em] text-[#98a2b3]">{label}</span>{children}</span>
+    <label className={`flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 last:border-b-0 lg:border-b-0 lg:border-r ${className}`}>
+      {Icon && <Icon className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />}
+      <span className="min-w-0 flex-1"><span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">{label}</span>{children}</span>
     </label>
   );
 }
 
 function FilterChip({ label }: { label: string }) {
-  return <span className="inline-flex min-h-[30px] items-center border border-white/15 bg-white/10 px-3 text-[11px] font-semibold text-white/80">{label}</span>;
+  return <span className="inline-flex min-h-[30px] items-center border border-[#dfe3e8] bg-white px-3 text-[11px] font-semibold text-[#475467]">{label}</span>;
 }
 
 function InfoRow({ text }: { text: string }) {
