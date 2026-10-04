@@ -18,10 +18,10 @@ import { createClient } from "@/lib/supabase/server";
 import MainHeader from "@/components/main-header";
 
 export const metadata: Metadata = {
-  title: "UK Jobs & Current Vacancies",
+  title: "Find UK Jobs & Current Vacancies",
 
   description:
-    "Search current UK jobs and vacancies from verified employers. Find opportunities by job title, location, sector and employment type on UKJobAlert.",
+    "Find UK jobs and current vacancies from verified employers. Search jobs in the UK by title, location, sector and employment type on UKJobAlert.",
 
   alternates: {
     canonical: "/jobs",
@@ -31,16 +31,16 @@ export const metadata: Metadata = {
     type: "website",
     url: "/jobs",
     siteName: "UKJobAlert",
-    title: "UK Jobs & Current Vacancies | UKJobAlert",
+    title: "Find UK Jobs & Current Vacancies | UKJobAlert",
     description:
-      "Search current UK jobs and vacancies from verified employers across the UK.",
+      "Find UK jobs and current vacancies from verified employers across the UK.",
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "UK Jobs & Current Vacancies | UKJobAlert",
+    title: "Find UK Jobs & Current Vacancies | UKJobAlert",
     description:
-      "Search current UK jobs and vacancies from verified employers across the UK.",
+      "Find UK jobs and current vacancies from verified employers across the UK.",
   },
 
   robots: {
@@ -342,10 +342,10 @@ export default async function JobsPage({
               Find jobs
             </div>
             <h1 className="mt-5 text-[42px] font-bold leading-[1.04] tracking-[-1.8px] text-[#07182d] sm:text-[54px] lg:text-[60px]">
-              Search UK jobs that are ready to explore.
+              Find current UK jobs and vacancies.
             </h1>
             <p className="mt-5 max-w-[700px] text-[16px] leading-7 text-[#5d6673]">
-              Browse current vacancies by role, location, sector and working pattern. Open a listing to review the details, employer information and application route before you apply.
+              Search jobs in the UK by role, location, sector and working pattern. Open a listing to review the details, employer information and application route before you apply.
             </p>
           </div>
 
@@ -423,14 +423,14 @@ export default async function JobsPage({
                 <Link
                   key={item}
                   href={filterHref("category", category === item ? "" : item)}
-                  className={`group -mx-2 flex items-center justify-between gap-3 rounded-sm px-2 py-2.5 text-[12px] font-semibold transition-all duration-300 ease-out hover:translate-x-1 hover:bg-[#fff6f6] hover:shadow-[0_4px_12px_rgba(215,25,32,.08)] motion-reduce:transform-none motion-reduce:transition-none ${
+                  className={`flex items-center justify-between gap-3 py-2.5 text-[12px] font-semibold transition ${
                     category === item
                       ? "text-[#d71920]"
-                      : "text-[#475467] hover:text-[#d71920]"
+                      : "text-[#475467] hover:text-[#07182d]"
                   }`}
                 >
-                  <span className="transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transform-none">{item}</span>
-                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3] transition-colors duration-300 group-hover:text-[#d71920]">
+                  <span>{item}</span>
+                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3]">
                     {categoryCounts.get(item) || 0}
                   </span>
                 </Link>
@@ -442,14 +442,14 @@ export default async function JobsPage({
                 <Link
                   key={item}
                   href={filterHref("type", type === item ? "" : item)}
-                  className={`group -mx-2 flex items-center justify-between gap-3 rounded-sm px-2 py-2.5 text-[12px] font-semibold transition-all duration-300 ease-out hover:translate-x-1 hover:bg-[#fff6f6] hover:shadow-[0_4px_12px_rgba(215,25,32,.08)] motion-reduce:transform-none motion-reduce:transition-none ${
+                  className={`flex items-center justify-between gap-3 py-2.5 text-[12px] font-semibold transition ${
                     type === item
                       ? "text-[#d71920]"
-                      : "text-[#475467] hover:text-[#d71920]"
+                      : "text-[#475467] hover:text-[#07182d]"
                   }`}
                 >
-                  <span className="transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transform-none">{item}</span>
-                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3] transition-colors duration-300 group-hover:text-[#d71920]">
+                  <span>{item}</span>
+                  <span className="min-w-6 text-right text-[11px] text-[#98a2b3]">
                     {typeCounts.get(item) || 0}
                   </span>
                 </Link>
