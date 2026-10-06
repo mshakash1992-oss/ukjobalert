@@ -238,7 +238,7 @@ export default async function Home() {
         <div className="absolute -right-32 top-12 h-80 w-80 rounded-full bg-[#ff9f1c]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-[1440px] px-6 pb-12 pt-[64px] sm:pb-16 sm:pt-[86px] md:px-10 lg:pb-14 lg:pt-[124px] xl:px-12">
-          <div className="mx-auto w-full max-w-[480px] text-left">
+          <div className="mx-auto w-full max-w-[1280px] text-left">
             <p className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.17em] text-white/90 backdrop-blur-sm sm:text-[12px]">
               Jobs across the United Kingdom
             </p>
