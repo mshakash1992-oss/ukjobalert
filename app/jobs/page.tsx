@@ -389,6 +389,21 @@ export default async function JobsPage({
             </button>
           </form>
 
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+            <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#667085]">
+              Explore UK jobs
+            </span>
+            <Link href="/jobs/remote" className="inline-flex items-center gap-1.5 border border-[#dfe3e8] bg-white px-3 py-2 text-[12px] font-bold text-[#344054] transition hover:border-[#07182d] hover:text-[#07182d]">
+              Remote jobs <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <Link href="/jobs/visa-sponsorship" className="inline-flex items-center gap-1.5 border border-[#dfe3e8] bg-white px-3 py-2 text-[12px] font-bold text-[#344054] transition hover:border-[#07182d] hover:text-[#07182d]">
+              Visa sponsorship <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <Link href="/guides/jobs-in-uk-for-foreigners" className="inline-flex items-center gap-1.5 border border-[#dfe3e8] bg-white px-3 py-2 text-[12px] font-bold text-[#344054] transition hover:border-[#07182d] hover:text-[#07182d]">
+              Jobs in the UK for foreigners <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
           {hasFilters && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#667085]">Filtered by</span>
