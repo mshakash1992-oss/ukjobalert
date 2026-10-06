@@ -345,7 +345,7 @@ export default async function Home() {
               <Link
                 key={keyword}
                 href={`/jobs?q=${encodeURIComponent(keyword)}`}
-                className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 font-semibold text-white/92 backdrop-blur-sm transition hover:border-[#ffb347] hover:bg-[#ff9f1c] hover:text-[#10203a]"
+                className="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 font-semibold text-white/90 backdrop-blur-sm transition hover:border-[#ffb347] hover:bg-[#ff9f1c] hover:text-[#10203a]"
               >
                 {keyword}
               </Link>
