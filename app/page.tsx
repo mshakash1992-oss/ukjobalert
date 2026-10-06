@@ -98,6 +98,16 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+function formatSalary(salary: string | null) {
+  if (!salary?.trim()) return "Salary not specified";
+
+  const cleaned = salary
+    .trim()
+    .replace(/^(?:\u00A3|Â\u00A3|â‚£|┬ú|Tú)\s*/i, "");
+
+  return /^\d/.test(cleaned) ? `\u00A3${cleaned}` : salary.trim();
+}
+
 export default async function Home() {
   const supabase = await createClient();
   const {
@@ -248,7 +258,7 @@ export default async function Home() {
           <form
             action="/jobs"
             method="GET"
-            className="mx-auto mt-9 grid w-full max-w-[1220px] overflow-hidden rounded-[18px] border border-white/55 bg-white p-1.5 shadow-[0_22px_55px_rgba(0,0,0,.30)] lg:mt-11 lg:grid-cols-[1.16fr_1fr_.9fr_172px] lg:rounded-[16px]"
+            className="mx-auto mt-9 grid w-full max-w-[1280px] overflow-hidden rounded-[18px] border border-white/55 bg-white p-1.5 shadow-[0_22px_55px_rgba(0,0,0,.30)] lg:mt-11 lg:grid-cols-[1.12fr_1fr_.9fr_.82fr_172px] lg:rounded-[16px]"
           >
             <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
               <Search className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
@@ -299,6 +309,27 @@ export default async function Home() {
               </span>
             </label>
 
+            <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
+              <Clock3 className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
+                  Job type
+                </span>
+                <select
+                  name="type"
+                  defaultValue=""
+                  className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-[#344054] outline-none"
+                >
+                  <option value="">Any type</option>
+                  {jobTypes.map((jobType) => (
+                    <option key={jobType} value={jobType}>
+                      {jobType}
+                    </option>
+                  ))}
+                </select>
+              </span>
+            </label>
+
             <button
               type="submit"
               className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#ff9f1c] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]"
@@ -308,7 +339,7 @@ export default async function Home() {
             </button>
           </form>
 
-          <div className="mx-auto mt-5 flex max-w-[1220px] flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[12px] sm:justify-start">
+          <div className="mx-auto mt-5 flex max-w-[1280px] flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[12px] sm:justify-start">
             <span className="mr-1 font-semibold text-white/70">Trending keywords:</span>
             {["Care Assistant", "Driver", "Warehouse", "Cleaner", "Office"].map((keyword) => (
               <Link
@@ -321,7 +352,7 @@ export default async function Home() {
             ))}
           </div>
 
-          <div className="mx-auto mt-10 grid w-full max-w-[1220px] overflow-hidden rounded-[16px] border border-white/15 bg-[#061a30]/75 shadow-[0_12px_32px_rgba(0,0,0,.18)] backdrop-blur-sm sm:grid-cols-3">
+          <div className="mx-auto mt-10 grid w-full max-w-[1280px] overflow-hidden rounded-[16px] border border-white/15 bg-[#061a30]/75 shadow-[0_12px_32px_rgba(0,0,0,.18)] backdrop-blur-sm sm:grid-cols-3">
             <HeroStat
               icon={BriefcaseBusiness}
               title={`${liveJobsCount} active ${liveJobsCount === 1 ? "job" : "jobs"}`}
@@ -531,7 +562,7 @@ export default async function Home() {
                               {job.location}
                             </span>
                             <span className="font-semibold text-[#344054]">
-                              {job.salary ? (job.salary.trim().startsWith("┬ú") ? job.salary : `┬ú${job.salary}`) : "Salary not specified"}
+                              {formatSalary(job.salary)}
                             </span>
                             <span>{job.job_type}</span>
                             <span className="flex items-center gap-1.5 text-[#98a2b3]">

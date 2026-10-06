@@ -52,6 +52,16 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+function formatSalary(salary: string | null) {
+  if (!salary?.trim()) return null;
+
+  const cleaned = salary
+    .trim()
+    .replace(/^(?:\u00A3|Â\u00A3|â‚£|┬ú|Tú)\s*/i, "");
+
+  return /^\d/.test(cleaned) ? `\u00A3${cleaned}` : salary.trim();
+}
+
 export default async function SeoJobResults({
   eyebrow,
   title,
@@ -183,7 +193,7 @@ export default async function SeoJobResults({
                     <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{job.location}</span>
                     <span>{job.job_type}</span>
                     <span>{job.category}</span>
-                    {job.salary && <span className="font-semibold text-[#344054]">{job.salary}</span>}
+                    {formatSalary(job.salary) && <span className="font-semibold text-[#344054]">{formatSalary(job.salary)}</span>}
                   </div>
                   <div className="mt-4 flex items-center gap-1.5 text-[11px] text-[#98a2b3]">
                     <Clock3 className="h-3.5 w-3.5" /> Posted {timeAgo(job.created_at)}
