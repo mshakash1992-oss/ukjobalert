@@ -394,7 +394,7 @@ export default async function JobsPage({
                 {jobTypes.map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
             </SearchField>
-            <button type="submit" className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#ff9f1c] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]">
+            <button type="submit" className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#d71920] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]">
               Search jobs <ArrowRight className="h-4 w-4" />
             </button>
           </form>
@@ -595,7 +595,7 @@ function FilterGroup({
 function SearchField({ icon: Icon, label, children, className = "" }: { icon?: typeof Search; label: string; children: React.ReactNode; className?: string }) {
   return (
     <label className={`flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 last:border-b-0 lg:border-b-0 lg:border-r ${className}`}>
-      {Icon && <Icon className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />}
+      {Icon && <Icon className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />}
       <span className="min-w-0 flex-1"><span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">{label}</span>{children}</span>
     </label>
   );
