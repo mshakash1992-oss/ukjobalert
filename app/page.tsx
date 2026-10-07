@@ -218,7 +218,7 @@ export default async function Home() {
           className="absolute inset-0 sm:hidden"
           style={{
             background:
-              "radial-gradient(circle at 82% 12%, rgba(255,159,28,.25) 0%, rgba(255,159,28,0) 31%), linear-gradient(135deg, #061529 0%, #0a2848 58%, #124a78 100%)",
+              "radial-gradient(circle at 82% 12%, rgba(215,25,32,.25) 0%, rgba(215,25,32,0) 31%), linear-gradient(135deg, #061529 0%, #0a2848 58%, #124a78 100%)",
           }}
         />
         <div
@@ -235,7 +235,7 @@ export default async function Home() {
               "linear-gradient(0deg, rgba(3,14,29,.82) 0%, rgba(3,14,29,.04) 56%, rgba(3,14,29,.16) 100%)",
           }}
         />
-        <div className="absolute -right-32 top-12 h-80 w-80 rounded-full bg-[#ff9f1c]/10 blur-3xl" />
+        <div className="absolute -right-32 top-12 h-80 w-80 rounded-full bg-[#d71920]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-[1440px] px-6 pb-12 pt-[64px] sm:pb-16 sm:pt-[86px] md:px-10 lg:pb-14 lg:pt-[124px] xl:px-12">
           <div className="mx-auto w-full max-w-[1280px] text-left">
@@ -244,9 +244,7 @@ export default async function Home() {
             </p>
 
             <h1 className="mt-6 font-serif text-[48px] font-semibold leading-[.98] tracking-[-1.7px] text-white drop-shadow-[0_5px_20px_rgba(0,0,0,.3)] sm:text-[66px] sm:tracking-[-2.4px] lg:text-[82px] lg:tracking-[-3.4px]">
-              Find a better
-              <br />
-              <span className="text-[#ff9f1c]">job in the UK</span>
+              Find a better job in the UK
             </h1>
 
             <p className="mt-5 max-w-[480px] text-[15px] font-medium leading-7 text-white/82 sm:text-[17px] sm:leading-8">
@@ -261,7 +259,7 @@ export default async function Home() {
             className="mx-auto mt-9 grid w-full max-w-[1280px] overflow-hidden rounded-[18px] border border-white/55 bg-white p-1.5 shadow-[0_22px_55px_rgba(0,0,0,.30)] lg:mt-11 lg:grid-cols-[1.12fr_1fr_.9fr_.82fr_172px] lg:rounded-[16px]"
           >
             <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
-              <Search className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <Search className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />
               <span className="min-w-0 flex-1">
                 <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
                   Keyword
@@ -275,7 +273,7 @@ export default async function Home() {
             </label>
 
             <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
-              <MapPin className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <MapPin className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />
               <span className="min-w-0 flex-1">
                 <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
                   Location
@@ -289,7 +287,7 @@ export default async function Home() {
             </label>
 
             <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
-              <BriefcaseBusiness className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <BriefcaseBusiness className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />
               <span className="min-w-0 flex-1">
                 <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
                   Category
@@ -310,7 +308,7 @@ export default async function Home() {
             </label>
 
             <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
-              <Clock3 className="h-5 w-5 shrink-0 text-[#ff9f1c]" strokeWidth={2} />
+              <Clock3 className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />
               <span className="min-w-0 flex-1">
                 <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
                   Job type
@@ -332,7 +330,7 @@ export default async function Home() {
 
             <button
               type="submit"
-              className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#ff9f1c] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]"
+              className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#d71920] px-5 text-[14px] font-extrabold text-[#10203a] transition hover:bg-[#f28c00] lg:min-h-[68px]"
             >
               Search jobs
               <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.4} />
@@ -345,7 +343,7 @@ export default async function Home() {
               <Link
                 key={keyword}
                 href={`/jobs?q=${encodeURIComponent(keyword)}`}
-                className="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 font-semibold text-white backdrop-blur-sm transition hover:border-[#ffb347] hover:bg-[#ff9f1c]"
+                className="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 font-semibold text-white backdrop-blur-sm transition hover:border-[#ffb347] hover:bg-[#d71920]"
                 style={{ color: "#ffffff" }}
               >
                 {keyword}
@@ -733,7 +731,7 @@ function HeroStat({
 }) {
   return (
     <div className="flex min-h-[94px] items-center justify-center gap-3.5 border-b border-white/12 px-5 py-5 text-center last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 sm:text-left">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ffb347]/35 bg-[#ff9f1c]/15">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ffb347]/35 bg-[#d71920]/15">
         <Icon className="h-5 w-5 text-[#ffb347]" strokeWidth={1.9} />
       </div>
       <div>
