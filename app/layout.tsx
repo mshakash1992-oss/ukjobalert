@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: { default: "UKJobAlert", template: "%s | UKJobAlert" },
   description: "Find jobs across the United Kingdom from verified employers.",
   robots: { index: true, follow: true },
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
   openGraph: {
     type: "website",
     siteName: "UKJobAlert",
