@@ -115,9 +115,6 @@ export default function LoginPage() {
 
       <section className={styles.formSide}>
         <div className={styles.card}>
-          <Link href="/" className={styles.mobileBrand} aria-label="UKJobAlert home">
-            <img src="/images/ukjobalert-logo.png" alt="UKJobAlert" />
-          </Link>
           <div className={styles.heading}>
             <span>WELCOME BACK</span>
 
