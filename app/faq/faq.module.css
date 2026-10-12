@@ -1,0 +1,585 @@
+.page {
+  min-height: 100vh;
+}
+
+.container {
+  width: min(1140px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   PAGE TITLE BAR
+========================================================= */
+
+.titleBar {
+  width: 100%;
+  background: #f4f4f4;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.titleBar .container {
+  min-height: 92px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+.titleBar h1 {
+  margin: 0;
+
+  color: #222222;
+
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #666666;
+
+  font-size: 14px;
+  line-height: 1;
+}
+
+.breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #666666;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+  color: #c8102e;
+}
+
+.breadcrumb a svg {
+  width: 14px;
+  height: 14px;
+
+  stroke-width: 1.8;
+}
+
+.breadcrumb > svg {
+  width: 13px;
+  height: 13px;
+
+  color: #999999;
+
+  stroke-width: 2;
+}
+
+.breadcrumb > span {
+  color: #012169;
+
+  font-weight: 500;
+}
+
+/* =========================================================
+   FAQ MAIN SECTION
+========================================================= */
+
+.faqSection {
+  padding: 54px 0 80px;
+
+  background: #ffffff;
+}
+
+.faqLayout {
+  display: grid;
+
+  grid-template-columns:
+    285px
+    minmax(0, 1fr);
+
+  gap: 42px;
+
+  align-items: start;
+}
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+.sidebar {
+  min-width: 0;
+}
+
+/* =========================================================
+   SEARCH BOX
+========================================================= */
+
+.searchBox {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 15px 0 20px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  border: 1px solid #dcdcdc;
+  border-radius: 3px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.04);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.searchBox:focus-within {
+  border-color: #012169;
+
+  box-shadow:
+    0 0 0 3px rgba(1, 33, 105, 0.07);
+}
+
+.searchBox input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #333333;
+
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.searchBox input::placeholder {
+  color: #777777;
+
+  opacity: 1;
+}
+
+.searchBox svg {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  color: #012169;
+
+  stroke-width: 1.7;
+}
+
+/* =========================================================
+   RECENT QUESTIONS
+========================================================= */
+
+.sidebar > h2 {
+  margin: 24px 0 14px;
+
+  color: #222222;
+
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.recentCard {
+  padding: 15px 0;
+
+  border: 1px solid #eeeeee;
+  border-radius: 3px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 7px rgba(0, 0, 0, 0.035);
+}
+
+.recentCard button {
+  width: 100%;
+
+  padding: 11px 22px;
+
+  display: block;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #5c5c5c;
+
+  text-align: left;
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.55;
+  font-weight: 400;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    padding-left 0.2s ease;
+}
+
+.recentCard button:hover {
+  padding-left: 26px;
+
+  background: #f7f8fb;
+
+  color: #c8102e;
+}
+
+/* =========================================================
+   RIGHT FAQ CONTENT
+========================================================= */
+
+.content {
+  min-width: 0;
+
+  scroll-margin-top: 30px;
+}
+
+.content > h2 {
+  margin: 0 0 28px;
+
+  color: #222222;
+
+  font-size: 19px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.questions {
+  width: 100%;
+}
+
+/* =========================================================
+   FAQ QUESTION CARD
+========================================================= */
+
+.question {
+  margin-bottom: 12px;
+
+  overflow: hidden;
+
+  border: 1px solid #e6e6e6;
+  border-radius: 3px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.035);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.question:hover {
+  border-color: #d7dce8;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.055);
+}
+
+/* =========================================================
+   QUESTION BUTTON
+========================================================= */
+
+.questionButton {
+  width: 100%;
+  min-height: 58px;
+
+  padding: 15px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  border: 0;
+
+  background: #ffffff;
+
+  color: #222222;
+
+  text-align: left;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.questionButton span {
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.chevron {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+
+  color: #012169;
+
+  stroke-width: 2;
+
+  transition:
+    transform 0.25s ease,
+    color 0.2s ease;
+}
+
+/* =========================================================
+   OPEN / ACTIVE QUESTION
+========================================================= */
+
+.questionOpen {
+  border-color: #c8102e;
+}
+
+.questionOpen .questionButton {
+  background: #c8102e;
+
+  color: #ffffff;
+}
+
+.questionOpen .chevron {
+  transform: rotate(180deg);
+
+  color: #ffffff;
+}
+
+/* =========================================================
+   ANSWER
+========================================================= */
+
+.answer {
+  padding: 0 20px;
+
+  background: #ffffff;
+
+  border-top: 1px solid #eeeeee;
+}
+
+.answer p {
+  max-width: 790px;
+
+  margin: 0;
+
+  padding: 20px 0 22px;
+
+  color: #666666;
+
+  font-size: 15px;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* =========================================================
+   NO SEARCH RESULTS
+========================================================= */
+
+.noResults {
+  padding: 55px 25px;
+
+  border: 1px solid #e7e7e7;
+  border-radius: 3px;
+
+  background: #f6f7f9;
+
+  text-align: center;
+}
+
+.noResults svg {
+  width: 30px;
+  height: 30px;
+
+  margin-bottom: 12px;
+
+  color: #012169;
+
+  stroke-width: 1.5;
+}
+
+.noResults h3 {
+  margin: 0;
+
+  color: #222222;
+
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.noResults p {
+  margin: 8px 0 0;
+
+  color: #777777;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .faqLayout {
+    grid-template-columns:
+      240px
+      minmax(0, 1fr);
+
+    gap: 30px;
+  }
+
+  .recentCard button {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .recentCard button:hover {
+    padding-left: 21px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 760px) {
+  .container {
+    width: calc(100% - 32px);
+  }
+
+  .titleBar .container {
+    min-height: 78px;
+  }
+
+  .titleBar h1 {
+    font-size: 22px;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+  }
+
+  .faqSection {
+    padding: 36px 0 55px;
+  }
+
+  .faqLayout {
+    grid-template-columns: 1fr;
+
+    gap: 36px;
+  }
+
+  .searchBox {
+    height: 50px;
+  }
+
+  .searchBox input {
+    font-size: 16px;
+  }
+
+  .sidebar > h2 {
+    font-size: 18px;
+  }
+
+  .recentCard button {
+    font-size: 15px;
+  }
+
+  .content > h2 {
+    margin-bottom: 20px;
+
+    font-size: 20px;
+  }
+
+  .questionButton {
+    min-height: 60px;
+
+    padding: 16px;
+  }
+
+  .questionButton span {
+    font-size: 15px;
+  }
+
+  .answer {
+    padding: 0 17px;
+  }
+
+  .answer p {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .titleBar .container {
+    min-height: auto;
+
+    padding: 17px 0;
+
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 7px;
+  }
+
+  .faqSection {
+    padding-top: 30px;
+  }
+
+  .questionButton {
+    gap: 14px;
+  }
+
+  .questionButton span {
+    font-size: 15px;
+  }
+
+  .chevron {
+    width: 18px;
+    height: 18px;
+  }
+}

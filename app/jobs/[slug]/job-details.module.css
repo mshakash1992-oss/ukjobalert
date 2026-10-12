@@ -1,0 +1,121 @@
+/* Jobword-inspired layout scoped exclusively to /jobs/[slug] */
+.page{min-height:100vh;background:#F7F9FC;color:#142B49;padding:28px 0 65px;font-family:inherit}
+.container{max-width:1170px;margin:0 auto;padding:0 20px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 324px;gap:44px;align-items:start}
+.left,.right{min-width:0}
+.left{display:flex;flex-direction:column}
+.right{display:flex;flex-direction:column;gap:17px}
+.jobHeader,.overview,.descriptionSection{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
+.headerTop{display:block}
+.headerText h1{font-size:27px;line-height:1.35;font-weight:500;color:#102A4C;letter-spacing:-.02em;margin:5px 0}
+.verified{color:#C8102E;font-size:12px;font-weight:600}
+.companyName{font-size:13px;color:#6b7480;margin:0}
+.meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:20px;color:#6c7480;font-size:12px}
+.meta span{display:inline-flex;align-items:center;gap:7px}
+.meta svg{width:15px;height:15px;stroke-width:1.7}
+.headerActions{margin-top:22px;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.actions{display:flex;flex-direction:column;gap:13px;min-width:280px}
+.applyButton{background:#C8102E;color:white!important;text-decoration:none;display:flex;justify-content:center;align-items:center;gap:12px;padding:14px 22px;border-radius:3px;min-height:47px;font-size:13px;font-weight:600}
+.applyButton:hover{background:#A50D25}
+.secondaryActions{display:flex;gap:12px}
+.secondaryActions button{font:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:10px 19px;border-radius:3px;font-size:13px;flex:1}
+.shortlist{border:1px solid #17365D;background:#17365D;color:#fff}
+.share{border:1px solid #e4e5e7;background:#fff;color:#344052}
+.deadline{font-size:12px;color:#C8102E;align-self:center}
+.noApply{color:#7c8793;font-size:12px}
+.overview{margin-top:48px}
+.overviewGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px 14px}
+.overviewItem{display:flex;gap:12px;min-width:0;align-items:flex-start}
+.overviewItem>svg{width:26px;height:26px;stroke-width:1.4;color:#C8102E;flex-shrink:0}
+.overviewItem div{min-width:0}
+.overviewItem span{display:block;color:#142B49;font-size:13px;margin-bottom:6px}
+.overviewItem strong{display:block;font-size:12px;font-weight:400;color:#6d7681;line-height:1.5;overflow-wrap:anywhere}
+.descriptionSection{margin-top:37px}
+.descriptionSection h2{font-size:17px;font-weight:500;margin:0 0 20px;color:#222b35}
+.description{font-size:13px;line-height:2;color:#66717e;white-space:pre-wrap;overflow-wrap:anywhere}
+.muted{font-size:13px;color:#76808b}
+.disclaimer{display:flex;gap:9px;align-items:flex-start;border-top:1px solid #e6e8e9;margin-top:30px;padding-top:15px;color:#8a929b}
+.disclaimer svg{width:18px;height:18px;flex-shrink:0;color:#C8102E}
+.disclaimer p{margin:0;font-size:11px;line-height:1.8}
+.sideCard{background:#fff;border:1px solid #ededed;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.025);padding:23px}
+.sideCompany{display:flex;align-items:center;gap:14px}
+.sideLogo{width:68px;height:68px;display:flex;align-items:center;justify-content:center;background:#f5f7fa;border:1px solid #e7e9ee;font-size:32px;color:#19365e;flex-shrink:0}
+.sideCompany h2{font-size:19px;font-weight:500;color:#102A4C;line-height:1.4;margin:0 0 5px;overflow-wrap:anywhere}
+.sideVerified{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#C8102E}
+.companyJobs{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:23px;padding-top:16px;border-top:1px solid #eee;text-decoration:none;color:#2d3848;font-size:12px}
+.facts{border:0;background:transparent;box-shadow:none;padding:0}
+.facts h2,.mapSection h2{font-size:16px;font-weight:500;margin:0 0 12px;color:#26313b}
+.infoList{display:flex;flex-direction:column;gap:10px}
+.infoList>div{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;border:1px solid #dedede;border-radius:3px;min-height:52px}
+.infoList svg{width:22px;height:22px;color:#C8102E;stroke-width:1.5;flex-shrink:0}
+.infoList span{font-size:12px;color:#6c7682;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.infoList strong{font-weight:600;color:#253142;font-size:12px;overflow-wrap:anywhere}
+.mapSection{background:transparent;border:0;box-shadow:none;padding:0}
+.locationBox{min-height:220px;background:#e7eaed;border:1px solid #dce1e6;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;text-align:center;padding:20px}
+.locationBox svg{color:#C8102E}
+.locationBox strong{font-size:13px;color:#354357}
+.locationBox span{font-size:11px;color:#798592}
+.sidebarDeadline{font-size:12px;color:#C8102E;text-align:center;margin:16px 0 10px}
+.actionsCompact{min-width:0;gap:10px}
+.actionsCompact .secondaryActions{width:100%}
+.actionsCompact .secondaryActions button{width:100%}
+.related{margin-top:55px}
+.relatedHeading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
+.relatedHeading h2{font-size:17px;font-weight:500;margin:0}
+.relatedHeading a{display:inline-flex;align-items:center;gap:5px;color:#C8102E;font-size:12px;text-decoration:none}
+.relatedGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.relatedCard{display:flex;align-items:flex-start;gap:12px;padding:18px;background:#fff;border:1px solid #e6e6e6;text-decoration:none;color:#26313c}
+.relatedCard:hover{box-shadow:0 6px 18px #00000012}
+.relatedLogo{width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#C8102E;border:1px solid #e8e8e8}
+.relatedContent{min-width:0;flex:1}
+.relatedType{font-size:11px;color:#C8102E}
+.relatedContent h3{font-size:14px;margin:5px 0}
+.relatedContent p{display:flex;gap:5px;align-items:center;color:#77808b;font-size:11px}
+.relatedSalary{font-size:12px;color:#6b7580}
+.relatedArrow{color:#C8102E;flex-shrink:0}
+@media(max-width:960px){.layout{grid-template-columns:minmax(0,1fr) 290px;gap:25px}.overviewGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.page{padding:20px 0 55px}.container{padding:0 16px}.layout{grid-template-columns:1fr;gap:35px}.overview{margin-top:35px}.descriptionSection{margin-top:30px}.overviewGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 12px}.headerText h1{font-size:24px}.headerActions{flex-direction:column}.actions{width:100%;min-width:0}.deadline{align-self:flex-start}.relatedGrid{grid-template-columns:1fr}.related{margin-top:35px}}
+
+/* Reference match refinements */
+.page{background:#F7F9FC;padding-top:21px}
+.layout{grid-template-columns:minmax(0,1fr) 324px;gap:35px}
+.headerText h1{font-size:25px;font-weight:500;margin:3px 0 5px}
+.companyName{font-size:12px}
+.meta{margin-top:16px}
+.headerActions{display:block;margin-top:20px}
+.actions{min-width:0;width:100%;gap:12px}
+.actionPrimary{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.actionPrimary .applyButton{width:144px;min-height:47px;flex:none}
+.deadline{align-self:auto;white-space:normal}
+.secondaryActions{gap:12px}
+.secondaryActions button{flex:none;width:145px;min-height:42px}
+.overview{margin-top:43px}
+.overviewGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 10px}
+.descriptionSection{margin-top:34px}
+.sideCard{padding:22px}
+.facts,.mapSection{padding:0}
+.facts h2{display:none}
+.infoList{gap:12px}
+.infoList>div{min-height:53px}
+.infoList span{font-size:12px}
+.infoList strong{font-weight:600}
+.sidebarDeadline{margin:16px 0 11px}
+.actionsCompact .actionPrimary{display:block}
+.actionsCompact .applyButton{width:100%;min-height:46px}
+.actionsCompact .secondaryActions{display:block}
+.actionsCompact .secondaryActions button{width:100%}
+@media(max-width:960px){.layout{grid-template-columns:minmax(0,1fr) 290px;gap:23px}.overviewGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.layout{grid-template-columns:1fr;gap:35px}.overviewGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.actionPrimary{align-items:flex-start}.secondaryActions button{width:calc(50% - 6px)}}
+@media(max-width:390px){.actionPrimary .applyButton{width:100%}.secondaryActions button{width:calc(50% - 6px)}}
+
+/* UK flag inspired: deep navy, white and Union Jack red. */
+.headerText h1,.descriptionSection h2,.sideCompany h2,.facts h2,.mapSection h2{color:#102A4C}
+.applyButton{background:#C8102E}
+.applyButton:hover{background:#A50D25}
+.shortlist{background:#17365D;border-color:#17365D}
+.shortlist:hover{background:#102A4C}
+.share{background:#fff;border-color:#D8E0EA;color:#17365D}
+.share:hover{background:#F1F5FA}
+.overviewItem>svg,.infoList svg,.locationBox svg,.disclaimer svg{color:#C8102E}
+.sideVerified,.verified,.deadline,.sidebarDeadline{color:#C8102E}
+.description{white-space:pre-wrap}
