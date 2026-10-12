@@ -101,28 +101,30 @@ export default function LoginPage() {
         </Link>
 
         <div className={styles.visualContent}>
-          <span>UK JOB OPPORTUNITIES</span>
+          <span className={styles.eyebrow}>THE UK JOB MARKETPLACE</span>
 
           <h1>
-            Find your next opportunity with confidence.
+            Your next chapter starts here.
           </h1>
 
           <p>
-            Search vacancies from verified UK employers and
-            manage your applications in one place.
+            Discover opportunities from verified UK employers, track your applications, and move your career forward with confidence.
           </p>
         </div>
       </section>
 
       <section className={styles.formSide}>
         <div className={styles.card}>
+          <Link href="/" className={styles.mobileBrand} aria-label="UKJobAlert home">
+            <img src="/images/ukjobalert-logo.png" alt="UKJobAlert" />
+          </Link>
           <div className={styles.heading}>
             <span>WELCOME BACK</span>
 
-            <h2>Sign in to your account</h2>
+            <h2>Welcome back<span className={styles.headingDot}>.</span></h2>
 
             <p>
-              Enter your details to continue to UKJobAlert.
+              Sign in to manage your career and discover what’s next.
             </p>
           </div>
 
@@ -201,20 +203,7 @@ export default function LoginPage() {
             </label>
 
             {error && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "8px",
-                  marginBottom: "16px",
-                  padding: "12px 14px",
-                  border: "1px solid #fecaca",
-                  background: "#fef2f2",
-                  color: "#b91c1c",
-                  fontSize: "13px",
-                  lineHeight: "1.5",
-                }}
-              >
+              <div className={styles.error}>
                 <AlertCircle
                   size={18}
                   style={{
