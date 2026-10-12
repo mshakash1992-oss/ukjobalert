@@ -1,66 +1,143 @@
-import "server-only";
+type CompaniesHouseAddress = {
+  premises?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  locality?: string;
+  region?: string;
+  postal_code?: string;
+  country?: string;
+};
 
-export class CompanyLookupError extends Error {
-  constructor(message: string, public status: number) {
-    super(message);
-  }
-}
-
-export type CompanyProfile = {
-  company_number: string;
-  company_name: string;
-  company_status: string;
+type CompaniesHouseCompany = {
+  company_name?: string;
+  company_number?: string;
+  company_status?: string;
   company_status_detail?: string;
   type?: string;
   date_of_creation?: string;
-  registered_office_address?: Record<string, string>;
+  registered_office_address?: CompaniesHouseAddress;
   has_insolvency_history?: boolean;
   can_file?: boolean;
 };
 
-export function normalizeCompanyNumber(value: unknown): string {
-  return typeof value === "string" ? value.trim().replace(/\s+/g, "").toUpperCase() : "";
+export type CompanyCheckResult = {
+  companyNumber: string;
+  companyName: string;
+  companyStatus: string;
+  companyStatusDetail: string;
+  companyType: string;
+  dateOfCreation: string | null;
+  registeredOfficeAddress: CompaniesHouseAddress | null;
+  hasInsolvencyHistory: boolean;
+  canFile: boolean | null;
+};
+
+export function normalizeCompanyNumber(value: string) {
+  return value.trim().replace(/\s+/g, "").toUpperCase();
 }
 
-export function recommendationFor(company: CompanyProfile): "auto" | "manual" | "reject" {
-  if (["dissolved", "liquidation", "receivership", "administration", "converted-closed", "insolvency-proceedings", "removed", "closed"].includes(company.company_status)) {
+export async function getCompaniesHouseCompany(
+  companyNumber: string
+): Promise<CompanyCheckResult> {
+  const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      "COMPANIES_HOUSE_API_KEY is missing."
+    );
+  }
+
+  const normalized =
+    normalizeCompanyNumber(companyNumber);
+
+  if (!/^[A-Z0-9]{8}$/.test(normalized)) {
+    throw new Error(
+      "Enter a valid Companies House company number."
+    );
+  }
+
+  const auth = Buffer.from(
+    `${apiKey}:`
+  ).toString("base64");
+
+  const response = await fetch(
+    `https://api.company-information.service.gov.uk/company/${encodeURIComponent(
+      normalized
+    )}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${auth}`,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    }
+  );
+
+  if (response.status === 404) {
+    throw new Error(
+      "Company not found on Companies House."
+    );
+  }
+
+  if (response.status === 401) {
+    throw new Error(
+      "Companies House API authentication failed."
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Companies House request failed (${response.status}).`
+    );
+  }
+
+  const company =
+    (await response.json()) as CompaniesHouseCompany;
+
+  if (
+    !company.company_name ||
+    !company.company_number
+  ) {
+    throw new Error(
+      "Companies House returned incomplete company information."
+    );
+  }
+
+  return {
+    companyNumber: company.company_number,
+    companyName: company.company_name,
+    companyStatus:
+      company.company_status || "unknown",
+    companyStatusDetail:
+      company.company_status_detail || "",
+    companyType: company.type || "",
+    dateOfCreation:
+      company.date_of_creation || null,
+    registeredOfficeAddress:
+      company.registered_office_address || null,
+    hasInsolvencyHistory:
+      Boolean(company.has_insolvency_history),
+    canFile:
+      typeof company.can_file === "boolean"
+        ? company.can_file
+        : null,
+  };
+}
+
+export function getVerificationRecommendation(
+  company: CompanyCheckResult
+): "auto" | "manual" | "reject" {
+  if (
+    company.companyStatus.toLowerCase() !==
+    "active"
+  ) {
     return "reject";
   }
-  // Unknown status details require review rather than silently approving them.
-  if (company.company_status === "active" && !company.company_status_detail && company.has_insolvency_history !== true) {
-    return "auto";
-  }
-  return "manual";
-}
 
-export async function lookupCompany(companyNumber: string): Promise<CompanyProfile> {
-  if (!/^[A-Z0-9]{8}$/.test(companyNumber)) {
-    throw new CompanyLookupError("Enter a valid 8-character company number.", 400);
+  if (company.hasInsolvencyHistory) {
+    return "manual";
   }
-  const apiKey = process.env.COMPANIES_HOUSE_API_KEY?.trim();
-  if (!apiKey || /\s|:|\*/.test(apiKey) || /YOUR_|NEW_KEY|HERE/i.test(apiKey)) {
-    throw new CompanyLookupError("Companies House verification is not configured correctly. Please contact support.", 503);
-  }
-  let response: Response;
-  try {
-    response = await fetch(`https://api.company-information.service.gov.uk/company/${encodeURIComponent(companyNumber)}`, {
-      headers: { Authorization: `Basic ${Buffer.from(`${apiKey}:`).toString("base64")}`, Accept: "application/json" },
-      cache: "no-store",
-      signal: AbortSignal.timeout(15000),
-    });
-  } catch {
-    throw new CompanyLookupError("Companies House could not be reached. Please try again shortly.", 503);
-  }
-  if (response.status === 404) throw new CompanyLookupError("Company not found on Companies House.", 404);
-  if (response.status === 401 || response.status === 403) throw new CompanyLookupError("Companies House authentication failed. Please contact support.", 503);
-  if (response.status === 429) throw new CompanyLookupError("Too many Companies House requests. Try again shortly.", 429);
-  if (!response.ok) throw new CompanyLookupError("Unable to check Companies House right now.", 503);
-  let company: CompanyProfile;
-  try { company = await response.json(); } catch {
-    throw new CompanyLookupError("Companies House returned an invalid response. Please try again.", 502);
-  }
-  if (!company || company.company_number !== companyNumber || typeof company.company_name !== "string" || !company.company_name || typeof company.company_status !== "string" || !company.company_status) {
-    throw new CompanyLookupError("Companies House returned an incomplete record. Please try again.", 502);
-  }
-  return company;
+
+  return "auto";
 }

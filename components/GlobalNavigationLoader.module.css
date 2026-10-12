@@ -1,0 +1,31 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  animation: reveal .12s ease-out both;
+}
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 2.5px solid #e3e9f2;
+  border-top-color: #012169;
+  border-radius: 50%;
+  animation: rotate .7s linear infinite;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+@keyframes reveal { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 1.8s; }
+  .overlay { animation: none; }
+}

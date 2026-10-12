@@ -1,764 +1,602 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
+import "./home-premium.css";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
-  BellRing,
-  Bookmark,
   BriefcaseBusiness,
-  Building2,
-  CheckCircle2,
-  ChevronRight,
-  ClipboardList,
-  Clock3,
+  GraduationCap,
+  HandHeart,
+  LockKeyhole,
+  LocateFixed,
   MapPin,
+  PenTool,
+  RadioTower,
   Search,
+  Send,
   ShieldCheck,
+  Users,
+  TrendingUp,
+  Trophy,
+  UserRoundSearch,
+  UsersRound,
+  Utensils,
+  Wrench,
 } from "lucide-react";
 
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import MainHeader from "@/components/main-header";
-
-export const metadata: Metadata = {
-  title: "UK Jobs: Latest Jobs in the UK",
-  description:
-    "Search UK jobs and current vacancies from verified employers. Find jobs in the UK by title, location, sector and employment type on UKJobAlert.",
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    url: "/",
-    siteName: "UKJobAlert",
-    title: "UK Jobs: Latest Jobs in the UK | UKJobAlert",
-    description:
-      "Search UK jobs and current vacancies from verified employers across the United Kingdom.",
+const categories = [
+  {
+    name: "Design & Multimedia",
+    count: "Browse opportunities",
+    icon: PenTool,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "UK Jobs: Latest Jobs in the UK | UKJobAlert",
-    description:
-      "Search UK jobs and current vacancies from verified employers across the United Kingdom.",
+  {
+    name: "Education Training",
+    count: "Browse opportunities",
+    icon: GraduationCap,
   },
-  robots: { index: true, follow: true },
-};
-
-type Job = {
-  id: string;
-  slug: string;
-  company_name: string;
-  company_logo_url: string | null;
-  company_number: string;
-  title: string;
-  category: string;
-  job_type: string;
-  location: string;
-  salary: string | null;
-  created_at: string;
-};
-
-const sectors = [
-  { name: "Healthcare", icon: "https://cdn-icons-png.flaticon.com/512/5405/5405344.png" },
-  { name: "Hospitality", icon: "https://cdn-icons-png.flaticon.com/512/4488/4488970.png" },
-  { name: "Construction", icon: "https://cdn-icons-png.flaticon.com/512/16235/16235921.png" },
-  { name: "Driving", icon: "https://cdn-icons-png.flaticon.com/512/6104/6104007.png" },
-  { name: "Cleaning", icon: "https://cdn-icons-png.flaticon.com/512/12003/12003562.png" },
-  { name: "Warehouse", icon: "https://cdn-icons-png.flaticon.com/512/17452/17452560.png" },
-  { name: "Office", icon: "https://cdn-icons-png.flaticon.com/512/9973/9973985.png" },
-  { name: "Retail", icon: "https://cdn-icons-png.flaticon.com/512/12315/12315929.png" },
+  {
+    name: "Accounting / Finance",
+    count: "Browse opportunities",
+    icon: TrendingUp,
+  },
+  {
+    name: "Human Resource",
+    count: "Browse opportunities",
+    icon: UsersRound,
+  },
+  {
+    name: "Telecommunications",
+    count: "Browse opportunities",
+    icon: RadioTower,
+  },
+  {
+    name: "Restaurant / Food Service",
+    count: "Browse opportunities",
+    icon: Utensils,
+  },
+  {
+    name: "Construction / Facilities",
+    count: "Browse opportunities",
+    icon: Wrench,
+  },
+  {
+    name: "Health",
+    count: "Browse opportunities",
+    icon: HandHeart,
+  },
 ];
 
-const jobTypes = [
-  "Full Time",
-  "Part Time",
-  "Temporary",
-  "Contract",
-  "Apprenticeship",
-  "Internship",
+type HomeJob = {id:string;slug:string;company:string;title:string;location:string;salary:string;type:string;time:string;logo:string;featured:boolean;urgent:boolean};
+
+const cities = [
+  {
+    name: "London",
+    count: "Browse opportunities",
+    image:
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    name: "Manchester",
+    count: "Browse opportunities",
+    image:
+      "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    name: "Birmingham",
+    count: "Browse opportunities",
+    image:
+      "https://images.unsplash.com/photo-1597933534024-debb6104af8e?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    name: "Liverpool",
+    count: "Browse opportunities",
+    image:
+      "https://images.unsplash.com/photo-1571504211935-1c936b327411?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    name: "Leeds",
+    count: "Browse opportunities",
+    image:
+      "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=88",
+  },
+  {
+    name: "Glasgow",
+    count: "Browse opportunities",
+    image:
+      "https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=900&q=88",
+  },
 ];
 
-function timeAgo(date: string) {
-  const difference = Date.now() - new Date(date).getTime();
-  const minutes = Math.floor(difference / 60000);
-  if (minutes < 1) return "Just now";
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days === 1) return "1 day ago";
-  return `${days} days ago`;
-}
+export default function Home() {
+  const [jobs, setJobs] = useState<HomeJob[]>([]);
+  const [jobsLoading, setJobsLoading] = useState(true);
+  useEffect(() => {
+    // Ignore late responses after unmount without aborting an in-flight request.
+    // This avoids noisy AbortError messages during React development remounts.
+    let active = true;
 
-function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word.charAt(0))
-    .join("")
-    .toUpperCase();
-}
+    fetch("/api/public-jobs")
+      .then((response) => {
+        if (!response.ok) throw new Error("Jobs unavailable");
+        return response.json();
+      })
+      .then((data) => {
+        if (active) setJobs(Array.isArray(data.jobs) ? data.jobs.slice(0, 6) : []);
+      })
+      .catch(() => {
+        if (active) setJobs([]);
+      })
+      .finally(() => {
+        if (active) setJobsLoading(false);
+      });
 
-function formatSalary(salary: string | null) {
-  if (!salary?.trim()) return "Salary not specified";
+    return () => {
+      active = false;
+    };
+  }, []);
+  const [location, setLocation] = useState("");
+  const [isLocating, setIsLocating] = useState(false);
 
-  const cleaned = salary
-    .trim()
-    .replace(/^(?:\u00A3|Â\u00A3|â‚£|┬ú|Tú)\s*/i, "");
+  const detectLocation = () => {
+    if (!navigator.geolocation || isLocating) return;
 
-  return /^\d/.test(cleaned) ? `\u00A3${cleaned}` : salary.trim();
-}
+    setIsLocating(true);
 
-export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coords.latitude}&lon=${coords.longitude}&zoom=10&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
 
-  const loggedIn = Boolean(user);
-  const accountType = user?.user_metadata?.account_type;
-  const displayName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Account";
-  const adminEmails = (process.env.ADMIN_EMAILS || "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-  const isAdmin = Boolean(
-    user?.email && adminEmails.includes(user.email.toLowerCase())
-  );
-  const now = new Date().toISOString();
+          if (!response.ok) throw new Error("Location lookup failed");
 
-  const { data: jobsData, error: jobsError } = await supabase
-    .from("jobs")
-    .select(`
-      id,
-      slug,
-      company_name,
-      company_logo_url,
-      company_number,
-      title,
-      category,
-      job_type,
-      location,
-      salary,
-      created_at
-    `)
-    .eq("status", "published")
-    .gt("expires_at", now)
-    .order("created_at", { ascending: false })
-    .limit(6);
+          const data = await response.json();
+          const address = data.address ?? {};
+          const place =
+            address.city ||
+            address.town ||
+            address.village ||
+            address.municipality ||
+            address.county ||
+            address.state_district ||
+            address.state;
 
-  if (jobsError) console.error(jobsError);
-  const jobs = (jobsData || []) as Job[];
+          const country = address.country_code
+            ? String(address.country_code).toUpperCase()
+            : "";
 
-  const admin = createAdminClient();
-  const [liveJobsResult, ...sectorResults] = await Promise.all([
-    admin
-      .from("jobs")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "published")
-      .gt("expires_at", now),
-    ...sectors.map((sector) =>
-      admin
-        .from("jobs")
-        .select("id", { count: "exact", head: true })
-        .eq("status", "published")
-        .eq("category", sector.name)
-        .gt("expires_at", now)
-    ),
-  ]);
-
-  const liveJobsCount = liveJobsResult.count || 0;
-  const sectorData = sectors.map((sector, index) => ({
-    ...sector,
-    count: sectorResults[index]?.count || 0,
-  }));
-
-  const typeResults = await Promise.all(
-    jobTypes.map((jobType) =>
-      admin
-        .from("jobs")
-        .select("id", { count: "exact", head: true })
-        .eq("status", "published")
-        .eq("job_type", jobType)
-        .gt("expires_at", now)
-    )
-  );
-
-  const jobTypeData = jobTypes.map((name, index) => ({
-    name,
-    count: typeResults[index]?.count || 0,
-  }));
-
-  const seekerBaseHref = !loggedIn ? "/signup" : accountType === "employer" ? "/jobs" : "/account";
-
+          if (place) {
+            setLocation(country ? `${place}, ${country}` : place);
+          }
+        } catch {
+          // Leave the current input unchanged if the city lookup fails.
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      () => setIsLocating(false),
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
+      }
+    );
+  };
   return (
-    <main className="min-h-screen bg-white text-[#0b1f3a]">
-      <MainHeader
-        loggedIn={loggedIn}
-        displayName={displayName}
-        accountType={accountType}
-        isAdmin={isAdmin}
-      />
+    <main>
+      <section className="premium-hero">
+        <div className="premium-hero-overlay" />
 
-      {/* HERO */}
-      <link
-        rel="preload"
-        as="image"
-        href="/london-hero.webp"
-        type="image/webp"
-        media="(min-width: 640px)"
-        fetchPriority="high"
-      />
-      <section className="relative isolate overflow-hidden bg-[#07182d]">
-        <div
-          className="absolute inset-0 hidden bg-cover bg-[center_42%] sm:block"
-          style={{ backgroundImage: "url('/london-hero.webp')" }}
-        />
-        <div
-          className="absolute inset-0 sm:hidden"
-          style={{
-            background:
-              "radial-gradient(circle at 82% 12%, rgba(215,25,32,.25) 0%, rgba(215,25,32,0) 31%), linear-gradient(135deg, #061529 0%, #0a2848 58%, #124a78 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(3,14,29,.91) 0%, rgba(3,14,29,.78) 40%, rgba(3,14,29,.43) 66%, rgba(3,14,29,.20) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(0deg, rgba(3,14,29,.82) 0%, rgba(3,14,29,.04) 56%, rgba(3,14,29,.16) 100%)",
-          }}
-        />
-        <div className="absolute -right-32 top-12 h-80 w-80 rounded-full bg-[#d71920]/10 blur-3xl" />
-
-        <div className="relative mx-auto max-w-[1440px] px-6 pb-12 pt-[64px] sm:pb-16 sm:pt-[86px] md:px-10 lg:pb-14 lg:pt-[124px] xl:px-12">
-          <div className="mx-auto w-full max-w-[1280px] text-left">
-            <p className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.17em] text-white/90 backdrop-blur-sm sm:text-[12px]">
-              Jobs across the United Kingdom
-            </p>
-
-            <h1 className="mt-6 max-w-[760px] text-[46px] font-bold leading-[1.02] tracking-[-1.7px] text-white drop-shadow-[0_5px_20px_rgba(0,0,0,.3)] sm:text-[62px] lg:text-[72px]">
-              Find a better
-              <br />
-              job in the UK
-            </h1>
-
-            <p className="mt-5 max-w-[480px] text-[15px] font-medium leading-7 text-white/82 sm:text-[17px] sm:leading-8">
-              Search current UK jobs and vacancies from verified employers. Find
-              jobs in the UK by title, location, sector and employment type.
-            </p>
+        <div className="container premium-hero-content">
+          <div className="premium-verified-pill">
+            <span className="premium-uk-mark" aria-hidden="true">UK</span>
+            <span>Jobs from verified UK employers</span>
+            <ShieldCheck />
           </div>
 
-          <form
-            action="/jobs"
-            method="GET"
-            className="mx-auto mt-9 grid w-full max-w-[1280px] overflow-hidden rounded-[18px] border border-white/55 bg-white p-1.5 shadow-[0_22px_55px_rgba(0,0,0,.30)] lg:mt-11 lg:grid-cols-[1.35fr_1fr_172px] lg:rounded-[16px]"
-          >
-            <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
-              <Search className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
-                  Keyword
-                </span>
-                <input
-                  name="q"
-                  placeholder="Job title or skill"
-                  className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#667085]"
-                />
+          <h1>
+            Find The Job That
+            <br />
+            Fits Your <span>Life</span>
+          </h1>
+
+          <p className="premium-hero-description">
+            Search current UK jobs and vacancies from verified employers. Find
+            jobs in the UK by title, location, sector and employment type.
+          </p>
+
+          <div className="premium-benefits">
+            <div className="premium-benefit">
+              <span className="premium-benefit-icon"><ShieldCheck /></span>
+              <span>
+                <strong>Verified Employers</strong>
+                <small>Trusted UK companies</small>
               </span>
+            </div>
+
+            <div className="premium-benefit">
+              <span className="premium-benefit-icon"><BriefcaseBusiness /></span>
+              <span>
+                <strong>Real Opportunities</strong>
+                <small>Latest job vacancies</small>
+              </span>
+            </div>
+
+            <div className="premium-benefit">
+              <span className="premium-benefit-icon"><Users /></span>
+              <span>
+                <strong>Build Your Career</strong>
+                <small>Take the next step</small>
+              </span>
+            </div>
+          </div>
+
+          <form className="premium-search-box">
+            <label className="premium-search-field premium-keyword-field">
+              <Search />
+              <input
+                type="text"
+                placeholder="Job Title or Keywords"
+                aria-label="Job Title or Keywords"
+              />
             </label>
 
-            <label className="flex min-h-[68px] items-center gap-3 border-b border-[#e7e9ed] px-5 lg:border-b-0 lg:border-r">
-              <MapPin className="h-5 w-5 shrink-0 text-[#d71920]" strokeWidth={2} />
-              <span className="min-w-0 flex-1">
-                <span className="block text-[11px] font-bold uppercase tracking-[.08em] text-[#98a2b3]">
-                  Location
-                </span>
-                <input
-                  name="location"
-                  placeholder="City or postcode"
-                  className="mt-0.5 w-full bg-transparent text-[14px] font-semibold text-[#101828] outline-none placeholder:font-normal placeholder:text-[#667085]"
-                />
-              </span>
+            <label className="premium-search-field premium-location-field">
+              <MapPin />
+              <input
+                type="text"
+                placeholder={isLocating ? "Detecting location..." : "Location"}
+                aria-label="Location"
+                value={location}
+                onChange={(event) => setLocation(event.target.value)}
+              />
+
+              <button
+                type="button"
+                className={`premium-location-detect${isLocating ? " is-locating" : ""}`}
+                onClick={detectLocation}
+                aria-label="Use my current location"
+                title="Use my current location"
+              >
+                <LocateFixed />
+              </button>
             </label>
 
-            <button
-              type="submit"
-              className="flex min-h-[60px] items-center justify-center gap-2 rounded-[12px] bg-[#d71920] px-5 text-[14px] font-extrabold text-white transition hover:bg-[#b91319] lg:min-h-[68px]"
-            >
-              Search jobs
-              <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.4} />
+            <button type="submit" className="premium-search-button">
+              <span>Search Jobs</span>
+              <ArrowRight />
             </button>
           </form>
 
-          <div className="mx-auto mt-5 flex max-w-[1280px] flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[12px] sm:justify-start">
-            <span className="mr-1 font-semibold text-white/70">Trending keywords:</span>
-            {["Care Assistant", "Driver", "Warehouse", "Cleaner", "Office"].map((keyword) => (
-              <Link
-                key={keyword}
-                href={`/jobs?q=${encodeURIComponent(keyword)}`}
-                className="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 font-semibold text-white backdrop-blur-sm transition hover:border-[#d71920] hover:bg-[#d71920]"
-                style={{ color: "#ffffff" }}
-              >
-                {keyword}
-              </Link>
-            ))}
-          </div>
-
-          <div className="mx-auto mt-10 grid w-full max-w-[1280px] overflow-hidden rounded-[16px] border border-white/15 bg-[#061a30]/75 shadow-[0_12px_32px_rgba(0,0,0,.18)] backdrop-blur-sm sm:grid-cols-3">
-            <HeroStat
-              icon={BriefcaseBusiness}
-              title={`${liveJobsCount} active ${liveJobsCount === 1 ? "job" : "jobs"}`}
-              text="Live vacancies today"
-            />
-            <HeroStat
-              icon={ShieldCheck}
-              title="Verified employers"
-              text="Checks before posting access"
-            />
-            <HeroStat
-              icon={MapPin}
-              title="UK-wide coverage"
-              text="Roles across the country"
-            />
+          <div className="premium-trending">
+            <TrendingUp />
+            <strong>Trending Keywords:</strong>
+            <span>Designer, Developer, Web, IOS, PHP, Senior, Engineer</span>
           </div>
         </div>
       </section>
 
-      {/* SECTORS */}
-      <section className="border-b border-[#e5e8ec] bg-white">
-        <div className="mx-auto max-w-[1360px] px-6 pb-[50px] pt-[42px] md:px-10 md:pt-[46px] xl:px-12">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
-                Browse vacancies
-              </p>
-              <h2 className="mt-2 font-serif text-[34px] font-semibold tracking-[-.8px] text-[#0b1f3a] md:text-[39px]">
-                Browse jobs by sector
-              </h2>
-              <p className="mt-1.5 text-[14px] text-[#667085]">
-                Explore current vacancies by industry and find the right role.
+      <section className="section categories-section">
+        <div className="container">
+          <div className="section-title">
+            <h2>Popular Job Categories</h2>
+
+            <p>
+              Explore jobs across the most popular industries in the UK.
+            </p>
+          </div>
+
+          <div className="reference-category-grid">
+            {categories.map((category) => {
+              const Icon = category.icon;
+
+              return (
+                <Link
+                  href={`/jobs?category=${encodeURIComponent(category.name)}`}
+                  className="reference-category-card"
+                  key={category.name}
+                >
+                  <div className="reference-category-icon">
+                    <Icon strokeWidth={1.45} />
+                  </div>
+
+                  <h3>{category.name}</h3>
+
+                  <p>{category.count}</p>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="center">
+            <Link href="/jobs" className="orange-button">
+              Browse All Categories
+              <ArrowRight />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section how" id="how-it-works">
+        <div className="container">
+          <div className="section-title">
+            <h2>How It Works?</h2>
+          </div>
+
+          <div className="steps">
+            <div className="step">
+              <div className="step-visual">
+                <div className="step-icon">
+                  <LockKeyhole />
+                </div>
+                <b className="step-number">1</b>
+              </div>
+
+              <h3>Create An Account</h3>
+              <p>
+                Create your free account and start your UK job search.
               </p>
             </div>
 
-            <Link
-              href="/jobs"
-              className="inline-flex items-center gap-2 text-[13px] font-bold text-[#0b1f3a] transition hover:text-[#d71920]"
-            >
-              View all sectors <ArrowRight className="h-4 w-4" />
+            <div className="step">
+              <div className="step-visual">
+                <div className="step-icon">
+                  <UserRoundSearch />
+                </div>
+                <b className="step-number">2</b>
+              </div>
+
+              <h3>Search Jobs</h3>
+              <p>
+                Browse UK vacancies and find opportunities that match your skills.
+              </p>
+            </div>
+
+            <div className="step">
+              <div className="step-visual">
+                <div className="step-icon">
+                  <Trophy />
+                </div>
+                <b className="step-number">3</b>
+              </div>
+
+              <h3>Save &amp; Apply</h3>
+              <p>
+                Save the jobs you like and apply directly to verified UK employers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section jobs-section">
+        <div className="container">
+          <div className="featured-heading">
+            <h2>Featured Jobs</h2>
+
+            <Link href="/jobs" className="featured-all-link">
+              Browse All Jobs
+              <ArrowRight />
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {sectorData.map(({ name, icon, count }) => (
-              <Link
-                key={name}
-                href={`/jobs?category=${encodeURIComponent(name)}`}
-                className="group flex min-h-[76px] items-center gap-3.5 rounded-[4px] border border-[#e2e6ea] bg-white px-[18px] py-3.5 transition duration-200 hover:-translate-y-[1px] hover:border-[#c8d0d9] hover:shadow-[0_7px_18px_rgba(16,24,40,.055)]"
-              >
-                <div
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] border border-[#e3e8ee] bg-white"
-                  style={{ boxShadow: "0 3px 10px rgba(11,31,58,.07)" }}
-                >
-                  <img
-                    src={icon}
-                    alt=""
-                    aria-hidden="true"
-                    width={38}
-                    height={38}
-                    loading="lazy"
-                    className="h-[38px] w-[38px] object-contain"
-                  />
+          {jobsLoading && <p style={{padding:"24px 0",color:"#667085"}}>Loading current vacancies…</p>}
+          {!jobsLoading && jobs.length === 0 && <p style={{padding:"24px 0",color:"#667085"}}>No vacancies are currently displayed here. Browse jobs for the latest listings.</p>}
+          <div className="featured-job-list">
+            {jobs.map((job) => (
+              <Link href={`/jobs/${job.slug}`} className="featured-job-card" key={job.id}>
+                {job.urgent && <span className="urgent-ribbon">URGENT</span>}
+
+                <div className="featured-company-logo">
+                  <span>{job.logo}</span>
                 </div>
 
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-[14px] font-bold text-[#101828]">{name}</h3>
-                  <p className="mt-0.5 text-[12px] text-[#667085]">
-                    {count} {count === 1 ? "job" : "jobs"}
+                <div className="featured-job-content">
+                  <span className="featured-job-type">{job.type}</span>
+
+                  <h3>
+                    {job.title}
+                    {job.featured && <span className="featured-star">★</span>}
+                  </h3>
+
+                  <p className="featured-posted">
+                    posted {job.time} by <strong>{job.company}</strong>
                   </p>
+
+                  <div className="featured-meta">
+                    <span>
+                      <MapPin />
+                      {job.location}
+                    </span>
+
+                    <span>
+                      <BriefcaseBusiness />
+                      {job.salary}
+                    </span>
+                  </div>
                 </div>
 
-                <ChevronRight className="h-4 w-4 shrink-0 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
+                <span className="featured-browse-button">Browse Job</span>
               </Link>
             ))}
           </div>
-
-          <p className="mt-4 text-right text-[10px] leading-4 text-[#7b8794]">
-            Sector icons designed by Creatype, Mehwish, apien, agus raharjo, ADI_ICONS, Paul J., Icon.verse and khld939 from{" "}
-            <a
-              href="https://www.flaticon.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="underline underline-offset-2"
-            >
-              Flaticon
-            </a>
-          </p>
         </div>
       </section>
 
-      {/* JOB TYPES */}
-      <section className="border-b border-[#e2e7ec] bg-[#f7f8fa]">
-        <div className="mx-auto max-w-[1360px] px-6 py-8 md:px-10 xl:px-12">
-          <div className="grid gap-4 lg:grid-cols-[250px_minmax(0,1fr)] lg:items-center">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#d71920]">
-                Working pattern
-              </p>
-              <h2 className="mt-1.5 text-[20px] font-bold tracking-[-.4px] text-[#07182d]">
-                Browse by job type
-              </h2>
-            </div>
+      <section className="section local-jobs">
+        <div className="container">
+          <div className="local-jobs-title">
+            <h2>Browse Local Jobs</h2>
+          </div>
 
-            <div className="grid gap-px border border-[#dfe4ea] bg-[#dfe4ea] sm:grid-cols-2 xl:grid-cols-3">
-              {jobTypeData.map(({ name, count }) => (
-                <Link
-                  key={name}
-                  href={`/jobs?type=${encodeURIComponent(name)}`}
-                  className="group flex min-h-[64px] items-center justify-between gap-4 bg-white px-5 transition hover:bg-[#fbfbfa]"
-                >
-                  <div>
-                    <p className="text-[13px] font-bold text-[#101828] group-hover:text-[#d71920]">{name}</p>
-                    <p className="mt-0.5 text-[11px] text-[#98a2b3]">{count} {count === 1 ? "vacancy" : "vacancies"}</p>
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
-                </Link>
-              ))}
+          <div className="local-city-grid">
+            {cities.map((city) => (
+              <Link
+                href="/jobs"
+                className="local-city-card"
+                key={city.name}
+                style={{ backgroundImage: `url("${city.image}")` }}
+              >
+                <span className="local-city-overlay" />
+
+                <div className="local-city-content">
+                  <h3>{city.name}</h3>
+                  <p>{city.count}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="footer-stats">
+        <div className="container footer-stats-inner">
+          <Link href="/" className="footer-stats-logo">
+            <Image
+              src="/images/ukjobalert-logo.png"
+              alt="UKJobAlert"
+              width={190}
+              height={52}
+            />
+          </Link>
+
+          <div className="footer-stat">
+            <strong>Free</strong>
+            <span>Job Search</span>
+          </div>
+          <div className="footer-stat">
+            <strong>Free</strong>
+            <span>Job Posting</span>
+          </div>
+          <div className="footer-stat">
+            <strong>Free</strong>
+            <span>Employer Access</span>
+          </div>
+          <div className="footer-stat">
+            <strong>Free</strong>
+            <span>Job Seeker Access</span>
+          </div>
+
+          <div className="footer-social">
+            <span>Follow Us</span>
+            <div className="footer-social-icons">
+              <Link href="#" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v2H6v4h3v7h4v-7h3.2l.8-4H13V9c0-.7.3-1 1-1Z" fill="currentColor" stroke="none" />
+                </svg>
+              </Link>
+              <Link href="#" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5.2 8.3H2V22h3.2V8.3ZM3.6 2A1.9 1.9 0 1 0 3.6 5.8 1.9 1.9 0 0 0 3.6 2ZM22 13.6c0-4.1-2.2-6-5.1-6-2.4 0-3.4 1.3-4 2.2V8.3H9.7V22h3.2v-6.8c0-1.8.3-3.6 2.6-3.6 2.2 0 2.3 2.1 2.3 3.7V22H21v-7.6l1-.8Z" fill="currentColor" stroke="none" />
+                </svg>
+              </Link>
+              <Link href="#" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+                </svg>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* LATEST JOBS */}
-      <section className="bg-[#f7f8fa]">
-        <div className="mx-auto max-w-[1440px] px-6 py-[60px] md:px-10 xl:px-12">
-          <div className="grid gap-9 lg:grid-cols-[minmax(0,1fr)_340px]">
-            <div>
-              <div className="mb-6 flex items-end justify-between gap-5">
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
-                    Recently added
-                  </p>
-                  <h2 className="mt-2 font-serif text-[34px] font-semibold tracking-[-.8px] text-[#0b1f3a] md:text-[39px]">
-                    Latest jobs
-                  </h2>
-                  <p className="mt-1.5 text-[14px] text-[#667085]">
-                    New vacancies from employers using UKJobAlert.
-                  </p>
-                </div>
+      <footer className="site-footer">
+        <div className="container footer-main-grid">
+          <FooterColumn
+            title="Quick Links"
+            links={[
+              { label: "Browse Jobs", href: "/jobs" },
+              { label: "Companies", href: "/companies" },
+              { label: "About Us", href: "/about" },
+              { label: "Contact Us", href: "/contact" },
+              { label: "FAQ", href: "/faq" },
+              { label: "How It Works", href: "/#how-it-works" },
+            ]}
+          />
 
-                <Link
-                  href="/jobs"
-                  className="hidden items-center gap-2 text-[13px] font-bold text-[#0b1f3a] transition hover:text-[#d71920] sm:flex"
-                >
-                  View all jobs <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+          <FooterColumn
+            title="For Candidates"
+            links={[
+              { label: "Candidate Dashboard", href: "/account" },
+              { label: "Browse Jobs", href: "/jobs" },
+              { label: "Saved Jobs", href: "/account" },
+              { label: "Applications", href: "/account" },
+              { label: "Job Alerts", href: "/account" },
+            ]}
+          />
 
-              {jobs.length === 0 ? (
-                <div className="border border-[#dfe4ea] bg-white px-8 py-12 text-center">
-                  <BriefcaseBusiness className="mx-auto h-7 w-7 text-[#98a2b3]" />
-                  <h3 className="mt-4 text-[18px] font-bold text-[#101828]">
-                    No jobs available
-                  </h3>
-                  <p className="mt-2 text-[14px] text-[#667085]">
-                    New vacancies will appear here when they are published.
-                  </p>
-                </div>
-              ) : (
-                <div className="border border-[#dfe4ea] bg-white">
-                  {jobs.map((job, index) => (
-                    <Link
-                      href={`/jobs/${job.slug}`}
-                      key={job.id}
-                      className={`group relative block px-5 py-[18px] transition-all duration-200 ease-out hover:z-10 hover:-translate-y-[2px] hover:bg-white hover:shadow-[0_10px_28px_rgba(16,24,40,.10)] md:px-6 ${
-                        index !== jobs.length - 1
-                          ? "border-b border-[#e6e9ed]"
-                          : ""
-                      }`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden border border-[#dfe4ea] bg-[#f7f8fa] text-[11px] font-bold text-[#344054]">
-                          {job.company_logo_url ? (
-                            <img
-                              src={job.company_logo_url}
-                              alt={`${job.company_name} logo`}
-                              className="h-full w-full object-contain p-1.5"
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          ) : (
-                            initials(job.company_name)
-                          )}
-                        </div>
+          <FooterColumn
+            title="For Employers"
+            links={[
+              { label: "Post a Job", href: "/post-job" },
+              { label: "Employer Login", href: "/login" },
+              { label: "Employer Dashboard", href: "/employer" },
+              { label: "Manage Jobs", href: "/employer/jobs" },
+              { label: "Verification", href: "/employer/verification" },
+            ]}
+          />
 
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <h3 className="truncate text-[16px] font-bold text-[#101828] transition group-hover:text-[#b91319]">
-                                  {job.title}
-                                </h3>
-                                <ShieldCheck className="h-4 w-4 shrink-0 text-[#d71920]" />
-                              </div>
-                              <p className="mt-1 text-[13px] font-semibold text-[#475467]">
-                                {job.company_name}
-                              </p>
-                            </div>
+          <div className="footer-newsletter">
+            <h3>Newsletter</h3>
+            <p>
+              Subscribe to UKJobAlert to get the latest UK jobs and career
+              updates delivered to your inbox.
+            </p>
 
-                            <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
-                          </div>
-
-                          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#667085]">
-                            <span className="flex items-center gap-1.5">
-                              <MapPin className="h-3.5 w-3.5" />
-                              {job.location}
-                            </span>
-                            <span className="font-semibold text-[#344054]">
-                              {formatSalary(job.salary)}
-                            </span>
-                            <span>{job.job_type}</span>
-                            <span className="flex items-center gap-1.5 text-[#98a2b3]">
-                              <Clock3 className="h-3.5 w-3.5" />
-                              {timeAgo(job.created_at)}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* EMPLOYER PANEL */}
-            <aside className="lg:pt-[82px]">
-              <div className="border border-[#dfe4ea] bg-white">
-                <div className="border-b border-[#e4e7ec] p-6">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
-                    For employers
-                  </p>
-                  <h2 className="mt-3 font-serif text-[29px] font-semibold leading-[1.05] text-[#0b1f3a]">
-                    Hiring in the UK?
-                  </h2>
-                  <p className="mt-4 text-[14px] leading-6 text-[#667085]">
-                    Complete the company check, then create and manage vacancies
-                    from your employer account.
-                  </p>
-
-                  <Link
-                    href={accountType === "employer" ? "/post-job" : "/signup"}
-                    className="mt-5 inline-flex min-h-[44px] items-center gap-2 bg-[#d71920] px-5 text-[13px] font-bold transition hover:bg-[#b91319]"
-                    style={{ color: "#ffffff" }}
-                  >
-                    Post a job <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-
-                <div className="divide-y divide-[#e4e7ec]">
-                  <EmployerPoint text="Company information checked before posting access" />
-                  <EmployerPoint text="Create and manage vacancies" />
-                  <EmployerPoint text="Email or website applications" />
-                </div>
-              </div>
-
-              <div className="mt-4 bg-[#07182d] p-6">
-                <ShieldCheck className="mb-5 h-8 w-8 text-[#f3b4bc]" strokeWidth={1.8} />
-                <h3
-                  className="text-[18px] font-bold"
-                  style={{ color: "#ffffff" }}
-                >
-                  Employer verification
-                </h3>
-                <p
-                  className="mt-2.5 text-[13px] leading-6"
-                  style={{ color: "rgba(255,255,255,.68)" }}
-                >
-                  UKJobAlert checks specified company information before
-                  employer posting access is enabled.
-                </p>
-                <Link
-                  href="/how-it-works"
-                  className="mt-4 inline-flex items-center gap-2 text-[13px] font-bold transition hover:opacity-80"
-                  style={{ color: "#ffffff" }}
-                >
-                  How it works <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </aside>
+            <form className="footer-newsletter-form" onSubmit={(event) => event.preventDefault()}>
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                aria-label="Email address"
+              />
+              <button type="submit" aria-label="Subscribe" title="Newsletter signup coming soon">
+                <Send />
+              </button>
+            </form>
           </div>
         </div>
-      </section>
 
-      {/* JOB SEEKER TOOLS */}
-      <section className="border-t border-[#e2e7ec] bg-[#07182d]">
-        <div className="mx-auto max-w-[1360px] px-6 py-14 md:px-10 lg:py-16 xl:px-12">
-          <div className="grid gap-10 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start lg:gap-16">
+        <div className="footer-bottom">
+          <div className="container footer-bottom-inner">
+            <span>© 2026 UKJobAlert. All Rights Reserved.</span>
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#f3b4bc]">
-                Job seeker tools
-              </p>
-              <h2 className="mt-3 font-serif text-[34px] font-semibold leading-[1.05] tracking-[-.8px] text-white md:text-[39px]">
-                Keep your search organised.
-              </h2>
-              <p className="mt-4 text-[14px] leading-7 text-white/60">
-                A job seeker account gives you practical tools for returning to roles, following searches and keeping track of applications.
-              </p>
-            </div>
-
-            <div className="grid gap-px bg-white/10 md:grid-cols-3">
-              <SeekerTool
-                icon={Bookmark}
-                title="Saved jobs"
-                text="Keep current vacancies in one place and return to them later."
-                href={loggedIn && accountType !== "employer" ? "/account" : seekerBaseHref}
-              />
-              <SeekerTool
-                icon={BellRing}
-                title="Job alerts"
-                text="Save the search criteria you want to follow from your account."
-                href={loggedIn && accountType !== "employer" ? "/account/alerts" : seekerBaseHref}
-              />
-              <SeekerTool
-                icon={ClipboardList}
-                title="Applications"
-                text="Record and review the vacancies you have applied for."
-                href={loggedIn && accountType !== "employer" ? "/account/applications" : seekerBaseHref}
-              />
+              <Link href="/site-map">Site Map</Link>
+              <Link href="/privacy-policy">Privacy Policy</Link>
+              <Link href="/terms">Terms of Service</Link>
+              <Link href="/security-privacy">Security &amp; Privacy</Link>
             </div>
           </div>
         </div>
-      </section>
+      </footer>
 
-      {/* COMPANY CHECK */}
-      <section className="border-t border-[#e2e7ec] bg-white">
-        <div className="mx-auto max-w-[1440px] px-6 py-[62px] md:px-10 xl:px-12">
-          <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr] lg:items-start">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
-                Employer accounts
-              </p>
-              <h2 className="mt-3 max-w-[500px] font-serif text-[34px] font-semibold leading-[1.05] tracking-[-.8px] text-[#0b1f3a] md:text-[39px]">
-                Company checks before posting
-              </h2>
-              <p className="mt-4 max-w-[470px] text-[14px] leading-7 text-[#667085]">
-                Employer accounts complete a company information check before
-                job posting access is enabled.
-              </p>
-            </div>
 
-            <div className="grid border-l border-t border-[#dfe4ea] sm:grid-cols-3">
-              <ProcessItem
-                number="01"
-                icon={Building2}
-                title="Company details"
-                text="Submit the registered company information for the employer account."
-              />
-              <ProcessItem
-                number="02"
-                icon={ShieldCheck}
-                title="Account check"
-                text="Company information is checked before posting access is enabled."
-              />
-              <ProcessItem
-                number="03"
-                icon={BriefcaseBusiness}
-                title="Publish jobs"
-                text="Approved employer accounts can publish and manage vacancies."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
 
-function HeroStat({
-  icon: Icon,
+function FooterColumn({
   title,
-  text,
+  links,
 }: {
-  icon: typeof BriefcaseBusiness;
   title: string;
-  text: string;
+  links: { label: string; href: string }[];
 }) {
   return (
-    <div className="flex min-h-[94px] items-center justify-center gap-3.5 border-b border-white/12 px-5 py-5 text-center last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0 sm:text-left">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ffb347]/35 bg-[#d71920]/15">
-        <Icon className="h-5 w-5 text-[#ffb347]" strokeWidth={1.9} />
-      </div>
-      <div>
-        <p className="text-[15px] font-extrabold text-white">{title}</p>
-        <p className="mt-1 text-[12px] text-white/60">{text}</p>
-      </div>
-    </div>
-  );
-}
+    <div className="footer-column">
+      <h3>{title}</h3>
 
-function SeekerTool({
-  icon: Icon,
-  title,
-  text,
-  href,
-}: {
-  icon: typeof Bookmark;
-  title: string;
-  text: string;
-  href: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group min-h-[190px] bg-[#0a213b] p-6 transition hover:bg-[#0d2948]"
-    >
-      <Icon className="mb-5 h-7 w-7 text-[#f3b4bc]" strokeWidth={1.8} />
-      <h3 className="text-[17px] font-bold text-white">{title}</h3>
-      <p className="mt-2.5 text-[13px] leading-6 text-white/58">{text}</p>
-      <span className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold text-white">
-        Open tool <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-      </span>
-    </Link>
-  );
-}
-
-function EmployerPoint({ text }: { text: string }) {
-  return (
-    <div className="flex min-h-[52px] items-center gap-3 px-6 text-[13px] font-medium text-[#475467]">
-      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#d71920]" />
-      <span>{text}</span>
-    </div>
-  );
-}
-
-function ProcessItem({
-  number,
-  icon: Icon,
-  title,
-  text,
-}: {
-  number: string;
-  icon: typeof Building2;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="min-h-[205px] border-b border-r border-[#dfe4ea] bg-white p-6">
-      <div className="flex items-center justify-between">
-        <span className="font-serif text-[21px] font-semibold text-[#b9c0c9]">
-          {number}
-        </span>
-        <Icon className="h-5 w-5 text-[#0b1f3a]" strokeWidth={1.8} />
-      </div>
-
-      <h3 className="mt-8 text-[16px] font-bold text-[#101828]">{title}</h3>
-      <p className="mt-2.5 text-[13px] leading-6 text-[#667085]">{text}</p>
+      {links.map((link) => (
+        <Link href={link.href} key={`${title}-${link.label}`}>
+          {link.label}
+        </Link>
+      ))}
     </div>
   );
 }

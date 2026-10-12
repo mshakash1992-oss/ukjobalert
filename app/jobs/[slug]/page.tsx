@@ -1,931 +1,263 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-
 import {
-  ArrowLeft,
-  BriefcaseBusiness,
-  Building2,
-  CalendarClock,
-  CalendarDays,
-  CheckCircle2,
-  ChevronRight,
-  Clock3,
-  MapPin,
-  ShieldCheck,
+  ArrowRight, ArrowUpRight, BriefcaseBusiness,
+  CheckCircle2, Clock3, GraduationCap, MapPin,
+  ShieldCheck, Users, Wallet, Tag
 } from "lucide-react";
+import { createAdminClient } from "@/lib/supabase/admin";
+import JobActions from "./JobActions";
+import styles from "./job-details.module.css";
 
-import { createClient } from "@/lib/supabase/server";
-import MainHeader from "@/components/main-header";
+export const dynamic = "force-dynamic";
+type RecordData = Record<string, unknown>;
+const value = (v: unknown) => typeof v === "string" && v.trim() ? v.trim() : typeof v === "number" ? String(v) : "";
+const first = (row: RecordData, keys: string[]) => keys.map(k => value(row[k])).find(Boolean) || "";
 
-import ApplyButton from "../apply-button";
-import SaveJobButton from "../save-job-button";
-
-type PageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
-
-function employmentTypeSchema(jobType: string) {
-  const normalized = jobType
-    .trim()
-    .toLowerCase();
-
-  if (
-    normalized === "full time" ||
-    normalized === "full-time"
-  ) {
-    return "FULL_TIME";
-  }
-
-  if (
-    normalized === "part time" ||
-    normalized === "part-time"
-  ) {
-    return "PART_TIME";
-  }
-
-  if (
-    normalized === "contract" ||
-    normalized === "contractor"
-  ) {
-    return "CONTRACTOR";
-  }
-
-  if (normalized === "temporary") {
-    return "TEMPORARY";
-  }
-
-  if (
-    normalized === "internship" ||
-    normalized === "intern"
-  ) {
-    return "INTERN";
-  }
-
-  return "OTHER";
+function salaryText(job: RecordData) {
+  const raw = first(job, ["salary", "salary_range", "salary_display"]);
+  const min = first(job, ["salary_min", "min_salary"]);
+  const max = first(job, ["salary_max", "max_salary"]);
+  const amount = raw || (min && max ? `${min} - ${max}` : min || max);
+  if (!amount) return "";
+  const currency = first(job, ["currency", "salary_currency"]);
+  const formatted = /[£$€]/.test(amount) || (currency && currency.toUpperCase() !== "GBP")
+    ? amount : `£${amount}`;
+  const period = first(job, ["salary_period", "pay_period"]);
+  return `${formatted}${period ? ` / ${period}` : ""}`;
+}
+function prettyDate(input: unknown) {
+  const v = value(input);
+  if (!v) return "";
+  const d = new Date(v);
+  return Number.isNaN(d.getTime()) ? "" : new Intl.DateTimeFormat("en-GB", {
+    day: "numeric", month: "long", year: "numeric"
+  }).format(d);
+}
+function detailFromDescription(description: string, label: string) {
+  const lines = description.split(/\r?\n/);
+  const match = lines.find(line => new RegExp(`^\\s*${label}\\s*:`, "i").test(line));
+  return match ? match.replace(new RegExp(`^\\s*${label}\\s*:`, "i"), "").trim() : "";
+}
+function plainText(input: string) {
+  return input.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
 }
 
-function jobDescriptionHtml(
-  description: string
-) {
-  const escaped = description
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-  return escaped
-    .split(/\n{2,}/)
-    .map((paragraph) => {
-      const content = paragraph
-        .trim()
-        .replace(/\n/g, "<br>");
-
-      return content
-        ? `<p>${content}</p>`
-        : "";
-    })
-    .filter(Boolean)
-    .join("");
+// Some older posts appended structured job fields inside description.
+// They belong in the overview, not repeated beneath the job description.
+function cleanDescription(input: string) {
+  const text = plainText(input);
+  const lines = text.split(/\r?\n/);
+  const heading = lines.findIndex(line =>
+    /^\s*(?:[-–—]+\s*)?Additional Job Details\s*(?:[-–—]+)?\s*$/i.test(line)
+  );
+  if (heading < 0) return text.trim();
+  const tail = lines.slice(heading + 1).filter(line => line.trim());
+  const fields = /^(?:Application Deadline|Minimum Salary|Maximum Salary|Salary Type|Experience|Industry|Qualification|Career Level|Tags|Gender)\s*:/i;
+  // Remove only when the block is genuinely the generated metadata section.
+  if (!tail.length || tail.every(line => fields.test(line.trim()))) {
+    return lines.slice(0, heading).join("\n").trim();
+  }
+  return text.trim();
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-
-  const supabase = await createClient();
-
-  const { data: job } = await supabase
-    .from("jobs")
-    .select(`
-      title,
-      company_name,
-      location,
-      description,
-      expires_at,
-      company_logo_url,
-      job_image_url
-    `)
-    .eq("slug", slug)
-    .eq("status", "published")
-    .gt(
-      "expires_at",
-      new Date().toISOString()
-    )
-    .maybeSingle();
-
-  if (!job) {
-    return {
-      title: "Job Not Found",
-      robots: {
-        index: false,
-        follow: false,
-      },
-    };
+  const db = createAdminClient();
+  const { data: job } = await db.from("jobs").select("title,description,location,employer_id,expires_at")
+    .eq("slug", slug).eq("status", "published").maybeSingle();
+  if (!job || (job.expires_at && new Date(job.expires_at).getTime() <= Date.now())) {
+    return { title: "Job Not Found", robots: { index: false, follow: false } };
   }
-
-  const descriptionText =
-    typeof job.description === "string"
-      ? job.description
-          .replace(/\s+/g, " ")
-          .trim()
-      : "";
-
-  const fallbackDescription =
-    `${job.title} job at ${job.company_name} in ${job.location}. ` +
-    `View vacancy details and application information on UKJobAlert.`;
-
-  const metaDescription =
-    descriptionText.length > 0
-      ? descriptionText.length > 155
-        ? `${descriptionText
-            .slice(0, 152)
-            .trim()}...`
-        : descriptionText
-      : fallbackDescription;
-
-  const canonicalUrl =
-    `/jobs/${slug}`;
-
+  const { data: employer } = await db.from("employer_verifications")
+    .select("verification_status").eq("user_id", job.employer_id).maybeSingle();
+  if (employer?.verification_status !== "verified") {
+    return { title: "Job Not Found", robots: { index: false, follow: false } };
+  }
+  const title = value(job.title) || "Job Opportunity";
+  const location = value(job.location);
+  const summary = plainText(value(job.description)).replace(/\s+/g, " ").slice(0, 150);
+  const description = summary || `Apply for ${title}${location ? ` in ${location}` : ""} on UKJobAlert.`;
+  const canonical = `/jobs/${encodeURIComponent(slug)}`;
   return {
-    title:
-      `${job.title} - ${job.company_name}`,
-
-    description: metaDescription,
-
-    alternates: {
-      canonical: canonicalUrl,
-    },
-
-    openGraph: {
-      type: "website",
-      url: canonicalUrl,
-      siteName: "UKJobAlert",
-      title:
-        `${job.title} - ${job.company_name}`,
-      description: metaDescription,
-      ...(job.job_image_url
-        ? { images: [{ url: job.job_image_url, alt: `${job.title} at ${job.company_name}` }] }
-        : {}),
-    },
-
-    twitter: {
-      card: "summary_large_image",
-      title:
-        `${job.title} - ${job.company_name}`,
-      description: metaDescription,
-      ...(job.job_image_url
-        ? { images: [job.job_image_url] }
-        : {}),
-    },
-
-    robots: {
-      index: true,
-      follow: true,
-    },
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: { title, description, url: canonical, type: "website" },
   };
 }
 
-function formatDate(date: string) {
-  return new Intl.DateTimeFormat(
-    "en-GB",
-    {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    }
-  ).format(new Date(date));
-}
-
-function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) =>
-      word.charAt(0)
-    )
-    .join("")
-    .toUpperCase();
-}
-
-export default async function JobDetailsPage({
-  params,
-}: PageProps) {
+export default async function JobDetails({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const db = createAdminClient();
+  const { data, error } = await db.from("jobs").select("*").eq("slug", slug).eq("status", "published").maybeSingle();
+  const job = data as RecordData | null;
+  if (error || !job || (job.expires_at && new Date(String(job.expires_at)).getTime() <= Date.now())) notFound();
 
-  const supabase =
-    await createClient();
+  const { data: employer } = await db.from("employer_verifications")
+    .select("company_name,verification_status")
+    .eq("user_id", job.employer_id).maybeSingle();
+  if (!employer || employer.verification_status !== "verified") notFound();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const applyUrl = value(job.apply_url);
+  const safeUrl = /^https?:\/\//i.test(applyUrl) ? applyUrl : "";
+  const applyEmail = value(job.apply_email);
+  const safeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(applyEmail) ? applyEmail : "";
+  const title = value(job.title) || "Job opportunity";
+  const location = value(job.location);
+  const type = first(job, ["job_type", "employment_type"]);
+  const salary = salaryText(job);
+  const description = value(job.description);
+  const expiry = prettyDate(job.expires_at);
+  const experience = first(job, ["experience", "experience_level", "required_experience"]) || detailFromDescription(description, "Experience");
+  const qualification = first(job, ["qualification", "education", "education_level"]) || detailFromDescription(description, "Qualification");
+  const category = first(job, ["category", "industry", "sector"]);
+  const industry = detailFromDescription(description, "Industry") || first(job, ["industry", "sector"]);
+  const careerLevel = first(job, ["career_level"]) || detailFromDescription(description, "Career Level");
+  const gender = first(job, ["gender"]) || detailFromDescription(description, "Gender");
+  const companyName = employer.company_name || "Verified UK Employer";
+  const companyInitial = companyName.slice(0, 1).toUpperCase();
+  const companyHref = `/companies/${encodeURIComponent(value(job.employer_id))}`;
 
-  const loggedIn =
-    Boolean(user);
+  // Related vacancies are optional; failure here must never break the job details page.
+  let related: RecordData[] = [];
+  try {
+    const { data: candidates } = await db.from("jobs")
+      .select("id,slug,title,location,job_type,salary,category,employer_id,expires_at")
+      .eq("status", "published").neq("id", job.id)
+      .order("created_at", { ascending: false }).limit(30);
+    const matches = ((candidates ?? []) as RecordData[])
+      .filter(j => !j.expires_at || new Date(String(j.expires_at)).getTime() > Date.now())
+      .sort((a, b) => Number(value(a.category) === category) - Number(value(b.category) === category))
+      .reverse();
+    const owners = [...new Set(matches.map(j => value(j.employer_id)).filter(Boolean))];
+    if (owners.length) {
+      const { data: approved } = await db.from("employer_verifications")
+        .select("user_id").in("user_id", owners).eq("verification_status", "verified");
+      const approvedIds = new Set((approved ?? []).map(v => String(v.user_id)));
+      related = matches.filter(j => approvedIds.has(value(j.employer_id))).slice(0, 3);
+    }
+  } catch (e) { console.error("Related jobs unavailable:", e); }
 
-  const accountType =
-    user?.user_metadata
-      ?.account_type;
-
-  const displayName =
-    user?.user_metadata
-      ?.full_name ||
-    user?.email?.split("@")[0] ||
-    "Account";
-
-  const adminEmails = (
-    process.env.ADMIN_EMAILS || ""
-  )
-    .split(",")
-    .map((email) =>
-      email
-        .trim()
-        .toLowerCase()
-    )
-    .filter(Boolean);
-
-  const isAdmin = Boolean(
-    user?.email &&
-      adminEmails.includes(
-        user.email.toLowerCase()
-      )
-  );
-
-  const {
-    data: job,
-    error,
-  } = await supabase
-    .from("jobs")
-    .select("*")
-    .eq("slug", slug)
-    .eq(
-      "status",
-      "published"
-    )
-    .gt(
-      "expires_at",
-      new Date().toISOString()
-    )
-    .maybeSingle();
-
-  if (error) {
-    console.error(error);
-  }
-
-  if (!job) {
-    notFound();
-  }
-
-  /*
-   * GOOGLE JOBPOSTING
-   *
-   * Only real job data already
-   * stored in the database is used.
-   */
-
-  const jobPostingJsonLd = {
-    "@context":
-      "https://schema.org",
+  const posted = value(job.created_at);
+  const postedDate = posted ? new Date(posted) : null;
+  const expires = value(job.expires_at);
+  const expiresDate = expires ? new Date(expires) : null;
+  const jobSchema = description && postedDate && !Number.isNaN(postedDate.getTime()) ? {
+    "@context": "https://schema.org",
     "@type": "JobPosting",
-
-    title: job.title,
-
-    description:
-      jobDescriptionHtml(
-        job.description
-      ),
-
-    identifier: {
-      "@type":
-        "PropertyValue",
-      name: job.company_name,
-      value: job.id,
-    },
-
-    datePosted:
-      new Date(
-        job.created_at
-      ).toISOString(),
-
-    validThrough:
-      new Date(
-        job.expires_at
-      ).toISOString(),
-
-    employmentType:
-      employmentTypeSchema(
-        job.job_type
-      ),
-
-    hiringOrganization: {
-      "@type":
-        "Organization",
-      name: job.company_name,
-      ...(job.company_logo_url
-        ? { logo: job.company_logo_url }
-        : {}),
-    },
-
-    ...(job.job_image_url
-      ? { image: job.job_image_url }
-      : {}),
-
+    title,
+    description: cleanDescription(description),
+    datePosted: postedDate.toISOString(),
+    ...(expiresDate && !Number.isNaN(expiresDate.getTime()) ? { validThrough: expiresDate.toISOString() } : {}),
+    hiringOrganization: { "@type": "Organization", name: companyName },
     jobLocation: {
       "@type": "Place",
       address: {
-        "@type":
-          "PostalAddress",
-        addressLocality:
-          job.location,
+        "@type": "PostalAddress",
+        ...(location ? { addressLocality: location } : {}),
         addressCountry: "GB",
       },
     },
+    ...(type ? { employmentType: type } : {}),
+    identifier: { "@type": "PropertyValue", name: "UKJobAlert", value: value(job.id) || slug },
+    url: `https://www.ukjobalert.com/jobs/${encodeURIComponent(slug)}`,
+  } : null;
 
-    url:
-      `https://ukjobalert.com/jobs/${job.slug}`,
-  };
-
-  /*
-   * Check whether this job
-   * is already saved by the
-   * logged-in job seeker.
-   */
-
-  let initiallySaved = false;
-
-  if (
-    user &&
-    accountType !== "employer"
-  ) {
-    const {
-      data: savedJob,
-      error: savedJobError,
-    } = await supabase
-      .from("saved_jobs")
-      .select("id")
-      .eq(
-        "user_id",
-        user.id
-      )
-      .eq(
-        "job_id",
-        job.id
-      )
-      .maybeSingle();
-
-    if (savedJobError) {
-      console.error(
-        "Saved job lookup error:",
-        savedJobError
-      );
-    }
-
-    initiallySaved =
-      Boolean(savedJob);
-  }
-
-  const { data: relatedJobs, error: relatedJobsError } = await supabase
-    .from("jobs")
-    .select("id, slug, title, company_name, company_logo_url, location, job_type, created_at")
-    .eq("status", "published")
-    .eq("category", job.category)
-    .neq("id", job.id)
-    .gt("expires_at", new Date().toISOString())
-    .order("created_at", { ascending: false })
-    .limit(3);
-
-  if (relatedJobsError) {
-    console.error("Related jobs error:", relatedJobsError);
-  }
+  const actions = <JobActions title={title} company={companyName} url={safeUrl} email={safeEmail} jobId={value(job.id) || slug} deadline={expiry} />;
 
   return (
-    <main className="min-h-screen bg-[#f7f8fa] text-[#101828]">
+    <main className={styles.page}>
+      {jobSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jobSchema).replace(/</g, "\\u003c"),
+      }} />}
+      <div className={styles.container}>
 
-      {/* GOOGLE JOB STRUCTURED DATA */}
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            jobPostingJsonLd
-          ).replace(
-            /</g,
-            "\\u003c"
-          ),
-        }}
-      />
+        <div className={styles.layout}>
+          <div className={styles.left}>
+            <section className={styles.jobHeader}>
+              <div className={styles.headerTop}>
 
-      <MainHeader
-        loggedIn={loggedIn}
-        displayName={
-          displayName
-        }
-        accountType={
-          accountType
-        }
-        isAdmin={isAdmin}
-      />
-
-      {/* JOB HEADER */}
-
-      <section
-        className="relative overflow-hidden"
-        style={{
-          backgroundColor:
-            "#07182d",
-        }}
-      >
-        <div
-          className="absolute -right-[120px] -top-[280px] h-[620px] w-[620px] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(23,92,211,.22) 0%, rgba(23,92,211,0) 68%)",
-          }}
-        />
-
-        <div className="relative mx-auto max-w-[1440px] px-6 pb-[78px] pt-[54px] md:px-10 xl:px-12">
-          <Link
-            href="/jobs"
-            className="inline-flex items-center gap-2 text-[13px] font-semibold transition hover:opacity-100"
-            style={{
-              color:
-                "rgba(255,255,255,.62)",
-            }}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to jobs
-          </Link>
-
-          <div className="mt-9 flex max-w-[950px] items-start gap-5">
-            <div
-              className="flex h-[68px] w-[68px] shrink-0 items-center justify-center rounded-[8px] border text-[16px] font-bold"
-              style={{
-                backgroundColor:
-                  "rgba(255,255,255,.08)",
-                borderColor:
-                  "rgba(255,255,255,.12)",
-                color:
-                  "#ffffff",
-              }}
-            >
-              {job.company_logo_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={job.company_logo_url}
-                  alt={`${job.company_name} logo`}
-                  className="h-full w-full rounded-[7px] bg-white object-contain p-1.5"
-                />
-              ) : (
-                initials(job.company_name)
-              )}
-            </div>
-
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-3">
-                <h1
-                  className="text-[38px] font-bold leading-[1.08] tracking-[-1.5px] sm:text-[48px]"
-                  style={{
-                    color:
-                      "#ffffff",
-                  }}
-                >
-                  {job.title}
-                </h1>
-
-                <ShieldCheck
-                  className="h-[21px] w-[21px]"
-                  style={{
-                    color:
-                      "#f3b4bc",
-                  }}
-                />
-              </div>
-
-              <p
-                className="mt-3 text-[16px] font-semibold"
-                style={{
-                  color:
-                    "rgba(255,255,255,.72)",
-                }}
-              >
-                {job.company_name}
-              </p>
-
-              <div
-                className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-[13px]"
-                style={{
-                  color:
-                    "rgba(255,255,255,.60)",
-                }}
-              >
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4" />
-                  {job.location}
-                </span>
-
-                <span
-                  className="rounded-full border px-3 py-1.5"
-                  style={{
-                    borderColor:
-                      "rgba(255,255,255,.14)",
-                    backgroundColor:
-                      "rgba(255,255,255,.07)",
-                    color:
-                      "rgba(255,255,255,.80)",
-                  }}
-                >
-                  {job.job_type}
-                </span>
-
-                <span
-                  className="rounded-full border px-3 py-1.5"
-                  style={{
-                    borderColor:
-                      "rgba(255,255,255,.14)",
-                    backgroundColor:
-                      "rgba(255,255,255,.07)",
-                    color:
-                      "rgba(255,255,255,.80)",
-                  }}
-                >
-                  {job.category}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTENT */}
-
-      <section className="mx-auto max-w-[1440px] px-6 py-[58px] md:px-10 xl:px-12">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
-
-          {/* LEFT */}
-
-          <div>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <Info
-                icon={MapPin}
-                label="Location"
-                value={
-                  job.location
-                }
-              />
-
-              <Info
-                icon={
-                  BriefcaseBusiness
-                }
-                label="Job type"
-                value={
-                  job.job_type
-                }
-              />
-
-              <Info
-                icon={
-                  CalendarDays
-                }
-                label="Posted"
-                value={formatDate(
-                  job.created_at
-                )}
-              />
-
-              <Info
-                icon={
-                  CalendarClock
-                }
-                label="Closing date"
-                value={formatDate(
-                  job.expires_at
-                )}
-              />
-            </div>
-
-            {job.salary && (
-              <div className="mt-4 flex items-center justify-between gap-6 rounded-[8px] border border-[#d9e2ef] bg-white px-6 py-5">
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#98a2b3]">
-                    Salary
-                  </p>
-
-                  <p className="mt-1.5 text-[20px] font-semibold tracking-[-0.4px] text-[#101828]">
-                    {job.salary.trim().startsWith("£") ? job.salary : `£${job.salary}`}
-                  </p>
+                <div className={styles.headerText}>
+                  <span className={styles.verified}>{type || "Job Opportunity"}</span>
+                  <h1>{title}</h1>
+                  <p className={styles.companyName}>Posted by <Link href={companyHref} style={{color:"#C8102E",fontWeight:600,textDecoration:"underline",textUnderlineOffset:3}}>{companyName}</Link></p>
                 </div>
-
-                <BriefcaseBusiness className="h-5 w-5 text-[#98a2b3]" />
               </div>
-            )}
-
-            <article className="mt-6 rounded-[8px] border border-[#e1e5eb] bg-white px-7 py-8 md:px-9 md:py-9">
-              <div className="border-b border-[#eaecf0] pb-6">
-                <p className="text-[12px] font-semibold text-[#d71920]">
-                  Vacancy details
-                </p>
-
-                <h2 className="mt-2 text-[27px] font-bold tracking-[-0.8px] text-[#101828]">
-                  Job description
-                </h2>
+              <div className={styles.meta}>
+                {type && <span><BriefcaseBusiness size={16}/>{type}</span>}
+                {location && <span><MapPin size={16}/>{location}</span>}
+                {salary && <span><Wallet size={16}/>{salary}</span>}
               </div>
+              <div className={styles.headerActions}>
+                {actions}
 
-              <div
-                className={
-                  job.job_image_url
-                    ? "mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start"
-                    : "mt-7"
-                }
-              >
-                <div className="whitespace-pre-wrap text-[15px] leading-[1.9] text-[#475467]">
-                  {job.description}
-                </div>
-
-                {job.job_image_url && (
-                  <figure className="overflow-hidden rounded-[8px] border border-[#e4e7ec] bg-[#f7f8fa]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={job.job_image_url}
-                      alt={`${job.title} workplace or role`}
-                      className="aspect-[4/3] w-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </figure>
-                )}
               </div>
-            </article>
+            </section>
+
+            <section className={styles.overview}>
+
+              <div className={styles.overviewGrid}>
+                {salary && <div className={styles.overviewItem}><Wallet/><div><span>Offered Salary</span><strong>{salary}</strong></div></div>}
+                {experience && <div className={styles.overviewItem}><Clock3/><div><span>Experience</span><strong>{experience}</strong></div></div>}
+                {gender && <div className={styles.overviewItem}><Users/><div><span>Gender</span><strong>{gender}</strong></div></div>}
+                {(industry || category) && <div className={styles.overviewItem}><BriefcaseBusiness/><div><span>Industry</span><strong>{industry || category}</strong></div></div>}
+                {qualification && <div className={styles.overviewItem}><GraduationCap/><div><span>Qualification</span><strong>{qualification}</strong></div></div>}
+                {careerLevel && <div className={styles.overviewItem}><Tag/><div><span>Career Level</span><strong>{careerLevel}</strong></div></div>}
+              </div>
+            </section>
+
+            <section className={styles.descriptionSection}>
+              <h2>Job Description</h2>
+              {description ? <div className={styles.description}>{cleanDescription(description)}</div> :
+                <p className={styles.muted}>The employer has not provided a job description.</p>}
+              <div className={styles.disclaimer}><ShieldCheck size={19}/><p>Employer verification checks company information; it does not guarantee a vacancy or employment outcome. Always assess opportunities carefully.</p></div>
+            </section>
           </div>
 
-          {/* RIGHT */}
-
-          <aside className="space-y-4 lg:sticky lg:top-[105px]">
-            <div
-              className="overflow-hidden rounded-[8px] shadow-[0_8px_24px_rgba(16,24,40,.07)]"
-              style={{
-                backgroundColor:
-                  "#07182d",
-              }}
-            >
-              <div className="p-7">
-                <div
-                  className="flex h-12 w-12 items-center justify-center rounded-[8px]"
-                  style={{
-                    backgroundColor:
-                      "rgba(255,255,255,.09)",
-                  }}
-                >
-                  <ShieldCheck
-                    className="h-6 w-6"
-                    style={{
-                      color:
-                        "#ffffff",
-                    }}
-                  />
-                </div>
-
-                <p
-                  className="mt-7 text-[11px] font-bold uppercase tracking-[0.09em]"
-                  style={{
-                    color:
-                      "rgba(255,255,255,.48)",
-                  }}
-                >
-                  Employer
-                </p>
-
-                <h2
-                  className="mt-2 text-[25px] font-semibold tracking-[-0.6px]"
-                  style={{
-                    color:
-                      "#ffffff",
-                  }}
-                >
-                  {job.company_name}
-                </h2>
-
-                <p
-                  className="mt-4 text-[13px] leading-6"
-                  style={{
-                    color:
-                      "rgba(255,255,255,.62)",
-                  }}
-                >
-                  This vacancy was
-                  published through an
-                  approved UKJobAlert
-                  employer account.
-                </p>
-
-                <div
-                  className="my-6 h-px"
-                  style={{
-                    backgroundColor:
-                      "rgba(255,255,255,.10)",
-                  }}
-                />
-
-                <div>
-                  <p
-                    className="text-[10px] font-bold uppercase tracking-[0.08em]"
-                    style={{
-                      color:
-                        "rgba(255,255,255,.40)",
-                    }}
-                  >
-                    Companies House
-                  </p>
-
-                  <p
-                    className="mt-1.5 text-[13px] font-semibold"
-                    style={{
-                      color:
-                        "rgba(255,255,255,.78)",
-                    }}
-                  >
-                    {job.company_number}
-                  </p>
-                </div>
-
-                {/* EXISTING APPLY LOGIC */}
-
-                <div className="mt-7">
-                  <ApplyButton
-                    jobId={
-                      job.id
-                    }
-                    title={
-                      job.title
-                    }
-                    applyMethod={
-                      job.apply_method
-                    }
-                    applyEmail={
-                      job.apply_email
-                    }
-                    applyUrl={
-                      job.apply_url
-                    }
-                  />
-                </div>
+          <aside className={styles.right}>
+            <section className={styles.sideCard}>
+              <div className={styles.sideCompany}>
+                <div className={styles.sideLogo}>{companyInitial}</div>
+                <div><h2><Link href={companyHref} style={{color:"inherit",textDecoration:"none"}}>{companyName}</Link></h2><span className={styles.sideVerified}><CheckCircle2 size={14}/> Verified UK Employer</span></div>
               </div>
-            </div>
-
-            {/* SAVE JOB */}
-
-            {accountType !==
-              "employer" && (
-              <SaveJobButton
-                jobId={
-                  job.id
-                }
-                userId={
-                  user?.id ??
-                  null
-                }
-                initiallySaved={
-                  initiallySaved
-                }
-              />
-            )}
-
-            <div className="rounded-[8px] border border-[#e4e7ec] bg-white p-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#f2f4f7]">
-                  <Building2 className="h-[18px] w-[18px] text-[#475467]" />
-                </div>
-
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#98a2b3]">
-                    Company
-                  </p>
-
-                  <p className="mt-0.5 text-[14px] font-semibold text-[#101828]">
-                    {job.company_name}
-                  </p>
-                </div>
+              <Link href={companyHref} className={styles.companyJobs}>View company jobs <ArrowRight size={15}/></Link>
+            </section>
+            <section className={`${styles.sideCard} ${styles.facts}`}>
+              <h2>Job Information</h2>
+              <div className={styles.infoList}>
+                {experience && <div><Clock3/><span><strong>{experience}</strong> Experience</span></div>}
+                {type && <div><BriefcaseBusiness/><span><strong>{type}</strong> Employment</span></div>}
+                {salary && <div><Wallet/><span><strong>{salary}</strong> Salary</span></div>}
               </div>
 
-              <div className="mt-6 border-t border-[#eaecf0] pt-5">
-                <CheckItem text="Company information checked" />
-                <CheckItem text="Current job listing" />
-                <CheckItem text="Application details provided" />
-              </div>
-            </div>
-
-            <Link
-              href="/jobs"
-              className="flex min-h-[48px] items-center justify-center gap-2 rounded-[8px] border border-[#d0d5dd] bg-white px-5 text-[13px] font-semibold text-[#344054] transition hover:bg-[#f9fafb]"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Browse more jobs
-            </Link>
+            </section>
+            <section className={`${styles.sideCard} ${styles.mapSection}`}>
+              <h2>Job Location</h2>
+              <div className={styles.locationBox}><MapPin size={25}/><strong>{location || "United Kingdom"}</strong><span>Location provided by the employer</span></div>
+              {expiry && <p className={styles.sidebarDeadline}>Application ends: {expiry}</p>}
+              <JobActions title={title} company={companyName} url={safeUrl} email={safeEmail} jobId={value(job.id) || slug} compact />
+            </section>
           </aside>
         </div>
-      </section>
 
-      {(relatedJobs || []).length > 0 && (
-        <section className="border-t border-[#e1e5eb] bg-white">
-          <div className="mx-auto max-w-[1440px] px-6 py-14 md:px-10 lg:py-16 xl:px-12">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#d71920]">
-                  More in {job.category}
-                </p>
-                <h2 className="mt-2 font-serif text-[32px] font-semibold tracking-[-.8px] text-[#07182d] md:text-[38px]">
-                  Related vacancies
-                </h2>
-              </div>
-              <Link href={`/jobs?category=${encodeURIComponent(job.category)}`} className="inline-flex items-center gap-2 text-[13px] font-bold text-[#07182d] hover:text-[#d71920]">
-                View all {job.category.toLowerCase()} jobs <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="mt-7 grid gap-px border border-[#dfe3e8] bg-[#dfe3e8] lg:grid-cols-3">
-              {(relatedJobs || []).map((related) => (
-                <Link key={related.id} href={`/jobs/${related.slug}`} className="group relative bg-white p-6 transition-all duration-200 ease-out hover:z-10 hover:-translate-y-[2px] hover:bg-white hover:shadow-[0_10px_28px_rgba(16,24,40,.10)]">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex min-w-0 items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden border border-[#dfe3e8] bg-[#f6f7f8] text-[11px] font-bold text-[#07182d]">
-                        {related.company_logo_url ? (
-                          <img
-                            src={related.company_logo_url}
-                            alt={`${related.company_name} logo`}
-                            className="h-full w-full object-contain p-1.5"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          initials(related.company_name)
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="text-[17px] font-bold text-[#07182d] transition group-hover:text-[#d71920]">{related.title}</h3>
-                        <p className="mt-1.5 text-[13px] font-semibold text-[#475467]">{related.company_name}</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
-                  </div>
-                  <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#eaecf0] pt-4 text-[11px] text-[#667085]">
-                    <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{related.location}</span>
-                    <span>{related.job_type}</span>
-                    <span className="flex items-center gap-1.5"><Clock3 className="h-3.5 w-3.5" />{formatDate(related.created_at)}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-    </main>
-  );
-}
-
-function Info({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof MapPin;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="min-h-[112px] rounded-[8px] border border-[#e1e5eb] bg-white p-5">
-      <div className="flex items-center gap-2 text-[#98a2b3]">
-        <Icon className="h-[16px] w-[16px]" />
-
-        <p className="text-[10px] font-bold uppercase tracking-[0.07em]">
-          {label}
-        </p>
+        {related.length > 0 && <section className={styles.related}>
+          <div className={styles.relatedHeading}><h2>Related Jobs</h2><Link href="/jobs">View all jobs <ArrowRight size={16}/></Link></div>
+          <div className={styles.relatedGrid}>{related.map(j => (
+            <Link key={value(j.id)} className={styles.relatedCard} href={`/jobs/${encodeURIComponent(value(j.slug) || value(j.id))}`}>
+              <div className={styles.relatedLogo}><BriefcaseBusiness size={24}/></div>
+              <div className={styles.relatedContent}>
+                <span className={styles.relatedType}>{value(j.job_type) || "Job Opportunity"}</span>
+                <h3>{value(j.title) || "Untitled job"}</h3>
+                <p><MapPin size={14}/>{value(j.location) || "United Kingdom"}</p>
+                <span className={styles.relatedSalary}>{salaryText(j)}</span>
+              </div><ArrowUpRight className={styles.relatedArrow} size={18}/>
+            </Link>
+          ))}</div>
+        </section>}
       </div>
-
-      <p className="mt-4 text-[14px] font-semibold leading-5 text-[#101828]">
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function CheckItem({
-  text,
-}: {
-  text: string;
-}) {
-  return (
-    <div className="mt-3 flex first:mt-0 items-start gap-2.5">
-      <CheckCircle2 className="mt-[1px] h-[16px] w-[16px] shrink-0 text-[#d71920]" />
-
-      <span className="text-[12px] leading-5 text-[#667085]">
-        {text}
-      </span>
-    </div>
+    </main>
   );
 }

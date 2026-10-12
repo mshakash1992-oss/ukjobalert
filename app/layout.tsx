@@ -1,92 +1,29 @@
 import type { Metadata } from "next";
-import {
-  Manrope,
-  Playfair_Display,
-} from "next/font/google";
-
+import { Suspense } from "react";
+import GlobalNavigationLoader from "@/components/GlobalNavigationLoader";
+import { Roboto } from "next/font/google";
+import SiteHeader from "@/components/SiteHeader";
 import "./globals.css";
 
-import SiteFooter from "@/components/site-footer";
-import WhatsAppChat from "@/components/whatsapp-chat";
-
-const manrope = Manrope({
+const roboto = Roboto({
   subsets: ["latin"],
-  variable: "--font-manrope",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-roboto",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    "https://ukjobalert.com"
-  ),
-
-  title: {
-    default:
-      "UK Jobs & Verified Employer Vacancies | UKJobAlert",
-    template: "%s | UKJobAlert",
-  },
-
-  description:
-    "Search UK jobs and current vacancies from verified employers. Find opportunities by job title, location, sector and employment type on UKJobAlert.",
-
-  applicationName: "UKJobAlert",
-
-  keywords: [
-    "UK jobs",
-    "jobs in UK",
-    "UK job vacancies",
-    "UK vacancies",
-    "find jobs UK",
-    "job search UK",
-    "verified employers UK",
-    "UKJobAlert",
-  ],
-
-  authors: [
-    {
-      name: "UKJobAlert",
-    },
-  ],
-
-  creator: "UKJobAlert",
-  publisher: "UKJobAlert",
-
+  metadataBase: new URL("https://www.ukjobalert.com"),
+  title: { default: "UKJobAlert", template: "%s | UKJobAlert" },
+  description: "Find jobs across the United Kingdom from verified employers.",
+  robots: { index: true, follow: true },
   openGraph: {
     type: "website",
-    locale: "en_GB",
     siteName: "UKJobAlert",
-    title:
-      "UK Jobs & Verified Employer Vacancies | UKJobAlert",
-    description:
-      "Search UK jobs and current vacancies from verified employers by job title, location, sector and employment type.",
+    title: "UKJobAlert",
+    description: "Find jobs across the United Kingdom from verified employers.",
+    url: "https://www.ukjobalert.com/",
   },
-
-  twitter: {
-    card: "summary_large_image",
-    title:
-      "UK Jobs & Verified Employer Vacancies | UKJobAlert",
-    description:
-      "Search UK jobs and current vacancies from verified employers.",
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
-
-  category: "jobs",
 };
 
 export default function RootLayout({
@@ -95,14 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en-GB"
-      className={`${manrope.variable} ${playfair.variable}`}
-    >
-      <body>
+    <html lang="en">
+      <body className={roboto.variable}>
+        <Suspense fallback={null}><GlobalNavigationLoader /></Suspense>
+        <SiteHeader />
         {children}
-        <SiteFooter />
-        <WhatsAppChat />
       </body>
     </html>
   );

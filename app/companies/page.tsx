@@ -1,182 +1,294 @@
+"use client";
+
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import {
+  ArrowLeft,
   ArrowRight,
+  BadgeCheck,
+  Bell,
   BriefcaseBusiness,
   Building2,
+  ChevronDown,
+  LocateFixed,
   MapPin,
-  ShieldCheck,
+  Search,
+  SlidersHorizontal,
+  UsersRound,
 } from "lucide-react";
+import styles from "./companies.module.css";
 
-import AuthMainHeader from "@/components/auth-main-header";
-import { createAdminClient } from "@/lib/supabase/admin";
+const companies: Array<{id:string;name:string;initial:string;industry:string;location:string;jobs:number;size:string;verified:boolean;description:string}> = [];
 
-type CompanyJob = {
-  company_name: string;
-  company_logo_url: string | null;
-  company_number: string | null;
-  location: string;
-};
+const industries = [
+  "Technology",
+  "Healthcare",
+  "Health & Social Care",
+  "Finance",
+  "Construction",
+  "Hospitality",
+  "Education",
+];
 
-type Company = {
-  name: string;
-  number: string | null;
-  logoUrl: string | null;
-  count: number;
-  locations: string[];
-};
+export default function CompaniesPage() {
+  const [keyword, setKeyword] = useState("");
+  const [location, setLocation] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [sort, setSort] = useState("Most Jobs");
+  const [mobileFilters, setMobileFilters] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
 
-function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word.charAt(0))
-    .join("")
-    .toUpperCase();
-}
+  const filtered = useMemo(() => {
+    let result = companies.filter((company) => {
+      const q = keyword.trim().toLowerCase();
+      const l = location.trim().toLowerCase();
+      return (
+        (!q ||
+          company.name.toLowerCase().includes(q) ||
+          company.industry.toLowerCase().includes(q)) &&
+        (!l || company.location.toLowerCase().includes(l)) &&
+        (!industry || company.industry === industry)
+      );
+    });
 
-export default async function CompaniesPage() {
-  const admin = createAdminClient();
-  const now = new Date().toISOString();
+    if (sort === "Most Jobs") result = [...result].sort((a, b) => b.jobs - a.jobs);
+    if (sort === "A-Z") result = [...result].sort((a, b) => a.name.localeCompare(b.name));
 
-  const { data, error } = await admin
-    .from("jobs")
-    .select("company_name, company_logo_url, company_number, location")
-    .eq("status", "published")
-    .gt("expires_at", now)
-    .order("company_name", { ascending: true });
+    return result;
+  }, [keyword, location, industry, sort]);
 
-  if (error) {
-    console.error("Company directory error:", error);
-  }
+  const detectLocation = () => {
+    if (!navigator.geolocation || isLocating) return;
+    setIsLocating(true);
 
-  const companiesMap = new Map<string, Company>();
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coords.latitude}&lon=${coords.longitude}&zoom=10&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          if (!response.ok) throw new Error();
+          const data = await response.json();
+          const a = data.address ?? {};
+          const place =
+            a.city || a.town || a.village || a.municipality || a.county || a.state;
+          const country = a.country_code ? String(a.country_code).toUpperCase() : "";
+          if (place) setLocation(country ? `${place}, ${country}` : place);
+        } catch {
+          // Keep existing input.
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      () => setIsLocating(false),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+    );
+  };
 
-  for (const row of (data || []) as CompanyJob[]) {
-    const key = `${row.company_name}::${row.company_number || ""}`;
-    const current = companiesMap.get(key);
-
-    if (current) {
-      current.count += 1;
-      if (!current.logoUrl && row.company_logo_url) {
-        current.logoUrl = row.company_logo_url;
-      }
-      if (row.location && !current.locations.includes(row.location)) {
-        current.locations.push(row.location);
-      }
-    } else {
-      companiesMap.set(key, {
-        name: row.company_name,
-        number: row.company_number,
-        logoUrl: row.company_logo_url,
-        count: 1,
-        locations: row.location ? [row.location] : [],
-      });
-    }
-  }
-
-  const companies = Array.from(companiesMap.values()).sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
+  const reset = () => {
+    setKeyword("");
+    setLocation("");
+    setIndustry("");
+  };
 
   return (
-    <main className="min-h-screen bg-[#f5f6f7] text-[#101828]">
-      <AuthMainHeader />
+    <main className={styles.page}>
+      <header className={styles.topbar}>
+        <div className={styles.container}>
+          <div className={styles.nav}>
+            <Link href="/" className={styles.logo}>
+              <img src="/images/ukjobalert-logo.png" alt="UKJobAlert" />
+            </Link>
 
-      <section className="border-b border-[#dfe3e8] bg-white">
-        <div className="mx-auto grid max-w-[1360px] gap-10 px-6 py-14 md:px-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end lg:py-18 xl:px-12">
-          <div className="max-w-[820px]">
-            <div className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#d71920]">
-              <span className="h-px w-9 bg-[#d71920]" />
-              Company directory
+            <nav className={styles.desktopNav}>
+              <Link href="/">Home</Link>
+              <Link href="/jobs">Jobs <ChevronDown /></Link>
+              <Link href="/companies" className={styles.active}>Employers <ChevronDown /></Link>
+              <Link href="/candidates">Candidates</Link>
+              <Link href="/about">Pages <ChevronDown /></Link>
+            </nav>
+
+            <div className={styles.navActions}>
+              <button className={styles.bell} aria-label="Notifications"><Bell /></button>
+              <Link href="/login" className={styles.login}>Login / Register</Link>
+              <Link href="/post-job" className={styles.postJob}>Post a Job</Link>
             </div>
-            <h1 className="mt-5 font-serif text-[44px] font-semibold leading-[1.02] tracking-[-1.7px] text-[#07182d] sm:text-[56px] lg:text-[64px]">
-              Companies with current UK vacancies.
-            </h1>
-            <p className="mt-5 max-w-[720px] text-[16px] leading-7 text-[#5d6673]">
-              Browse employers that currently have live jobs on UKJobAlert. Open a company to see the vacancies available now.
-            </p>
           </div>
+        </div>
+      </header>
 
-          <div className="border-l-4 border-[#d71920] bg-[#07182d] p-6 sm:p-7">
-            <Building2 className="h-5 w-5 text-white/70" />
-            <p className="mt-5 text-[32px] font-bold tracking-[-1px] text-white">
-              {companies.length}
-            </p>
-            <p className="mt-1 text-[13px] leading-6 text-white/65">
-              {companies.length === 1 ? "company has" : "companies have"} active vacancies right now.
-            </p>
+      <section className={styles.pageHero}>
+        <div className={styles.container}>
+          <div className={styles.heroRow}>
+            <div>
+              <h1>Browse Employers</h1>
+              <p>Explore verified employers and discover their latest UK job opportunities.</p>
+            </div>
+            <div className={styles.breadcrumb}>
+              <Link href="/">Home</Link><span>/</span><strong>Employers</strong>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1360px] px-6 py-12 md:px-10 lg:py-16 xl:px-12">
-        {companies.length === 0 ? (
-          <div className="border border-[#dfe3e8] bg-white px-8 py-16 text-center">
-            <Building2 className="mx-auto h-7 w-7 text-[#98a2b3]" />
-            <h2 className="mt-4 text-[20px] font-bold text-[#07182d]">No companies to show yet</h2>
-            <p className="mt-2 text-[14px] text-[#667085]">
-              Companies will appear here when they have a current published vacancy.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-px border border-[#dfe3e8] bg-[#dfe3e8] md:grid-cols-2 xl:grid-cols-3">
-            {companies.map((company) => (
-              <Link
-                key={`${company.name}-${company.number || "company"}`}
-                href={`/jobs?company=${encodeURIComponent(company.name)}`}
-                className="group bg-white p-6 transition hover:bg-[#fbfbfa]"
+      <section className={styles.searchSection}>
+        <div className={styles.container}>
+          <div className={styles.searchBar}>
+            <label>
+              <Search />
+              <input
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                placeholder="Company name or industry"
+              />
+            </label>
+
+            <label className={styles.locationField}>
+              <MapPin />
+              <input
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder={isLocating ? "Detecting location..." : "Location"}
+              />
+              <button
+                type="button"
+                onClick={detectLocation}
+                className={isLocating ? styles.locating : ""}
+                aria-label="Use current location"
               >
-                <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden border border-[#dfe3e8] bg-[#f6f7f8] text-[13px] font-bold text-[#07182d]">
-                    {company.logoUrl ? (
-                      <img
-                        src={company.logoUrl}
-                        alt={`${company.name} logo`}
-                        className="h-full w-full object-contain p-2"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    ) : (
-                      initials(company.name)
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h2 className="truncate text-[17px] font-bold text-[#07182d] transition group-hover:text-[#d71920]">
-                        {company.name}
-                      </h2>
-                      <ShieldCheck className="h-4 w-4 shrink-0 text-[#0b6b4b]" />
-                    </div>
-                    {company.number && (
-                      <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[#98a2b3]">
-                        Company No. {company.number}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                <LocateFixed />
+              </button>
+            </label>
 
-                <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-[#eaecf0] pt-5 text-[12px] text-[#667085]">
-                  <span className="flex items-center gap-1.5">
-                    <BriefcaseBusiness className="h-3.5 w-3.5" />
-                    {company.count} {company.count === 1 ? "live job" : "live jobs"}
-                  </span>
-                  {company.locations[0] && (
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {company.locations[0]}
-                      {company.locations.length > 1 ? ` +${company.locations.length - 1}` : ""}
-                    </span>
-                  )}
-                </div>
-
-                <div className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]">
-                  View current jobs <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-                </div>
-              </Link>
-            ))}
+            <button className={styles.searchButton}>Search Employers</button>
           </div>
-        )}
+        </div>
+      </section>
+
+      <section className={styles.content}>
+        <div className={styles.container}>
+          <button
+            className={styles.mobileFilter}
+            onClick={() => setMobileFilters(!mobileFilters)}
+          >
+            <SlidersHorizontal /> Filters
+          </button>
+
+          <div className={styles.layout}>
+            <aside className={`${styles.sidebar} ${mobileFilters ? styles.sidebarOpen : ""}`}>
+              <div className={styles.filterHead}>
+                <h2>Filter Employers</h2>
+                <button onClick={reset}>Clear All</button>
+              </div>
+
+              <div className={styles.filterGroup}>
+                <h3>Industry</h3>
+                <label className={styles.radioRow}>
+                  <input
+                    type="radio"
+                    name="industry"
+                    checked={!industry}
+                    onChange={() => setIndustry("")}
+                  />
+                  <span>All Industries</span>
+                </label>
+
+                {industries.map((item) => (
+                  <label className={styles.radioRow} key={item}>
+                    <input
+                      type="radio"
+                      name="industry"
+                      checked={industry === item}
+                      onChange={() => setIndustry(item)}
+                    />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className={styles.verifiedBox}>
+                <BadgeCheck />
+                <h3>Verified Employers</h3>
+                <p>Employer profiles shown here are presented with a verified status indicator.</p>
+              </div>
+            </aside>
+
+            <div className={styles.results}>
+              <div className={styles.resultsHead}>
+                <div>
+                  <h2>UK Employers</h2>
+                  <p>{filtered.length} employers found</p>
+                </div>
+
+                <label className={styles.sort}>
+                  <span>Sort by:</span>
+                  <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                    <option>Most Jobs</option>
+                    <option>A-Z</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className={styles.companyGrid}>
+                {filtered.map((company) => (
+                  <article className={styles.companyCard} key={company.id}>
+                    <div className={styles.cardTop}>
+                      <div className={styles.companyLogo}>{company.initial}</div>
+                      {company.verified && (
+                        <span className={styles.verified}>
+                          <BadgeCheck /> Verified
+                        </span>
+                      )}
+                    </div>
+
+                    <div className={styles.companyInfo}>
+                      <Link href={`/companies/${company.id}`} className={styles.companyName}>
+                        {company.name}
+                      </Link>
+                      <p className={styles.industry}>{company.industry}</p>
+
+                      <div className={styles.meta}>
+                        <span><MapPin />{company.location}</span>
+                        <span><UsersRound />{company.size} employees</span>
+                      </div>
+
+                      <p className={styles.description}>{company.description}</p>
+                    </div>
+
+                    <div className={styles.cardFooter}>
+                      <span><BriefcaseBusiness /> {company.jobs} Open Jobs</span>
+                      <Link href={`/companies/${company.id}`}>
+                        View Profile <ArrowRight />
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {filtered.length === 0 && (
+                <div className={styles.empty}>
+                  <Building2 />
+                  <h3>No employers found</h3>
+                  <p>Try changing the company name, location or industry filter.</p>
+                  <button onClick={reset}>Reset Filters</button>
+                </div>
+              )}
+
+              {filtered.length > 0 && (
+                <div className={styles.pagination}>
+                  <button aria-label="Previous page"><ArrowLeft /></button>
+                  <button className={styles.current}>1</button>
+                  <button>2</button>
+                  <button>3</button>
+                  <span>...</span>
+                  <button>6</button>
+                  <button aria-label="Next page"><ArrowRight /></button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );

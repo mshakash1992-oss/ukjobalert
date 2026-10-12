@@ -1,111 +1,321 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, HelpCircle, ShieldCheck } from "lucide-react";
+import {
+  Bell,
+  ChevronDown,
+  ChevronRight,
+  Home,
+  Search,
+} from "lucide-react";
+import styles from "./faq.module.css";
 
-import AuthMainHeader from "@/components/auth-main-header";
-
-const questions = [
+const faqs = [
   {
-    question: "Do I need an account to search for jobs?",
+    question: "Is UKJobAlert free for job seekers?",
     answer:
-      "No. You can browse current vacancies and open job details without creating an account. A job seeker account is useful for saved jobs, job alerts and application tracking.",
+      "Yes. Job seekers can browse current UK vacancies and use UKJobAlert's job-search features without employer verification.",
   },
   {
-    question: "What does employer verification mean?",
+    question: "Who can post jobs on UKJobAlert?",
     answer:
-      "Employer accounts complete the required company-information checks before posting access is enabled. Verification confirms specified information at the time of the check; it is not an endorsement or guarantee of an employer, vacancy or employment outcome.",
+      "Only verified employer accounts can publish vacancies. Employers must complete UKJobAlert's verification requirements before job posting is enabled.",
   },
   {
-    question: "How do I apply for a vacancy?",
+    question: "How does employer verification work?",
     answer:
-      "Open the vacancy and use the application route supplied by the employer. Depending on the listing, this may be an email address or an external application website.",
+      "Employers provide their registered UK limited company details. UKJobAlert checks the company information against Companies House and requires an eligible active company before automatic verification can be completed.",
   },
   {
-    question: "Can I save jobs for later?",
+    question: "Can an unverified employer publish a job?",
     answer:
-      "Yes. Job seeker accounts can save current vacancies and return to them from the account area while the jobs remain published and open.",
+      "No. The Post a Job area remains restricted until the employer verification requirement has been completed successfully.",
   },
   {
-    question: "What are job alerts?",
+    question: "How do I apply for a job?",
     answer:
-      "Job alerts let signed-in job seekers save search criteria so they can manage the kinds of vacancies they want to follow from their account.",
+      "Open a vacancy and select the Apply action. Depending on the employer, you may be directed to an application URL or the employer's approved application method.",
   },
   {
-    question: "Can employers edit or close a job?",
+    question: "Can I view my job applications?",
     answer:
-      "Yes. Approved employer accounts can manage their own listings, including editing, closing, reopening and deleting jobs from the employer dashboard.",
+      "Yes. Sign in to your job seeker account and open your account area to view applications that are tracked through UKJobAlert.",
   },
   {
-    question: "Does UKJobAlert charge job seekers to apply?",
+    question: "How can employers manage their vacancies?",
     answer:
-      "UKJobAlert does not ask job seekers to pay to secure a vacancy. Be cautious of any request for payment that claims it will guarantee a job or application outcome.",
+      "Verified employers can use the Employer Dashboard and Manage Jobs area to manage vacancies associated with their account.",
   },
   {
-    question: "Where can I see companies that are currently hiring?",
+    question: "How can I find jobs in a specific UK location?",
     answer:
-      "The Companies page lists employers that currently have published, unexpired vacancies on UKJobAlert. You can open a company to see its current jobs.",
+      "Use the job search to enter a job title or keyword together with a UK location. You can also browse available vacancies from the Jobs page.",
+  },
+  {
+    question: "Why does UKJobAlert verify employers?",
+    answer:
+      "Employer verification helps improve trust on the platform by restricting job publishing to employers that have completed UKJobAlert's verification process.",
+  },
+  {
+    question: "What should I do if a vacancy looks suspicious?",
+    answer:
+      "Do not send money, passwords, login codes or other sensitive information. Stop the application process and contact UKJobAlert through the Contact page with details of the vacancy.",
+  },
+  {
+    question: "How can I contact UKJobAlert?",
+    answer:
+      "Use the Contact page to send a message to UKJobAlert. Official support contact information can also be published there when available.",
   },
 ];
 
-export default function FaqPage() {
-  return (
-    <main className="min-h-screen bg-[#f5f6f7] text-[#101828]">
-      <AuthMainHeader />
+export default function FAQPage() {
+  const [openQuestion, setOpenQuestion] = useState<string>(
+    faqs[0].question
+  );
+  const [search, setSearch] = useState("");
 
-      <section className="bg-[#07182d]">
-        <div className="mx-auto max-w-[1360px] px-6 py-16 md:px-10 lg:py-20 xl:px-12">
-          <div className="max-w-[800px]">
-            <div className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[#f3b4bc]">
-              <span className="h-px w-9 bg-[#d71920]" />
-              Help centre
-            </div>
-            <h1 className="mt-5 font-serif text-[44px] font-semibold leading-[1.02] tracking-[-1.8px] text-white sm:text-[56px] lg:text-[64px]">
-              Questions about using UKJobAlert?
-            </h1>
-            <p className="mt-5 max-w-[680px] text-[16px] leading-7 text-white/65">
-              Straightforward answers for job seekers and employers using the platform.
-            </p>
+  const filteredFaqs = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) {
+      return faqs;
+    }
+
+    return faqs.filter((faq) => {
+      return (
+        faq.question.toLowerCase().includes(query) ||
+        faq.answer.toLowerCase().includes(query)
+      );
+    });
+  }, [search]);
+
+  const recentQuestions = faqs.slice(0, 5);
+
+  const openRecentQuestion = (question: string) => {
+    setSearch("");
+    setOpenQuestion(question);
+
+    window.setTimeout(() => {
+      document
+        .getElementById("frequently-asked-questions")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 0);
+  };
+
+  return (
+    <main>
+      {/* =====================================================
+          SAME HEADER AS HOMEPAGE
+      ===================================================== */}
+
+      <header className="topbar">
+        <div className="container nav">
+          <Link href="/" className="logo">
+            <Image
+              src="/images/ukjobalert-logo.png"
+              alt="UKJobAlert"
+              width={190}
+              height={52}
+              priority
+            />
+          </Link>
+
+          <nav className="desktop-nav">
+            <Link href="/">
+              Home
+            </Link>
+
+            <Link href="/jobs">
+              Jobs <ChevronDown />
+            </Link>
+
+            <Link href="/companies">
+              Employers <ChevronDown />
+            </Link>
+
+            <Link href="/candidates">
+              Candidates
+            </Link>
+
+            <Link href="/about" className="active">
+              Pages <ChevronDown />
+            </Link>
+          </nav>
+
+          <div className="nav-actions">
+            <button
+              type="button"
+              className="bell"
+              aria-label="Notifications"
+            >
+              <Bell />
+            </button>
+
+            <Link href="/login" className="login">
+              Login / Register
+            </Link>
+
+            <Link href="/post-job" className="post-job">
+              Post a Job
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* =====================================================
+          FAQ PAGE TITLE
+      ===================================================== */}
+
+      <section className={styles.titleBar}>
+        <div className={styles.container}>
+          <h1>FAQ</h1>
+
+          <div className={styles.breadcrumb}>
+            <Link href="/">
+              <Home />
+              <span>Home</span>
+            </Link>
+
+            <ChevronRight />
+
+            <span>FAQ</span>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1360px] gap-10 px-6 py-14 md:px-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:py-18 xl:px-12">
-        <div className="border-t border-[#cfd5dc]">
-          {questions.map((item, index) => (
-            <div key={item.question} className="grid gap-4 border-b border-[#cfd5dc] py-7 sm:grid-cols-[44px_minmax(0,1fr)] sm:gap-5">
-              <div className="flex h-10 w-10 items-center justify-center bg-white text-[12px] font-bold text-[#d71920]">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-              <div>
-                <h2 className="text-[18px] font-bold text-[#07182d]">{item.question}</h2>
-                <p className="mt-3 max-w-[760px] text-[14px] leading-7 text-[#667085]">{item.answer}</p>
-              </div>
+      {/* =====================================================
+          FAQ MAIN CONTENT
+      ===================================================== */}
+
+      <section className={styles.faqSection}>
+        <div className={`${styles.container} ${styles.faqLayout}`}>
+          {/* LEFT SIDEBAR */}
+
+          <aside className={styles.sidebar}>
+            <div className={styles.searchBox}>
+              <input
+                type="search"
+                value={search}
+                placeholder="Search"
+                aria-label="Search frequently asked questions"
+                onChange={(event) => {
+                  setSearch(event.target.value);
+
+                  const value = event.target.value
+                    .trim()
+                    .toLowerCase();
+
+                  if (!value) {
+                    setOpenQuestion(faqs[0].question);
+                    return;
+                  }
+
+                  const firstMatch = faqs.find((faq) => {
+                    return (
+                      faq.question
+                        .toLowerCase()
+                        .includes(value) ||
+                      faq.answer
+                        .toLowerCase()
+                        .includes(value)
+                    );
+                  });
+
+                  setOpenQuestion(
+                    firstMatch ? firstMatch.question : ""
+                  );
+                }}
+              />
+
+              <Search aria-hidden="true" />
             </div>
-          ))}
+
+            <h2>Recent Questions</h2>
+
+            <div className={styles.recentCard}>
+              {recentQuestions.map((faq) => (
+                <button
+                  key={faq.question}
+                  type="button"
+                  onClick={() =>
+                    openRecentQuestion(faq.question)
+                  }
+                >
+                  {faq.question}
+                </button>
+              ))}
+            </div>
+          </aside>
+
+          {/* RIGHT FAQ CONTENT */}
+
+          <div
+            className={styles.content}
+            id="frequently-asked-questions"
+          >
+            <h2>Frequently Asked Questions</h2>
+
+            <div className={styles.questions}>
+              {filteredFaqs.length > 0 ? (
+                filteredFaqs.map((faq) => {
+                  const isOpen =
+                    openQuestion === faq.question;
+
+                  return (
+                    <article
+                      key={faq.question}
+                      className={`${styles.question} ${
+                        isOpen
+                          ? styles.questionOpen
+                          : ""
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        className={styles.questionButton}
+                        aria-expanded={isOpen}
+                        onClick={() => {
+                          setOpenQuestion(
+                            isOpen ? "" : faq.question
+                          );
+                        }}
+                      >
+                        <span>{faq.question}</span>
+
+                        <ChevronDown
+                          className={styles.chevron}
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {isOpen && (
+                        <div className={styles.answer}>
+                          <p>{faq.answer}</p>
+                        </div>
+                      )}
+                    </article>
+                  );
+                })
+              ) : (
+                <div className={styles.noResults}>
+                  <Search aria-hidden="true" />
+
+                  <h3>No questions found</h3>
+
+                  <p>
+                    Try another keyword or clear the
+                    search field.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-
-        <aside className="space-y-5 lg:sticky lg:top-[104px] lg:self-start">
-          <div className="border-t-4 border-[#d71920] bg-white p-6">
-            <HelpCircle className="h-5 w-5 text-[#07182d]" />
-            <h2 className="mt-5 text-[19px] font-bold text-[#07182d]">Still need help?</h2>
-            <p className="mt-3 text-[13px] leading-6 text-[#667085]">
-              Contact UKJobAlert if your question is about the platform or your account.
-            </p>
-            <Link href="/contact" className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-[#d71920]">
-              Contact us <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="bg-[#07182d] p-6 text-white">
-            <ShieldCheck className="h-5 w-5 text-white/70" />
-            <h2 className="mt-5 text-[18px] font-bold text-white">Searching for work?</h2>
-            <p className="mt-3 text-[13px] leading-6 text-white/60">
-              Browse current vacancies and review the full listing before using the employer&apos;s application route.
-            </p>
-            <Link href="/jobs" className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-white">
-              Find jobs <BriefcaseBusiness className="h-4 w-4" />
-            </Link>
-          </div>
-        </aside>
       </section>
     </main>
   );

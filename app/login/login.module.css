@@ -1,0 +1,80 @@
+.page {
+  --accent: #c8102e;
+  --accent-dark: #a50d26;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 46% 54%;
+  background: #fff;
+  color: #333;
+}
+
+.visual {
+  position: relative;
+  min-height: 100vh;
+  padding: 42px 55px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background: linear-gradient(rgba(18, 28, 37, .48), rgba(18, 28, 37, .65)),
+    url("https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1400&q=88") center / cover no-repeat;
+}
+.brand { width: 180px; position: relative; z-index: 2; }
+.brand img { display: block; width: 100%; height: auto; }
+.visualContent { position: relative; z-index: 2; max-width: 500px; margin-bottom: 55px; color: #fff; }
+.visualContent > span { font-size: 11px; font-weight: 700; letter-spacing: 1.8px; color: #fff; }
+.visualContent h1 { margin: 15px 0 17px; font-size: 43px; line-height: 1.16; font-weight: 400; }
+.visualContent p { max-width: 450px; margin: 0; color: #e4e4e4; font-size: 14px; line-height: 1.8; }
+
+.formSide { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 50px 30px; }
+.card { width: min(440px, 100%); }
+.heading > span { color: var(--accent-dark); font-size: 10px; font-weight: 700; letter-spacing: 1.4px; }
+.heading h2 { margin: 9px 0 8px; color: #222; font-size: 30px; font-weight: 500; line-height: 1.22; }
+.heading p { margin: 0 0 31px; color: #888; font-size: 13px; line-height: 1.6; }
+.label { display: block; margin: 0 0 8px; color: #444; font-size: 12px; font-weight: 500; }
+.inputWrap { height: 52px; margin-bottom: 19px; padding: 0 14px; display: flex; align-items: center; gap: 10px; border: 1px solid #dedede; background: #fff; transition: border-color .2s, box-shadow .2s; }
+.inputWrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200, 16, 46, .08); }
+.inputWrap > svg { width: 17px; height: 17px; flex-shrink: 0; color: #aaa; stroke-width: 1.5; }
+.inputWrap input { width: 100%; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; color: #333; font-size: 13px; }
+.inputWrap button { width: 30px; height: 30px; flex-shrink: 0; border: 0; background: transparent; color: #aaa; display: grid; place-items: center; cursor: pointer; }
+.inputWrap button svg { width: 16px; height: 16px; }
+.passwordLabel { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.passwordLabel a { margin-bottom: 8px; color: var(--accent-dark); font-size: 11px; text-decoration: none; }
+.remember { width: fit-content; margin: -2px 0 23px; display: flex; align-items: center; gap: 8px; color: #777; font-size: 11px; cursor: pointer; }
+.remember input { accent-color: var(--accent); }
+.submit { width: 100%; height: 50px; border: 0; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 500; cursor: pointer; transition: background .2s; }
+.submit:hover { background: var(--accent-dark); }
+.submit:disabled { opacity: .65; cursor: not-allowed; }
+.submit svg { width: 15px; height: 15px; }
+.divider { margin: 26px 0; display: flex; align-items: center; gap: 13px; color: #aaa; font-size: 10px; }
+.divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: #e8e8e8; }
+.create { height: 48px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; color: #555; font-size: 12px; text-decoration: none; }
+.create:hover { border-color: var(--accent); color: var(--accent-dark); }
+.terms { margin: 22px 0 0; text-align: center; color: #aaa; font-size: 10px; line-height: 1.6; }
+.terms a { color: #666; }
+.terms a:hover { color: var(--accent-dark); }
+
+@media (max-width: 850px) {
+  .page { display: block; min-height: 0; }
+  .visual { display: none; }
+  .formSide { min-height: 0; display: block; padding: 34px 24px 48px; }
+  .card { margin: 0 auto; }
+  .heading h2 { font-size: 26px; }
+  .heading p { margin-bottom: 24px; }
+}
+
+@media (max-width: 480px) {
+  .formSide { padding: 28px 20px 42px; }
+  .heading > span { font-size: 10px; }
+  .heading h2 { margin: 8px 0 10px; font-size: clamp(23px, 6.3vw, 27px); line-height: 1.25; }
+  .heading p { margin-bottom: 25px; font-size: 13px; }
+  .label { font-size: 12px; }
+  .inputWrap { height: 49px; margin-bottom: 18px; }
+  .inputWrap input { font-size: 14px; }
+  .passwordLabel a { font-size: 12px; }
+  .remember { margin-bottom: 20px; font-size: 12px; }
+  .submit { height: 49px; font-size: 14px; }
+  .divider { margin: 23px 0; font-size: 11px; }
+  .create { height: 47px; font-size: 13px; }
+  .terms { margin-top: 18px; }
+}

@@ -1,804 +1,284 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
+"use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import {
-  ArrowRight,
-  BellRing,
-  Bookmark,
+  Bell,
   BriefcaseBusiness,
-  CheckCircle2,
-  ClipboardCheck,
-  Mail,
+  ChevronDown,
+  CircleUserRound,
+  FileText,
+  Heart,
+  LayoutDashboard,
+  MessageSquareText,
+  LogOut,
   MapPin,
+  Menu,
   Search,
   Settings,
-  ShieldCheck,
   UserRound,
+  WalletCards,
+  X,
+  ArrowRight,
+  CheckCircle2,
 } from "lucide-react";
+import styles from "./account.module.css";
 
-import MainHeader from "@/components/main-header";
-import { createClient } from "@/lib/supabase/server";
+const savedJobs: Array<{id:string;title:string;company:string;location:string;salary:string;type:string}> = [];
 
-export const metadata = {
-  title: "My Account",
-  description: "Manage your UKJobAlert job seeker account.",
-};
+const applications: Array<{id:string;title:string;company:string;date:string;status:string}> = [];
 
-type SavedJobRow = {
-  id: string;
-  created_at: string;
-  job_id: string;
-  jobs:
-    | {
-        id: string;
-        title: string;
-        slug: string;
-        company_name: string;
-        location: string;
-        job_type: string;
-        salary: string | null;
-        status: string;
-        expires_at: string;
+export default function AccountPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileName, setProfileName] = useState("My Account");
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const [signedIn, setSignedIn] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+    const updateProfile = (user: { email?: string; user_metadata?: Record<string, unknown> } | null) => {
+      if (!active) return;
+      setSignedIn(Boolean(user));
+      if (!user) {
+        setProfileName("My Account");
+        setProfilePhoto("");
+        return;
       }
-    | {
-        id: string;
-        title: string;
-        slug: string;
-        company_name: string;
-        location: string;
-        job_type: string;
-        salary: string | null;
-        status: string;
-        expires_at: string;
-      }[]
-    | null;
-};
-
-function getSavedJob(
-  relation: SavedJobRow["jobs"]
-) {
-  if (!relation) {
-    return null;
-  }
-
-  if (Array.isArray(relation)) {
-    return relation[0] ?? null;
-  }
-
-  return relation;
-}
-
-export default async function AccountPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const adminEmails = (process.env.ADMIN_EMAILS || "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-
-  const isAdmin = Boolean(
-    user.email && adminEmails.includes(user.email.toLowerCase())
-  );
-
-  const accountType =
-    user.user_metadata?.account_type;
-
-  if (accountType === "employer") {
-    redirect("/employer/jobs");
-  }
-
-  const fullName =
-    user.user_metadata?.full_name?.trim() ||
-    "Job seeker";
-
-  const email = user.email || "";
-
-  const firstName =
-    fullName === "Job seeker"
-      ? "there"
-      : fullName.split(" ")[0];
-
-  /*
-   * SAVED JOBS
-   */
-
-  const {
-    data: savedRows,
-    error: savedError,
-  } = await supabase
-    .from("saved_jobs")
-    .select(`
-      id,
-      job_id,
-      created_at,
-      jobs (
-        id,
-        title,
-        slug,
-        company_name,
-        location,
-        job_type,
-        salary,
-        status,
-        expires_at
-      )
-    `)
-    .eq("user_id", user.id)
-    .order("created_at", {
-      ascending: false,
+      const meta = user.user_metadata ?? {};
+      const name = [meta.full_name, meta.display_name, meta.name,
+        [meta.first_name, meta.last_name].filter(Boolean).join(" ")]
+        .find((value) => typeof value === "string" && value.trim());
+      setProfileName(typeof name === "string" ? name.trim() : (user.email?.split("@")[0] || "My Account"));
+      const photo = [meta.avatar_url, meta.profile_photo_url, meta.profile_image_url, meta.photo_url]
+        .find((value) => typeof value === "string" && (value.startsWith("https://") || value.startsWith("/")));
+      setProfilePhoto(typeof photo === "string" ? photo : "");
+    };
+    supabase.auth.getUser().then(({ data }) => updateProfile(data.user)).catch(() => updateProfile(null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      updateProfile(session?.user ?? null);
     });
+    return () => { active = false; subscription.unsubscribe(); };
+  }, []);
 
-  if (savedError) {
-    console.error(
-      "Saved jobs account error:",
-      savedError
-    );
+  const initials = profileName.split(/\s+/).filter(Boolean).slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "").join("") || "U";
+
+  async function signOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Sign out failed", error);
+      setSigningOut(false);
+    }
   }
-
-  const now = new Date();
-
-  const savedJobs = (
-    (savedRows || []) as SavedJobRow[]
-  )
-    .map((row) => ({
-      savedId: row.id,
-      savedAt: row.created_at,
-      job: getSavedJob(row.jobs),
-    }))
-    .filter((item) => {
-      if (!item.job) {
-        return false;
-      }
-
-      return (
-        item.job.status === "published" &&
-        new Date(item.job.expires_at) > now
-      );
-    });
-
-  /*
-   * ACTIVE JOB ALERTS
-   */
-
-  const {
-    count: activeAlertCount,
-    error: alertCountError,
-  } = await supabase
-    .from("job_alerts")
-    .select("id", {
-      count: "exact",
-      head: true,
-    })
-    .eq("user_id", user.id)
-    .eq("is_active", true);
-
-  if (alertCountError) {
-    console.error(
-      "Job alert count error:",
-      alertCountError
-    );
-  }
-
-  const activeAlerts =
-    activeAlertCount ?? 0;
-
-  /*
-   * APPLICATIONS
-   */
-
-  const {
-    count: applicationCount,
-    error: applicationCountError,
-  } = await supabase
-    .from("job_applications")
-    .select("id", {
-      count: "exact",
-      head: true,
-    })
-    .eq("user_id", user.id);
-
-  if (applicationCountError) {
-    console.error(
-      "Application count error:",
-      applicationCountError
-    );
-  }
-
-  const applications =
-    applicationCount ?? 0;
 
   return (
-    <main className="min-h-screen bg-[#f7f8fa]">
-      <MainHeader
-        loggedIn
-        displayName={
-          user.user_metadata?.full_name?.trim() ||
-          "Account"
-        }
-        accountType={
-          user.user_metadata?.account_type ||
-          "job_seeker"
-        }
-        isAdmin={isAdmin}
-      />
+    <main className={styles.page}>
+      <header className={styles.topbar}>
+        <div className={styles.headerInner}>
+          <Link href="/" className={styles.logo}>
+            <img src="/images/ukjobalert-logo.png" alt="UKJobAlert" />
+          </Link>
 
-      {/* HERO */}
+          <div className={styles.headerSearch}>
+            <Search />
+            <input placeholder="Search jobs..." />
+          </div>
 
-      <section className="relative overflow-hidden bg-[#07182d]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(23,92,211,0.2),transparent_34%)]" />
-
-        <div className="relative mx-auto max-w-[1280px] px-6 py-16 sm:px-8 lg:px-10 lg:py-20">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <div className="flex items-center gap-2.5">
-                <div className="h-[2px] w-7 bg-[#d71920]" />
-
-                <p
-                  className="text-[11px] font-bold uppercase tracking-[0.17em]"
-                  style={{
-                    color: "#f3b4bc",
-                  }}
-                >
-                  Job seeker account
-                </p>
+          <div className={styles.headerActions}>
+            <button className={styles.notification} aria-label="Notifications">
+              <Bell />
+            </button>
+            <div className={styles.userMini}>
+              <div className={styles.avatar}>{profilePhoto ? <img src={profilePhoto} alt="Profile" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} onError={() => setProfilePhoto("")} /> : initials}</div>
+              <div>
+                <strong>{profileName}</strong>
+                <span>My Account</span>
               </div>
-
-              <h1
-                className="mt-6 text-[42px] font-bold leading-[1.04] tracking-[-1.7px] sm:text-[52px]"
-                style={{
-                  color: "#ffffff",
-                }}
-              >
-                Welcome, {firstName}.
-              </h1>
-
-              <p
-                className="mt-5 max-w-[620px] text-[15px] leading-7"
-                style={{
-                  color:
-                    "rgba(255,255,255,.66)",
-                }}
-              >
-                Manage your UKJobAlert account and continue
-                your job search from one place.
-              </p>
+              <ChevronDown />
             </div>
-
-            <Link
-              href="/jobs"
-              className="inline-flex min-h-[50px] items-center justify-center gap-2 self-start rounded-[8px] bg-[#d71920] px-6 text-[14px] font-bold text-white transition hover:bg-[#b91319] lg:self-auto"
+            <button
+              className={styles.mobileMenu}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle account menu"
             >
-              Find jobs
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+              {sidebarOpen ? <X /> : <Menu />}
+            </button>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* CONTENT */}
+      <div className={styles.shell}>
+        <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
+          <div className={styles.profile}>
+            <div className={styles.profileAvatar}>{profilePhoto ? <img src={profilePhoto} alt="Profile" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} onError={() => setProfilePhoto("")} /> : initials}</div>
+            <div>
+              <strong>{profileName}</strong>
+              <span>My account</span>
+            </div>
+          </div>
 
-      <section>
-        <div className="mx-auto max-w-[1280px] px-6 py-16 sm:px-8 lg:px-10 lg:py-20">
-          <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+          <nav className={styles.sideNav}>
+            <Link href="/account" className={styles.active}>
+              <LayoutDashboard /> Dashboard
+            </Link>
+            <Link href="/account/profile">
+              <UserRound /> My Profile
+            </Link>
+            <Link href="/account/applications">
+              <FileText /> Applications <span className={styles.count}>0</span>
+            </Link>
+            <Link href="/account/saved-jobs">
+              <Heart /> Saved Jobs <span className={styles.count}>0</span>
+            </Link>
+            <Link href="/account/messages">
+              <MessageSquareText /> Messages
+            </Link>
+            <Link href="/jobs">
+              <BriefcaseBusiness /> Find Jobs
+            </Link>
+            <Link href="/account/settings">
+              <Settings /> Account Settings
+            </Link>
+          </nav>
 
-            {/* LEFT */}
+          <div className={styles.sideBottom}>
+            <button type="button" onClick={signOut} disabled={!signedIn || signingOut}><LogOut /> {signingOut ? "Signing Out..." : "Sign Out"}</button>
+          </div>
+        </aside>
 
-            <div className="space-y-8">
+        <section className={styles.content}>
+          <div className={styles.welcome}>
+            <div>
+              <span>JOB SEEKER DASHBOARD</span>
+              <h1>Welcome back</h1>
+              <p>Manage your profile, saved jobs and applications from one place.</p>
+            </div>
+            <Link href="/jobs">Find New Jobs <ArrowRight /></Link>
+          </div>
 
-              {/* ACCOUNT DETAILS */}
+          <div className={styles.stats}>
+            <article>
+              <div className={styles.statIcon}><FileText /></div>
+              <div><strong>0</strong><span>Applications</span></div>
+            </article>
+            <article>
+              <div className={styles.statIcon}><Heart /></div>
+              <div><strong>0</strong><span>Saved Jobs</span></div>
+            </article>
+            <article>
+              <div className={styles.statIcon}><CircleUserRound /></div>
+              <div><strong>—</strong><span>Profile Complete</span></div>
+            </article>
+            <article>
+              <div className={styles.statIcon}><CheckCircle2 /></div>
+              <div><strong>0</strong><span>Active Applications</span></div>
+            </article>
+          </div>
 
-              <div className="border border-[#e4e7ec] bg-white">
-                <div className="border-b border-[#e4e7ec] px-7 py-6 sm:px-8">
-                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
-                        <UserRound className="h-5 w-5 text-[#d71920]" />
-                      </div>
-
-                      <div>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#98a2b3]">
-                          Account
-                        </p>
-
-                        <h2 className="mt-1 text-[20px] font-bold tracking-[-0.4px] text-[#101828]">
-                          Your details
-                        </h2>
-                      </div>
-                    </div>
-
-                    <Link
-                      href="/account/settings"
-                      className="group inline-flex min-h-[42px] w-fit items-center justify-center gap-2 rounded-[7px] border border-[#d0d5dd] bg-white px-4 text-[12px] font-bold text-[#344054] transition hover:border-[#e7b8bd] hover:bg-[#f7f8fa] hover:text-[#d71920]"
-                    >
-                      <Settings className="h-4 w-4 text-[#667085] transition group-hover:text-[#d71920]" />
-                      Account settings
-                      <ArrowRight className="h-3.5 w-3.5 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[#d71920]" />
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="grid sm:grid-cols-2">
-                  <AccountDetail
-                    label="Full name"
-                    value={fullName}
-                  />
-
-                  <AccountDetail
-                    label="Account type"
-                    value="Job seeker"
-                  />
-
-                  <div className="border-t border-[#e4e7ec] px-7 py-6 sm:px-8">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#98a2b3]">
-                      Email address
-                    </p>
-
-                    <div className="mt-3 flex items-center gap-2">
-                      <Mail className="h-4 w-4 shrink-0 text-[#667085]" />
-
-                      <p className="break-all text-[14px] font-semibold text-[#344054]">
-                        {email}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-[#e4e7ec] px-7 py-6 sm:border-l sm:px-8">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#98a2b3]">
-                      Email status
-                    </p>
-
-                    <div className="mt-3 flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#039855]" />
-
-                      <p className="text-[14px] font-semibold text-[#344054]">
-                        {user.email_confirmed_at
-                          ? "Verified"
-                          : "Not verified"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* JOB SEEKER TOOLS */}
-
-              <div className="grid gap-5 md:grid-cols-3">
-
-                {/* JOB SEARCH */}
-
-                <div className="flex min-h-[230px] flex-col border border-[#e4e7ec] bg-white px-7 py-7">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
-                    <Search className="h-5 w-5 text-[#d71920]" />
-                  </div>
-
-                  <h2 className="mt-5 text-[20px] font-bold tracking-[-0.4px] text-[#101828]">
-                    Find your next role
-                  </h2>
-
-                  <p className="mt-2 text-[13px] leading-6 text-[#667085]">
-                    Browse current UK vacancies from
-                    verified employers.
-                  </p>
-
-                  <div className="mt-auto pt-6">
-                    <Link
-                      href="/jobs"
-                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
-                    >
-                      Browse jobs
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* JOB ALERTS */}
-
-                <div className="flex min-h-[230px] flex-col border border-[#e4e7ec] bg-white px-7 py-7">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
-                      <BellRing className="h-5 w-5 text-[#d71920]" />
-                    </div>
-
-                    <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#fff5f4] px-2.5 text-[11px] font-bold text-[#d71920]">
-                      {activeAlerts}
-                    </div>
-                  </div>
-
-                  <h2 className="mt-5 text-[20px] font-bold tracking-[-0.4px] text-[#101828]">
-                    Job alerts
-                  </h2>
-
-                  <p className="mt-2 text-[13px] leading-6 text-[#667085]">
-                    {activeAlerts > 0
-                      ? `You have ${activeAlerts} active ${
-                          activeAlerts === 1
-                            ? "job alert"
-                            : "job alerts"
-                        }.`
-                      : "Save a job search and keep your preferences organised."}
-                  </p>
-
-                  <div className="mt-auto pt-6">
-                    <Link
-                      href="/account/alerts"
-                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
-                    >
-                      {activeAlerts > 0
-                        ? "Manage alerts"
-                        : "Create an alert"}
-
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* APPLICATIONS */}
-
-                <div className="flex min-h-[230px] flex-col border border-[#e4e7ec] bg-white px-7 py-7">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#fff5f4]">
-                      <ClipboardCheck className="h-5 w-5 text-[#d71920]" />
-                    </div>
-
-                    <div className="flex h-8 min-w-8 items-center justify-center rounded-full bg-[#fff5f4] px-2.5 text-[11px] font-bold text-[#d71920]">
-                      {applications}
-                    </div>
-                  </div>
-
-                  <h2 className="mt-5 text-[20px] font-bold tracking-[-0.4px] text-[#101828]">
-                    My applications
-                  </h2>
-
-                  <p className="mt-2 text-[13px] leading-6 text-[#667085]">
-                    {applications > 0
-                      ? `Track ${applications} ${
-                          applications === 1
-                            ? "application"
-                            : "applications"
-                        } from your account.`
-                      : "Applications you track will appear here."}
-                  </p>
-
-                  <div className="mt-auto pt-6">
-                    <Link
-                      href="/account/applications"
-                      className="inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
-                    >
-                      View applications
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* SAVED JOBS */}
-
-              <div className="border border-[#e4e7ec] bg-white">
-                <div className="flex flex-col gap-5 border-b border-[#e4e7ec] px-7 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <div className={styles.dashboardGrid}>
+            <div className={styles.mainColumn}>
+              <section className={styles.panel}>
+                <div className={styles.panelHead}>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <Bookmark className="h-5 w-5 text-[#d71920]" />
-
-                      <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#d71920]">
-                        Saved jobs
-                      </p>
-                    </div>
-
-                    <h2 className="mt-3 text-[24px] font-bold tracking-[-0.6px] text-[#101828]">
-                      Your saved vacancies
-                    </h2>
+                    <h2>Recent Applications</h2>
+                    <p>Track your latest job applications.</p>
                   </div>
-
-                  <div className="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#fff5f4] px-3 text-[12px] font-bold text-[#d71920]">
-                    {savedJobs.length}
-                  </div>
+                  <Link href="/account/applications">View All <ArrowRight /></Link>
                 </div>
 
-                {savedJobs.length > 0 ? (
+                <div className={styles.applicationList}>
+                  {applications.length === 0 && <p style={{padding:"24px",color:"#667085"}}>No recorded applications to display.</p>}
+                  {applications.map((item) => (
+                    <article className={styles.application} key={item.id}>
+                      <div className={styles.companyInitial}>{item.company.charAt(0)}</div>
+                      <div className={styles.applicationInfo}>
+                        <Link href={`/jobs/${item.id}`}>{item.title}</Link>
+                        <span>{item.company}</span>
+                      </div>
+                      <div className={styles.applicationDate}>
+                        <span>Applied</span>
+                        <strong>{item.date}</strong>
+                      </div>
+                      <span className={`${styles.status} ${item.status === "In Review" ? styles.review : ""}`}>
+                        {item.status}
+                      </span>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className={styles.panel}>
+                <div className={styles.panelHead}>
                   <div>
-                    {savedJobs.map(
-                      ({
-                        savedId,
-                        job,
-                      }) => {
-                        if (!job) {
-                          return null;
-                        }
-
-                        return (
-                          <Link
-                            key={savedId}
-                            href={`/jobs/${job.slug}`}
-                            className="group block border-b border-[#eaecf0] px-7 py-6 transition last:border-b-0 hover:bg-[#f9fafb] sm:px-8"
-                          >
-                            <div className="flex items-start justify-between gap-6">
-                              <div className="min-w-0">
-                                <p className="text-[17px] font-bold tracking-[-0.3px] text-[#101828] transition group-hover:text-[#d71920]">
-                                  {job.title}
-                                </p>
-
-                                <p className="mt-1.5 text-[13px] font-semibold text-[#475467]">
-                                  {job.company_name}
-                                </p>
-
-                                <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#667085]">
-                                  <span className="flex items-center gap-1.5">
-                                    <MapPin className="h-3.5 w-3.5" />
-                                    {job.location}
-                                  </span>
-
-                                  <span className="flex items-center gap-1.5">
-                                    <BriefcaseBusiness className="h-3.5 w-3.5" />
-                                    {job.job_type}
-                                  </span>
-                                </div>
-
-                                {job.salary && (
-                                  <p className="mt-3 text-[13px] font-bold text-[#344054]">
-                                    {job.salary}
-                                  </p>
-                                )}
-                              </div>
-
-                              <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#98a2b3] transition group-hover:translate-x-1 group-hover:text-[#d71920]" />
-                            </div>
-                          </Link>
-                        );
-                      }
-                    )}
+                    <h2>Saved Jobs</h2>
+                    <p>Jobs you may want to apply for later.</p>
                   </div>
-                ) : (
-                  <div className="px-7 py-12 text-center sm:px-8">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#f2f4f7]">
-                      <Bookmark className="h-5 w-5 text-[#667085]" />
-                    </div>
+                  <Link href="/account/saved-jobs">View All <ArrowRight /></Link>
+                </div>
 
-                    <h3 className="mt-5 text-[17px] font-bold text-[#101828]">
-                      No saved jobs yet
-                    </h3>
-
-                    <p className="mx-auto mt-2 max-w-[420px] text-[13px] leading-6 text-[#667085]">
-                      Save vacancies you&apos;re interested
-                      in and they&apos;ll appear here for
-                      quick access.
-                    </p>
-
-                    <Link
-                      href="/jobs"
-                      className="mt-6 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[7px] bg-[#d71920] px-5 text-[13px] font-bold text-white"
-                    >
-                      Find jobs
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                )}
-              </div>
+                <div className={styles.savedList}>
+                  {savedJobs.length === 0 && <p style={{padding:"24px",color:"#667085"}}>No saved jobs to display.</p>}
+                  {savedJobs.map((job) => (
+                    <article className={styles.savedJob} key={job.id}>
+                      <div className={styles.companyInitial}>{job.company.charAt(0)}</div>
+                      <div className={styles.savedInfo}>
+                        <span className={styles.jobType}>{job.type}</span>
+                        <Link href={`/jobs/${job.id}`}>{job.title}</Link>
+                        <p>{job.company}</p>
+                        <div>
+                          <span><MapPin />{job.location}</span>
+                          <span><WalletCards />{job.salary}</span>
+                        </div>
+                      </div>
+                      <Link href={`/jobs/${job.id}`} className={styles.viewJob}>View Job</Link>
+                    </article>
+                  ))}
+                </div>
+              </section>
             </div>
 
-            {/* RIGHT */}
-
-            <aside className="space-y-6">
-
-              {/* ACCOUNT STATUS */}
-
-              <div className="bg-[#07182d] p-7 sm:p-8">
-                <ShieldCheck
-                  className="h-7 w-7"
-                  style={{
-                    color: "#f3b4bc",
-                  }}
-                />
-
-                <p
-                  className="mt-6 text-[11px] font-bold uppercase tracking-[0.15em]"
-                  style={{
-                    color:
-                      "rgba(255,255,255,.45)",
-                  }}
-                >
-                  Account status
-                </p>
-
-                <h2
-                  className="mt-3 text-[23px] font-bold tracking-[-0.5px]"
-                  style={{
-                    color: "#ffffff",
-                  }}
-                >
-                  Job seeker
-                </h2>
-
-                <p
-                  className="mt-4 text-[13px] leading-6"
-                  style={{
-                    color:
-                      "rgba(255,255,255,.62)",
-                  }}
-                >
-                  Your account is set up for searching,
-                  saving and applying for vacancies.
-                </p>
-
-                <div className="mt-7 border-t border-white/10 pt-6">
-                  <StatusItem>
-                    Account active
-                  </StatusItem>
-
-                  <StatusItem>
-                    Job search access
-                  </StatusItem>
-
-                  <StatusItem>
-                    Saved jobs enabled
-                  </StatusItem>
-
-                  <StatusItem>
-                    Job alerts enabled
-                  </StatusItem>
+            <aside className={styles.rightColumn}>
+              <section className={styles.profileCard}>
+                <div className={styles.progressRing}>
+                  <span>—</span>
                 </div>
-              </div>
+                <h2>Complete Your Profile</h2>
+                <p>Complete your profile to keep your job search information organised.</p>
 
-              {/* OVERVIEW */}
+                <div className={styles.progressBar}><span /></div>
 
-              <div className="border border-[#e4e7ec] bg-white">
-                <div className="border-b border-[#eaecf0] px-7 py-6">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#667085]">
-                    Your activity
-                  </p>
+                <ul>
+                  <li><CircleUserRound /> Basic information</li>
+                  <li><CircleUserRound /> Contact details</li>
+                  <li><CircleUserRound /> Work experience</li>
+                  <li><CircleUserRound /> Skills & preferences</li>
+                </ul>
 
-                  <h3 className="mt-2 text-[18px] font-bold tracking-[-0.3px] text-[#101828]">
-                    Account overview
-                  </h3>
-                </div>
+                <Link href="/account/profile">Complete Profile <ArrowRight /></Link>
+              </section>
 
-                <div className="grid grid-cols-3">
-                  <div className="px-7 py-6">
-                    <Bookmark className="h-4 w-4 text-[#d71920]" />
-
-                    <p className="mt-3 text-[28px] font-bold tracking-[-0.8px] text-[#101828]">
-                      {savedJobs.length}
-                    </p>
-
-                    <p className="mt-1 text-[11px] font-semibold text-[#667085]">
-                      Saved jobs
-                    </p>
-                  </div>
-
-                  <div className="border-l border-[#eaecf0] px-7 py-6">
-                    <BellRing className="h-4 w-4 text-[#d71920]" />
-
-                    <p className="mt-3 text-[28px] font-bold tracking-[-0.8px] text-[#101828]">
-                      {activeAlerts}
-                    </p>
-
-                    <p className="mt-1 text-[11px] font-semibold text-[#667085]">
-                      Job alerts
-                    </p>
-                  </div>
-
-                  <div className="border-l border-[#eaecf0] px-7 py-6">
-                    <ClipboardCheck className="h-4 w-4 text-[#d71920]" />
-
-                    <p className="mt-3 text-[28px] font-bold tracking-[-0.8px] text-[#101828]">
-                      {applications}
-                    </p>
-
-                    <p className="mt-1 text-[11px] font-semibold text-[#667085]">
-                      Applications
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* ALERT SHORTCUT */}
-
-              <div className="border border-[#e4e7ec] bg-white p-7">
-                <BellRing className="h-5 w-5 text-[#d71920]" />
-
-                <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#667085]">
-                  Job alerts
-                </p>
-
-                <h3 className="mt-2 text-[18px] font-bold tracking-[-0.3px] text-[#101828]">
-                  Keep your search organised.
-                </h3>
-
-                <p className="mt-3 text-[12px] leading-6 text-[#667085]">
-                  Create alerts for the roles, locations
-                  and job types you&apos;re interested in.
-                </p>
-
-                <Link
-                  href="/account/alerts"
-                  className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold text-[#d71920]"
-                >
-                  Manage job alerts
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-
-              {/* HELP */}
-
-              <div className="border border-[#e4e7ec] bg-white p-7">
-                <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-[#98a2b3]">
-                  Need help?
-                </p>
-
-                <h3 className="mt-3 text-[18px] font-bold tracking-[-0.3px] text-[#101828]">
-                  Account support
-                </h3>
-
-                <p className="mt-3 text-[13px] leading-6 text-[#667085]">
-                  Visit the contact page for account,
-                  privacy or job listing questions.
-                </p>
-
-                <Link
-                  href="/contact"
-                  className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-[#d71920]"
-                >
-                  Contact UKJobAlert
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+              <section className={styles.tipCard}>
+                <BriefcaseBusiness />
+                <h3>Looking for your next role?</h3>
+                <p>Browse current vacancies from UK employers and filter by role, location and category.</p>
+                <Link href="/jobs">Browse Jobs</Link>
+              </section>
             </aside>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
-  );
-}
-
-function AccountDetail({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="px-7 py-6 sm:px-8">
-      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#98a2b3]">
-        {label}
-      </p>
-
-      <p className="mt-3 text-[15px] font-bold text-[#344054]">
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function StatusItem({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="mt-4 flex first:mt-0 items-center gap-2.5">
-      <CheckCircle2
-        className="h-4 w-4 shrink-0"
-        style={{
-          color: "#f3b4bc",
-        }}
-      />
-
-      <p
-        className="text-[12px] font-semibold"
-        style={{
-          color: "#ffffff",
-        }}
-      >
-        {children}
-      </p>
-    </div>
   );
 }

@@ -1,0 +1,392 @@
+.premium-hero {
+          position: relative;
+          min-height: 620px;
+          overflow: hidden;
+          background:
+            linear-gradient(90deg, rgba(1, 33, 105, 0.98) 0%, rgba(1, 33, 105, 0.90) 35%, rgba(1, 33, 105, 0.48) 64%, rgba(1, 33, 105, 0.16) 100%),
+            url("/images/london-job-hero.png") center 44% / cover no-repeat;
+        }
+
+        .premium-hero-overlay {
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 12% 22%, rgba(25, 88, 166, 0.20), transparent 32%),
+            linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.20));
+          pointer-events: none;
+        }
+
+        .premium-hero-content {
+          position: relative;
+          z-index: 2;
+          padding-top: 46px;
+          padding-bottom: 42px;
+          color: #fff;
+        }
+
+        .premium-verified-pill {
+          width: fit-content;
+          min-height: 34px;
+          padding: 6px 13px 6px 7px;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          border: 1px solid rgba(255,255,255,.14);
+          border-radius: 999px;
+          background: rgba(3, 46, 111, .72);
+          box-shadow: 0 10px 28px rgba(0,0,0,.12);
+          backdrop-filter: blur(8px);
+          color: #eef5ff;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+        }
+
+        .premium-verified-pill > svg {
+          width: 16px;
+          height: 16px;
+          color: #fff;
+        }
+
+        .premium-uk-mark {
+          width: 30px;
+          height: 22px;
+          display: grid;
+          place-items: center;
+          border-radius: 4px;
+          background: #c8102e;
+          color: #fff;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0;
+        }
+
+        .premium-hero h1 {
+          max-width: 720px;
+          margin: 22px 0 0;
+          color: #fff;
+          font-size: clamp(44px, 4.25vw, 66px);
+          line-height: 1.04;
+          font-weight: 700;
+          letter-spacing: -0.035em;
+          text-shadow: 0 5px 24px rgba(0,0,0,.18);
+        }
+
+        .premium-hero h1 span {
+          position: relative;
+          display: inline-block;
+          color: #ed1b2f;
+        }
+
+        .premium-hero h1 span::after {
+          content: "";
+          position: absolute;
+          left: 3%;
+          right: -4%;
+          bottom: -8px;
+          height: 7px;
+          border-radius: 50%;
+          background: #ed1b2f;
+          transform: rotate(-3deg) skewX(-18deg);
+          opacity: .96;
+        }
+
+        .premium-hero-description {
+          max-width: 690px;
+          margin: 24px 0 0;
+          color: rgba(255,255,255,.92);
+          font-size: 18px;
+          line-height: 1.65;
+        }
+
+        .premium-benefits {
+          margin-top: 28px;
+          display: flex;
+          align-items: center;
+          gap: 0;
+        }
+
+        .premium-benefit {
+          min-width: 220px;
+          padding-right: 26px;
+          margin-right: 26px;
+          display: flex;
+          align-items: center;
+          gap: 13px;
+          border-right: 1px solid rgba(255,255,255,.18);
+        }
+
+        .premium-benefit:last-child {
+          border-right: 0;
+          margin-right: 0;
+          padding-right: 0;
+        }
+
+        .premium-benefit-icon {
+          width: 48px;
+          height: 48px;
+          flex: 0 0 48px;
+          display: grid;
+          place-items: center;
+          border-radius: 10px;
+          background: rgba(9, 80, 158, .82);
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+        }
+
+        .premium-benefit-icon svg {
+          width: 24px;
+          height: 24px;
+          stroke-width: 1.8;
+        }
+
+        .premium-benefit > span:last-child {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+
+        .premium-benefit strong {
+          color: #fff;
+          font-size: 15px;
+          line-height: 1.2;
+        }
+
+        .premium-benefit small {
+          color: rgba(255,255,255,.72);
+          font-size: 13px;
+        }
+
+        .premium-search-box {
+          width: 100%;
+          min-height: 76px;
+          margin-top: 30px;
+          display: grid;
+          grid-template-columns: 1.35fr 1fr 250px;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,.75);
+          border-radius: 10px;
+          background: #fff;
+          box-shadow: 0 18px 45px rgba(0,0,0,.24);
+        }
+
+        .premium-search-field {
+          min-width: 0;
+          padding: 0 25px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          color: #0b3676;
+          background: #fff;
+        }
+
+        .premium-keyword-field {
+          border-right: 1px solid #e2e6ed;
+        }
+
+        .premium-search-field > svg {
+          width: 25px;
+          height: 25px;
+          flex-shrink: 0;
+          stroke-width: 1.7;
+        }
+
+        .premium-search-field input {
+          width: 100%;
+          height: 74px;
+          min-width: 0;
+          border: 0;
+          outline: 0;
+          background: transparent;
+          color: #242b35;
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        .premium-search-field input::placeholder {
+          color: #858d99;
+          opacity: 1;
+        }
+
+        .premium-location-detect {
+          width: 42px;
+          height: 42px;
+          flex: 0 0 42px;
+          display: grid;
+          place-items: center;
+          padding: 0;
+          border: 0;
+          border-radius: 50%;
+          background: transparent;
+          color: #49627f;
+        }
+
+        .premium-location-detect:hover {
+          background: #f0f4fa;
+          color: #c8102e;
+        }
+
+        .premium-location-detect svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        .premium-location-detect.is-locating svg {
+          animation: premium-spin 1s linear infinite;
+        }
+
+        .premium-search-button {
+          border: 0;
+          padding: 0 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          background: linear-gradient(135deg, #c8102e, #e01738);
+          color: #fff;
+          font-size: 16px;
+          font-weight: 700;
+          transition: transform .2s ease, background .2s ease;
+        }
+
+        .premium-search-button:hover {
+          background: linear-gradient(135deg, #a50d26, #c8102e);
+        }
+
+        .premium-search-button svg {
+          width: 20px;
+          height: 20px;
+          transition: transform .2s ease;
+        }
+
+        .premium-search-button:hover svg {
+          transform: translateX(4px);
+        }
+
+        .premium-trending {
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          color: rgba(255,255,255,.84);
+          font-size: 14px;
+        }
+
+        .premium-trending > svg {
+          width: 20px;
+          height: 20px;
+          color: #ed1b2f;
+          stroke-width: 2.4;
+        }
+
+        .premium-trending strong {
+          color: #fff;
+        }
+
+        @keyframes premium-spin {
+          to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 980px) {
+          .premium-hero {
+            min-height: auto;
+          }
+
+          .premium-hero-content {
+            padding-top: 54px;
+            padding-bottom: 48px;
+          }
+
+          .premium-benefits {
+            gap: 18px;
+            flex-wrap: wrap;
+          }
+
+          .premium-benefit {
+            min-width: 190px;
+            margin-right: 0;
+            padding-right: 18px;
+          }
+
+          .premium-search-box {
+            grid-template-columns: 1fr 1fr 190px;
+          }
+        }
+
+        @media (max-width: 760px) {
+          .premium-hero {
+            background-position: 62% center;
+          }
+
+          .premium-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(1, 33, 105, .35);
+          }
+
+          .premium-hero h1 {
+            font-size: clamp(38px, 11vw, 54px);
+          }
+
+          .premium-hero-description {
+            font-size: 16px;
+          }
+
+          .premium-benefits {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .premium-benefit {
+            border-right: 0;
+            padding-right: 0;
+          }
+
+          .premium-search-box {
+            grid-template-columns: 1fr;
+            border-radius: 8px;
+          }
+
+          .premium-keyword-field,
+          .premium-location-field {
+            border-right: 0;
+            border-bottom: 1px solid #e2e6ed;
+          }
+
+          .premium-search-field input {
+            height: 64px;
+          }
+
+          .premium-search-button {
+            min-height: 62px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .premium-hero-content {
+            padding-top: 36px;
+            padding-bottom: 34px;
+          }
+
+          .premium-verified-pill {
+            font-size: 10px;
+            letter-spacing: .08em;
+          }
+
+          .premium-hero h1 {
+            margin-top: 18px;
+          }
+
+          .premium-benefit-icon {
+            width: 42px;
+            height: 42px;
+            flex-basis: 42px;
+          }
+
+          .premium-search-field {
+            padding: 0 18px;
+          }
+        }

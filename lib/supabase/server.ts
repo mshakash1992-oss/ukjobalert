@@ -6,7 +6,8 @@ export async function createClient() {
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    process.env
+      .NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -15,13 +16,18 @@ export async function createClient() {
 
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
+            cookiesToSet.forEach(
+              ({ name, value, options }) => {
+                cookieStore.set(
+                  name,
+                  value,
+                  options
+                );
+              }
+            );
           } catch {
-            // Cookie updates can be ignored when called
-            // from a Server Component because proxy.ts
-            // will keep the session refreshed.
+            // Cookie writes can be unavailable
+            // while rendering a Server Component.
           }
         },
       },
