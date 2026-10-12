@@ -257,3 +257,18 @@
   .mobileOverlay{inset:0;z-index:10009}
   .shell{min-height:0}
 }
+
+/* FINAL FIX: Sidebar stays within workspace, footer starts below it. */
+.page{display:flex;flex-direction:column;min-height:calc(100dvh - 76px)}
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);width:100%;max-width:1260px;margin:0 auto;min-height:0;flex:1 0 auto;align-items:stretch;background:#fff}
+.sidebar{position:relative;top:auto;height:auto;min-height:0;align-self:stretch;overflow:visible;background:#fafafa;padding:46px 20px 25px 0}
+.content{min-height:0}
+.careerFooter{position:relative;z-index:1;flex-shrink:0;width:100%}
+@media(max-width:1150px) and (min-width:851px){.shell{grid-template-columns:265px minmax(0,1fr)}}
+@media(max-width:850px){
+.page{min-height:calc(100dvh - 66px)}
+.shell{display:block;min-height:0;flex:1 0 auto}
+.sidebar{display:none;position:fixed;top:0;left:0;bottom:0;width:min(285px,88vw);height:100dvh;min-height:0;padding:20px 15px;overflow-y:auto;z-index:10010;box-shadow:8px 0 24px rgba(0,0,0,.14)}
+.sidebarOpen{display:flex}
+.mobileOverlay{display:block;position:fixed;inset:0;z-index:10009}
+}
