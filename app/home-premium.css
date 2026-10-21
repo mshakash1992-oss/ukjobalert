@@ -88,3 +88,5 @@
  .grow-home .grow-subtitle{position:absolute;left:4.8%;top:54.18vw;margin:0;color:#061e53;font-size:clamp(13px,3.4vw,19px);font-weight:700;line-height:1.2}
  .grow-home .gh-premium-search-box{position:relative;left:auto;right:auto;bottom:auto;width:100%;margin:0;padding:10px;grid-template-columns:1fr}
 }
+
+@media(max-width:700px){.grow-home .gh-premium-search-box{box-shadow:none}}
