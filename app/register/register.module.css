@@ -1,6 +1,6 @@
 /* Registration uses the shared site header as its only logo. */
 .page{--accent:#c8102e;--ink:#061e53;min-height:calc(100dvh - 72px);display:grid;grid-template-columns:46% 54%;background:#f4f8fc;color:#31435b}
-.visual{position:relative;display:flex;align-items:flex-end;padding:clamp(32px,4vw,64px);background:linear-gradient(90deg,#001a49d9,#001a4944),url("/images/grow-team-hero.png") 65% center/cover no-repeat}
+.visual{position:relative;display:flex;align-items:flex-end;padding:clamp(32px,4vw,64px);background:linear-gradient(90deg,#001a49d9,#001a4944),url("/images/grow-team-hero-2172.webp") 65% center/cover no-repeat}
 .visualContent{max-width:500px;color:white;padding-bottom:24px}
 .visualContent>span{font-size:12px;font-weight:700;letter-spacing:1.8px}
 .visualContent h1{margin:18px 0;font-size:clamp(32px,3vw,50px);line-height:1.15;font-weight:800;color:white}

@@ -1,8 +1,8 @@
 /* Grow Your Team reference theme: scoped to the homepage. */
 .grow-home{color:#061e53;background:#fff}
 .grow-home .container{width:min(1366px,calc(100% - 64px))}
-.grow-home .gh-premium-hero{position:relative;min-height:440px;overflow:visible;background:linear-gradient(90deg,#001a49ee,transparent 75%),url('/images/grow-team-hero.png') center/cover no-repeat;background-color:#082e61}
-.grow-home .gh-premium-hero-overlay{display:none}
+.grow-home .gh-premium-hero{position:relative;min-height:440px;overflow:visible;background:#082e61}
+.grow-home .gh-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none}.grow-home .gh-premium-hero-overlay{display:block;position:absolute;inset:0;background:linear-gradient(90deg,#001a49ee,transparent 75%);pointer-events:none}
 .grow-home .gh-premium-hero-content{position:relative;z-index:1;padding-top:24px;padding-bottom:62px}
 .grow-home .grow-title{margin:0;font-size:clamp(64px,6.8vw,102px);font-weight:900;line-height:.83;letter-spacing:-5px;color:#fff}
 .grow-home .grow-title span{color:#f00025}
@@ -70,6 +70,6 @@
 .grow-home .gh-reference-category-card:hover{box-shadow:0 6px 18px #001a450d}
 .grow-home .gh-reference-category-icon{flex:none}
 @media(min-width:1500px){.grow-home .grow-title{font-size:102px}}
-@media(max-width:700px){.grow-home .gh-premium-hero{background-image:linear-gradient(90deg,#001a49f2,#001a4977),url('/images/grow-team-hero.png')}.grow-home .gh-reference-category-card{height:128px}.grow-home .gh-reference-category-icon svg{width:32px;height:32px}}
+@media(max-width:700px){.grow-home .gh-hero-image{object-position:62% center}.grow-home .gh-premium-hero-overlay{background:linear-gradient(90deg,#001a49f2,#001a4977)}.grow-home .gh-reference-category-card{height:128px}.grow-home .gh-reference-category-icon svg{width:32px;height:32px}}
 
 .grow-footer-post{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;background:#f00025;color:white;border-radius:6px;font-size:14px;font-weight:600}.grow-footer-post:hover{background:#c8102e}
