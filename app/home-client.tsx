@@ -212,8 +212,10 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
               </select>
             </label>
             
+              <button type="submit" className="gh-premium-search-button">
               <Search size={18} strokeWidth={2.4} />
               <span>Search Jobs</span>
+            </button>
             
           </form>
 
