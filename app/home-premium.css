@@ -90,3 +90,11 @@
 }
 
 @media(max-width:700px){.grow-home .gh-premium-search-box{box-shadow:none}}
+@media(max-width:700px) {
+  .grow-home .gh-premium-hero > picture { position:relative; line-height:0; }
+  .grow-home .gh-premium-hero > picture::after {
+    content:""; position:absolute; left:0; right:0; bottom:0;
+    height:2px; background:#fff; pointer-events:none;
+  }
+  .grow-home .gh-premium-search-box { border-top:0!important; box-shadow:none!important; }
+}
