@@ -160,8 +160,7 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
   return (
     <main className="grow-home">
       <section className="gh-premium-hero">
-        <link rel="preload" as="image" href="/images/grow-team-hero-2172.webp" imageSrcSet="/images/grow-team-hero-960.webp 960w, /images/grow-team-hero-1440.webp 1440w, /images/grow-team-hero-2172.webp 2172w" imageSizes="100vw" />
-        <img className="gh-hero-image" src="/images/grow-team-hero-2172.webp" srcSet="/images/grow-team-hero-960.webp 960w, /images/grow-team-hero-1440.webp 1440w, /images/grow-team-hero-2172.webp 2172w" sizes="100vw" alt="" aria-hidden="true" width="2172" height="724" loading="eager" fetchPriority="high" decoding="async" />
+        <img className="gh-hero-image" src="/images/grow-team-hero-2172.webp" srcSet="/images/grow-team-hero-960.webp 960w, /images/grow-team-hero-1440.webp 1440w, /images/grow-team-hero-2172.webp 2172w" sizes="100vw" alt="" aria-hidden="true" width="2172" height="724" loading="eager" fetchPriority="high" decoding="sync" />
         <div className="gh-premium-hero-overlay" />
 
         <div className="container gh-premium-hero-content">
