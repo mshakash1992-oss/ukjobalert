@@ -54,3 +54,6 @@
 .hero{padding:18px 0 32px!important}
 .breadcrumb{margin-bottom:16px!important}
 @media(max-width:760px){.hero{padding-bottom:20px!important}}
+.hero{padding:14px 0 24px!important}
+.breadcrumb{margin-bottom:12px!important}
+@media(max-width:760px){.hero{padding-bottom:14px!important}}
