@@ -394,5 +394,4 @@
 .sidebar h2,.sidebar h3{color:#061e53}
 @media(max-width:700px){.container{width:calc(100% - 32px)}}
 
-.heroRow{min-height:145px!important}
-.heroRow{min-height:125px!important}
+.heroRow{min-height:100px!important}
