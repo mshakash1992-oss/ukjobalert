@@ -161,7 +161,7 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
     <main className="grow-home">
       <section className="gh-premium-hero">
         <picture>
-          <source media="(max-width: 700px)" srcSet="/images/grow-team-office-mobile.webp" />
+          <source media="(max-width: 700px)" srcSet="/images/grow-team-header-mobile.webp" />
           <img className="gh-hero-image" src="/images/grow-team-hero-2172.webp" srcSet="/images/grow-team-hero-960.webp 960w, /images/grow-team-hero-1440.webp 1440w, /images/grow-team-hero-2172.webp 2172w" sizes="100vw" alt="" aria-hidden="true" width="2172" height="724" loading="eager" fetchPriority="high" decoding="sync" />
         </picture>
         <div className="gh-premium-hero-overlay" />

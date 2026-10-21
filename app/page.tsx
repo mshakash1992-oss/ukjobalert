@@ -12,7 +12,7 @@ export default async function Page() {
     <link
       rel="preload"
       as="image"
-      href="/images/grow-team-office-mobile.webp"
+      href="/images/grow-team-header-mobile.webp"
       media="(max-width: 700px)"
       fetchPriority="high"
     />
