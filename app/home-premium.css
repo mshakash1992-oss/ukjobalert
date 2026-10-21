@@ -77,7 +77,7 @@
 
 /* A landscape photo needs its own landscape area on narrow screens. */
 @media(max-width:700px){
- .grow-home .gh-premium-hero{background:#082e61}
+ .grow-home .gh-premium-hero{background:#fff}
  .grow-home .gh-hero-image{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:1231 / 1278;object-fit:cover;object-position:center}
  .grow-home .gh-premium-hero-overlay{display:none}
  .grow-home .gh-premium-hero-content{position:static;padding:0 0 24px;z-index:2}
