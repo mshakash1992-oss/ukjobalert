@@ -1,3 +1,5 @@
+import { isPublicJob } from "@/lib/job-publication";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -28,6 +30,13 @@ function cleanText(v: unknown) {
   return str(v).replace(/<[^>]+>/g, " ").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").trim();
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!/^[0-9a-f-]{36}$/i.test(slug)) return { title: "Company not found", robots: { index: false } };
+  const { data } = await createAdminClient().from("employer_verifications").select("company_name,verification_status").eq("user_id", slug).maybeSingle();
+  if (!data || data.verification_status !== "verified") return { title: "Company not found", robots: { index: false } };
+  return pageMetadata(`${data.company_name} Jobs`, `Browse current vacancies and employer information for ${data.company_name}.`, `/companies/${encodeURIComponent(slug)}`);
+}
 export default async function CompanyProfile({params}:{params:Promise<{slug:string}>}) {
   const {slug: employerId} = await params;
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(employerId)) notFound();
@@ -40,7 +49,7 @@ export default async function CompanyProfile({params}:{params:Promise<{slug:stri
   const {data: jobData, error: jobsError} = await db.from("jobs")
     .select("*").eq("employer_id",employerId).eq("status","published")
     .order("created_at",{ascending:false});
-  const jobs = ((jobData || []) as Row[]).filter(j => !j.expires_at || new Date(str(j.expires_at)).getTime() > Date.now());
+  const jobs = ((jobData || []) as Row[]).filter(j => isPublicJob(j));
   const company = get(employer,["company_name","legal_name"]) || "Verified UK Employer";
   const description = cleanText(get(employer,["company_description","description","about","about_company","company_about"]));
   const location = get(employer,["location","company_location","city","address","registered_address"])

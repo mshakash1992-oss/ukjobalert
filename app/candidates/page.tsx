@@ -42,18 +42,6 @@ export default function CandidatesPage(){
   }
 
   return <main className={styles.page}>
-    <header className={styles.header}>
-      <div className={styles.nav}>
-        <Link href="/" className={styles.logo}><img src="/images/ukjobalert-logo.png" alt="UKJobAlert"/></Link>
-        <nav>
-          <Link href="/jobs">Jobs</Link>
-          <Link href="/companies">Companies</Link>
-          <Link href="/candidates" className={styles.active}>Candidates</Link>
-          <Link href="/about">Pages <ChevronDown/></Link>
-        </nav>
-        <div className={styles.actions}><Link href="/login">Login</Link><Link href="/post-job">Post a Job</Link></div>
-      </div>
-    </header>
 
     <section className={styles.hero}>
       <div className={styles.container}>

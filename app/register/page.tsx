@@ -83,9 +83,6 @@ export default function RegisterPage() {
   return (
     <main className={styles.page}>
       <section className={styles.visual}>
-        <Link href="/" className={styles.brand}>
-          <img src="/images/ukjobalert-logo.png" alt="UKJobAlert" />
-        </Link>
         <div className={styles.visualContent}>
           <span>JOIN UKJOBALERT</span>
           <h1>{accountType === "employer" ? "Hire with a verified employer profile." : "Your UK job search starts here."}</h1>
@@ -98,10 +95,6 @@ export default function RegisterPage() {
       </section>
 
       <section className={styles.formSide}>
-        <div className={styles.mobileBrand}>
-          <Link href="/"><img src="/images/ukjobalert-logo.png" alt="UKJobAlert" /></Link>
-        </div>
-
         <div className={styles.card}>
           <div className={styles.heading}>
             <span>CREATE ACCOUNT</span>
@@ -109,25 +102,19 @@ export default function RegisterPage() {
             <p>Choose your account type to get started.</p>
           </div>
 
-          <div className={styles.accountTypes}>
-            <button
-              type="button"
-              className={accountType === "jobseeker" ? styles.selected : ""}
-              onClick={() => setAccountType("jobseeker")}
-            >
-              <UserRound />
-              <div><strong>Job Seeker</strong><span>Find and save UK jobs</span></div>
-            </button>
-
-            <button
-              type="button"
-              className={accountType === "employer" ? styles.selected : ""}
-              onClick={() => setAccountType("employer")}
-            >
-              <Building2 />
-              <div><strong>Employer</strong><span>Post jobs after verification</span></div>
-            </button>
-          </div>
+          <fieldset className={styles.accountTypes} disabled={loading}>
+            <legend className={styles.accountLegend}>Account type</legend>
+            {(["jobseeker", "employer"] as const).map(type => (
+              <label key={type} className={`${styles.accountOption} ${accountType === type ? styles.selected : ""}`}>
+                <input type="radio" name="accountType" value={type} checked={accountType === type} onChange={() => setAccountType(type)} />
+                {type === "jobseeker" ? <UserRound aria-hidden="true" /> : <Building2 aria-hidden="true" />}
+                <span className={styles.accountText}>
+                  <strong>{type === "jobseeker" ? "Job Seeker" : "Employer"}</strong>
+                  <span>{type === "jobseeker" ? "Find and save UK jobs" : "Post jobs after verification"}</span>
+                </span>
+              </label>
+            ))}
+          </fieldset>
 
           {accountType === "employer" && (
             <div className={styles.notice}>
@@ -139,22 +126,24 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleRegister}>
-            <label className={styles.label}>Full Name</label>
+            <label htmlFor="register-name" className={styles.label}>Full Name</label>
             <div className={styles.inputWrap}>
               <UserRound />
-              <input type="text" placeholder="Your full name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required disabled={loading} />
+              <input id="register-name" type="text" placeholder="Your full name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required disabled={loading} />
             </div>
 
-            <label className={styles.label}>Email Address</label>
+            <label htmlFor="register-email" className={styles.label}>Email Address</label>
             <div className={styles.inputWrap}>
               <Mail />
-              <input type="email" placeholder="you@example.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={loading} />
+              <input id="register-email" type="email" placeholder="you@example.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={loading} />
             </div>
 
-            <label className={styles.label}>Password</label>
+            <label htmlFor="register-password" className={styles.label}>Password</label>
             <div className={styles.inputWrap}>
               <LockKeyhole />
               <input
+                id="register-password"
+                aria-describedby="password-help"
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a password"
                 autoComplete="new-password"
@@ -164,10 +153,12 @@ export default function RegisterPage() {
                 required
                 disabled={loading}
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} aria-label="Show or hide password">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword}>
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
             </div>
+
+            <p id="password-help" className={styles.passwordHelp}>Use at least 8 characters.</p>
 
             <label className={styles.agree}>
               <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} required disabled={loading} />

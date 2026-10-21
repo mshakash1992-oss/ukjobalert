@@ -1,3 +1,5 @@
+import CompanyLogo from "@/components/CompanyLogo";
+import { isPublicJob, schemaEmploymentType } from "@/lib/job-publication";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -65,9 +67,9 @@ function cleanDescription(input: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const db = createAdminClient();
-  const { data: job } = await db.from("jobs").select("title,description,location,employer_id,expires_at")
+  const { data: job } = await db.from("jobs").select("slug,title,description,location,employer_id,expires_at")
     .eq("slug", slug).eq("status", "published").maybeSingle();
-  if (!job || (job.expires_at && new Date(job.expires_at).getTime() <= Date.now())) {
+  if (!job || !isPublicJob(job)) {
     return { title: "Job Not Found", robots: { index: false, follow: false } };
   }
   const { data: employer } = await db.from("employer_verifications")
@@ -93,7 +95,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
   const db = createAdminClient();
   const { data, error } = await db.from("jobs").select("*").eq("slug", slug).eq("status", "published").maybeSingle();
   const job = data as RecordData | null;
-  if (error || !job || (job.expires_at && new Date(String(job.expires_at)).getTime() <= Date.now())) notFound();
+  if (error || !job || !isPublicJob(job)) notFound();
 
   const { data: employer } = await db.from("employer_verifications")
     .select("company_name,verification_status")
@@ -117,7 +119,6 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
   const careerLevel = first(job, ["career_level"]) || detailFromDescription(description, "Career Level");
   const gender = first(job, ["gender"]) || detailFromDescription(description, "Gender");
   const companyName = employer.company_name || "Verified UK Employer";
-  const companyInitial = companyName.slice(0, 1).toUpperCase();
   const companyHref = `/companies/${encodeURIComponent(value(job.employer_id))}`;
 
   // Related vacancies are optional; failure here must never break the job details page.
@@ -128,7 +129,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
       .eq("status", "published").neq("id", job.id)
       .order("created_at", { ascending: false }).limit(30);
     const matches = ((candidates ?? []) as RecordData[])
-      .filter(j => !j.expires_at || new Date(String(j.expires_at)).getTime() > Date.now())
+      .filter(j => isPublicJob(j))
       .sort((a, b) => Number(value(a.category) === category) - Number(value(b.category) === category))
       .reverse();
     const owners = [...new Set(matches.map(j => value(j.employer_id)).filter(Boolean))];
@@ -144,7 +145,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
   const postedDate = posted ? new Date(posted) : null;
   const expires = value(job.expires_at);
   const expiresDate = expires ? new Date(expires) : null;
-  const jobSchema = description && postedDate && !Number.isNaN(postedDate.getTime()) ? {
+  const jobSchema = description && location && (safeUrl || safeEmail) && postedDate && !Number.isNaN(postedDate.getTime()) ? {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title,
@@ -160,7 +161,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
         addressCountry: "GB",
       },
     },
-    ...(type ? { employmentType: type } : {}),
+    ...(schemaEmploymentType(type) ? { employmentType: schemaEmploymentType(type) } : {}),
     identifier: { "@type": "PropertyValue", name: "UKJobAlert", value: value(job.id) || slug },
     url: `https://www.ukjobalert.com/jobs/${encodeURIComponent(slug)}`,
   } : null;
@@ -220,7 +221,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
           <aside className={styles.right}>
             <section className={styles.sideCard}>
               <div className={styles.sideCompany}>
-                <div className={styles.sideLogo}>{companyInitial}</div>
+                <div className={styles.sideLogo}><CompanyLogo src={value(job.company_logo_url)} name={companyName} /></div>
                 <div><h2><Link href={companyHref} style={{color:"inherit",textDecoration:"none"}}>{companyName}</Link></h2><span className={styles.sideVerified}><CheckCircle2 size={14}/> Verified UK Employer</span></div>
               </div>
               <Link href={companyHref} className={styles.companyJobs}>View company jobs <ArrowRight size={15}/></Link>

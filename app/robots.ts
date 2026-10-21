@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [{
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/auth/", "/account/", "/employer/", "/login", "/register", "/post-job"],
+      disallow: ["/api/", "/auth/"],
     }],
     sitemap: "https://www.ukjobalert.com/sitemap.xml",
     host: "https://www.ukjobalert.com",

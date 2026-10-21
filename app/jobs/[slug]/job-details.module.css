@@ -36,12 +36,12 @@
 .muted{font-size:13px;color:#76808b}
 .disclaimer{display:flex;gap:9px;align-items:flex-start;border-top:1px solid #e6e8e9;margin-top:30px;padding-top:15px;color:#8a929b}
 .disclaimer svg{width:18px;height:18px;flex-shrink:0;color:#C8102E}
-.disclaimer p{margin:0;font-size:11px;line-height:1.8}
+.disclaimer p{margin:0;font-size: 12px;line-height:1.8}
 .sideCard{background:#fff;border:1px solid #ededed;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.025);padding:23px}
 .sideCompany{display:flex;align-items:center;gap:14px}
 .sideLogo{width:68px;height:68px;display:flex;align-items:center;justify-content:center;background:#f5f7fa;border:1px solid #e7e9ee;font-size:32px;color:#19365e;flex-shrink:0}
 .sideCompany h2{font-size:19px;font-weight:500;color:#102A4C;line-height:1.4;margin:0 0 5px;overflow-wrap:anywhere}
-.sideVerified{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#C8102E}
+.sideVerified{display:inline-flex;align-items:center;gap:5px;font-size: 12px;color:#C8102E}
 .companyJobs{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:23px;padding-top:16px;border-top:1px solid #eee;text-decoration:none;color:#2d3848;font-size:12px}
 .facts{border:0;background:transparent;box-shadow:none;padding:0}
 .facts h2,.mapSection h2{font-size:16px;font-weight:500;margin:0 0 12px;color:#26313b}
@@ -54,7 +54,7 @@
 .locationBox{min-height:220px;background:#e7eaed;border:1px solid #dce1e6;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;text-align:center;padding:20px}
 .locationBox svg{color:#C8102E}
 .locationBox strong{font-size:13px;color:#354357}
-.locationBox span{font-size:11px;color:#798592}
+.locationBox span{font-size: 12px;color:#798592}
 .sidebarDeadline{font-size:12px;color:#C8102E;text-align:center;margin:16px 0 10px}
 .actionsCompact{min-width:0;gap:10px}
 .actionsCompact .secondaryActions{width:100%}
@@ -68,9 +68,9 @@
 .relatedCard:hover{box-shadow:0 6px 18px #00000012}
 .relatedLogo{width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#C8102E;border:1px solid #e8e8e8}
 .relatedContent{min-width:0;flex:1}
-.relatedType{font-size:11px;color:#C8102E}
+.relatedType{font-size: 12px;color:#C8102E}
 .relatedContent h3{font-size:14px;margin:5px 0}
-.relatedContent p{display:flex;gap:5px;align-items:center;color:#77808b;font-size:11px}
+.relatedContent p{display:flex;gap:5px;align-items:center;color:#77808b;font-size: 12px}
 .relatedSalary{font-size:12px;color:#6b7580}
 .relatedArrow{color:#C8102E;flex-shrink:0}
 @media(max-width:960px){.layout{grid-template-columns:minmax(0,1fr) 290px;gap:25px}.overviewGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -119,3 +119,10 @@
 .overviewItem>svg,.infoList svg,.locationBox svg,.disclaimer svg{color:#C8102E}
 .sideVerified,.verified,.deadline,.sidebarDeadline{color:#C8102E}
 .description{white-space:pre-wrap}
+
+
+/* Shared UKJobAlert reference theme */
+.page{--green:#f00025;--green-dark:#c8102e;--accent:#f00025;--accent-dark:#c8102e;--dark:#061e53;--ink:#061e53;--text:#31435b;--muted:#63748c;color:#31435b;background:#f7faff;}
+.container{width:min(1366px,calc(100% - 64px));margin-inline:auto;}
+.applyButton{background:#f00025;color:white;border:1px solid #f00025;border-radius:6px;font-size:14px;font-weight:600;}
+@media(max-width:700px){.container{width:calc(100% - 32px)}}

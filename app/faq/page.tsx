@@ -113,60 +113,6 @@ export default function FAQPage() {
           SAME HEADER AS HOMEPAGE
       ===================================================== */}
 
-      <header className="topbar">
-        <div className="container nav">
-          <Link href="/" className="logo">
-            <Image
-              src="/images/ukjobalert-logo.png"
-              alt="UKJobAlert"
-              width={190}
-              height={52}
-              priority
-            />
-          </Link>
-
-          <nav className="desktop-nav">
-            <Link href="/">
-              Home
-            </Link>
-
-            <Link href="/jobs">
-              Jobs <ChevronDown />
-            </Link>
-
-            <Link href="/companies">
-              Employers <ChevronDown />
-            </Link>
-
-            <Link href="/candidates">
-              Candidates
-            </Link>
-
-            <Link href="/about" className="active">
-              Pages <ChevronDown />
-            </Link>
-          </nav>
-
-          <div className="nav-actions">
-            <button
-              type="button"
-              className="bell"
-              aria-label="Notifications"
-            >
-              <Bell />
-            </button>
-
-            <Link href="/login" className="login">
-              Login / Register
-            </Link>
-
-            <Link href="/post-job" className="post-job">
-              Post a Job
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* =====================================================
           FAQ PAGE TITLE
       ===================================================== */}

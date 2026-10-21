@@ -1,3 +1,4 @@
+import { isPublicJob } from "@/lib/job-publication";
 import type { MetadataRoute } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -5,7 +6,7 @@ export const dynamic = "force-dynamic";
 const SITE = "https://www.ukjobalert.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const paths = ["", "/jobs", "/companies", "/candidates", "/about", "/contact", "/faq", "/privacy-policy", "/terms", "/security-privacy"];
+  const paths = ["", "/jobs", "/companies", "/about", "/contact", "/faq", "/privacy-policy", "/terms", "/security-privacy", "/how-it-works", "/jobs/remote", "/jobs/visa-sponsorship", "/guides/jobs-in-uk-for-foreigners"];
   const staticPages: MetadataRoute.Sitemap = paths.map((path) => ({
     url: `${SITE}${path || "/"}`,
     changeFrequency: path === "/jobs" ? "daily" : "weekly",
@@ -27,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const pageSize = 500;
     for (let offset = 0; ; offset += pageSize) {
       const { data: jobs, error } = await db.from("jobs")
-        .select("slug,employer_id,expires_at,created_at")
+        .select("slug,employer_id,expires_at,created_at,updated_at")
         .eq("status", "published")
         .order("created_at", { ascending: false })
         .range(offset, offset + pageSize - 1);
@@ -35,8 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const rows = jobs ?? [];
       for (const job of rows) {
         if (!job.slug || !verifiedIds.has(String(job.employer_id))) continue;
-        if (job.expires_at && new Date(job.expires_at).getTime() <= now) continue;
-        const changed = job.created_at;
+        if (!isPublicJob(job, now)) continue;
+        const changed = job.updated_at || job.created_at;
         const parsed = changed ? new Date(changed) : null;
         jobPages.push({
           url: `${SITE}/jobs/${encodeURIComponent(job.slug)}`,

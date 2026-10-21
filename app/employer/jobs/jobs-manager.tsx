@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { BriefcaseBusiness, CalendarDays, Eye, MapPin, Pencil, Plus, Search, SlidersHorizontal } from "lucide-react";
 import styles from "./jobs-manager.module.css";
+import JobActions from "./job-actions";
 
 type Job={id:string;slug:string;title:string;location:string|null;job_type:string|null;status:string;apply_clicks:number|null;created_at:string};
 export default function JobsManager({jobs,verified,loadError}:{jobs:Job[];verified:boolean;loadError:string}){
@@ -40,7 +41,10 @@ export default function JobsManager({jobs,verified,loadError}:{jobs:Job[];verifi
         <div className={styles.details}><Link href={`/jobs/${job.slug}`} className={styles.title}>{job.title}</Link><div className={styles.meta}><span><MapPin size={15}/>{job.location||"Location not specified"}</span><span><BriefcaseBusiness size={15}/>{job.job_type||"Not specified"}</span><span><CalendarDays size={15}/>{job.created_at?new Date(job.created_at).toLocaleDateString("en-GB"):"—"}</span></div></div>
         <span className={`${styles.status} ${job.status==="published"?styles.published:job.status==="draft"?styles.draft:styles.other}`}>{job.status}</span>
         <span className={styles.clicks} title="Apply clicks, not unique views"><Eye size={17}/>{job.apply_clicks||0} clicks</span>
-        <Link className={styles.edit} href={`/employer/jobs/${job.id}/edit`}><Pencil size={16}/> Edit</Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link className={styles.edit} href={`/employer/jobs/${job.id}/edit`}><Pencil size={16}/> Edit</Link>
+          <JobActions jobId={job.id} title={job.title} status={job.status}/>
+        </div>
       </article>)}</div>}
     </section>
   </div>;

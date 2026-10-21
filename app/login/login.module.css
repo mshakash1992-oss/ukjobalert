@@ -84,7 +84,7 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 2.1px;
   color: #f6f8fd;
@@ -141,7 +141,7 @@
 .heading > span {
   display: inline-block;
   color: var(--accent);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 2px;
 }
@@ -364,7 +364,7 @@
   margin: 27px 0 0;
   text-align: center;
   color: #8995a6;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
 }
 
@@ -494,3 +494,21 @@
     transition: none;
   }
 }
+
+
+/* Shared UKJobAlert reference theme */
+.page{--green:#f00025;--green-dark:#c8102e;--accent:#f00025;--accent-dark:#c8102e;--dark:#061e53;--ink:#061e53;--text:#31435b;--muted:#63748c;color:#31435b;background:#f7faff;}
+.card{border-color:#e1e7ef;border-radius:8px;}
+.card{background:#fff;box-shadow:0 3px 16px #001e4a05;}
+.heading{color:#061e53;}
+.submit{background:#f00025;color:white;border:1px solid #f00025;border-radius:6px;font-size:14px;font-weight:600;}
+.inputWrap{border:1px solid #dce3ed;border-radius:6px;background:white;min-height:48px;}
+.inputWrap input{font-size:15px;color:#31435b}.inputWrap:focus-within{border-color:#1975ee;box-shadow:0 0 0 3px #1975ee12}
+.label{font-size:14px;font-weight:600;color:#31435b;}
+.heading h1,.heading h2{color:#061e53;font-weight:800}.heading p{font-size:14px;line-height:1.6}
+
+/* Recruitment identity shared with homepage */
+.page{min-height:calc(100dvh - 73px);background:#f4f8fc;}
+.visual{min-height:calc(100dvh - 73px);background:linear-gradient(90deg,#001a49d9,#001a4944),url("/images/grow-team-hero.png") 65% center/cover no-repeat;} .visual:before,.visual:after{display:none}.visual h1{color:white!important;font-size:clamp(32px,3vw,50px);font-weight:800}.visual p{color:#e0e9fa!important;font-size:15px;}
+.formSide{min-height:calc(100dvh - 73px);background:#f4f8fc;}
+.card{padding:32px;border:1px solid #e1e7ef;background:white;border-radius:12px;box-shadow:0 10px 35px #001e4a08;}@media(max-width:600px){.card{padding:24px 18px}}

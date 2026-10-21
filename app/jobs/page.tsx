@@ -1,3 +1,6 @@
+import CompanyLogo from "@/components/CompanyLogo";
+import { pageMetadata } from "@/lib/seo";
+import { isPublicJob } from "@/lib/job-publication";
 import Link from "next/link";
 import { ArrowRight, BriefcaseBusiness, Clock3, MapPin, Search, SlidersHorizontal } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -10,6 +13,7 @@ type Params = Record<string, string | string[] | undefined>;
 type Props = { searchParams: Promise<Params> };
 type JobRow = {
   id: string;
+  company_logo_url: string | null;
   slug: string | null;
   title: string | null;
   location: string | null;
@@ -48,6 +52,13 @@ function buildUrl(current: { keyword: string; location: string; category: string
   return `/jobs${suffix ? `?${suffix}` : ""}`;
 }
 
+export async function generateMetadata({ searchParams }: Props) {
+  const params = await searchParams;
+  const filtered = ["keyword", "location", "category", "type", "sort"].some(key => Boolean(param(params[key])));
+  return { ...pageMetadata("Find UK Jobs & Current Vacancies", "Browse current UK vacancies by job title, location, category and employment type. Apply directly to verified employers.", "/jobs"),
+    robots: { index: !filtered, follow: true } };
+}
+
 export default async function JobsPage({ searchParams }: Props) {
   const p = await searchParams;
   const keyword = param(p.keyword);
@@ -65,14 +76,13 @@ export default async function JobsPage({ searchParams }: Props) {
     const db = createAdminClient();
     const { data, error } = await db
       .from("jobs")
-      .select("id,slug,title,location,category,job_type,salary,employer_id,created_at,expires_at")
+      .select("id,slug,title,location,category,job_type,salary,employer_id,created_at,expires_at,company_logo_url")
       .eq("status", "published")
       .order("created_at", { ascending: false })
       .limit(500);
     if (error) throw error;
-    const now = Date.now();
     const valid = ((data ?? []) as JobRow[]).filter((j) =>
-      j.employer_id && (!j.expires_at || new Date(j.expires_at).getTime() > now)
+      j.employer_id && isPublicJob(j)
     );
     const ownerIds = [...new Set(valid.map((j) => j.employer_id).filter((v): v is string => Boolean(v)))];
     if (ownerIds.length) {
@@ -166,7 +176,7 @@ export default async function JobsPage({ searchParams }: Props) {
               <div className={styles.jobList}>
                 {filtered.map((job) => (
                   <article className={styles.jobCard} key={job.id}>
-                    <div className={styles.companyLogo} aria-label="Company">{(companies.get(String(job.employer_id)) ?? "U").slice(0, 1).toUpperCase()}</div>
+                    <div className={styles.companyLogo} aria-label="Company"><CompanyLogo src={job.company_logo_url} name={companies.get(String(job.employer_id)) ?? "Verified employer"} /></div>
                     <div className={styles.jobInfo}>
                       <div className={styles.jobTop}><span className={styles.jobType}>{job.job_type || "Not specified"}</span></div>
                       <Link href={`/jobs/${encodeURIComponent(job.slug || job.id)}`} className={styles.jobTitle}>{job.title || "Untitled job"}</Link>

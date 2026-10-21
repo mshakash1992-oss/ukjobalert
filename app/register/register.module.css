@@ -1,1 +1,43 @@
-.page{--green:#C8102E;--green-dark:#A50D26;min-height:100vh;display:grid;grid-template-columns:46% 54%;background:#fff;color:#333}.visual{position:relative;min-height:100vh;padding:42px 55px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background:linear-gradient(rgba(18,28,37,.48),rgba(18,28,37,.68)),url("https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1400&q=88") center/cover no-repeat}.brand{width:180px;position:relative;z-index:2}.brand img,.mobileBrand img{display:block;width:100%;height:auto}.visualContent{position:relative;z-index:2;max-width:500px;margin-bottom:55px;color:#fff}.visualContent>span{font-size:11px;font-weight:700;letter-spacing:1.8px;color:#FFFFFF}.visualContent h1{margin:15px 0 17px;font-size:42px;line-height:1.16;font-weight:400}.visualContent p{max-width:455px;margin:0;color:#e4e4e4;font-size:14px;line-height:1.8}.formSide{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:45px 30px}.card{width:min(465px,100%)}.mobileBrand{display:none}.heading>span{color:var(--green-dark);font-size:10px;font-weight:700;letter-spacing:1.4px}.heading h2{margin:9px 0 7px;color:#222;font-size:29px;font-weight:500}.heading p{margin:0 0 24px;color:#888;font-size:13px}.accountTypes{margin-bottom:19px;display:grid;grid-template-columns:1fr 1fr;gap:11px}.accountTypes button{min-height:78px;padding:13px;border:1px solid #dedede;display:flex;align-items:center;gap:11px;background:#fff;text-align:left;color:#555}.accountTypes button>svg{width:23px;height:23px;flex-shrink:0;color:#aaa;stroke-width:1.5}.accountTypes strong,.accountTypes span{display:block}.accountTypes strong{margin-bottom:4px;color:#333;font-size:12px;font-weight:500}.accountTypes span{color:#999;font-size:9px}.accountTypes .selected{border-color:var(--green);background:#F5F7FC;box-shadow:0 0 0 2px rgba(132,189,58,.07)}.accountTypes .selected>svg,.accountTypes .selected strong{color:var(--green-dark)}.notice{margin-bottom:19px;padding:12px 14px;display:flex;gap:10px;border-left:3px solid var(--green);background:#f6faef}.notice svg{width:18px;flex-shrink:0;color:var(--green-dark)}.notice p{margin:0;color:#53678E;font-size:10px;line-height:1.55}.label{display:block;margin:0 0 7px;color:#444;font-size:11px;font-weight:500}.inputWrap{height:49px;margin-bottom:15px;padding:0 14px;display:flex;align-items:center;gap:10px;border:1px solid #dedede;background:#fff;transition:.2s}.inputWrap:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(132,189,58,.08)}.inputWrap>svg{width:16px;color:#aaa;stroke-width:1.5}.inputWrap input{width:100%;height:100%;border:0;outline:0;background:transparent;color:#333;font-size:12px}.inputWrap button{width:30px;height:30px;border:0;background:transparent;color:#aaa;display:grid;place-items:center}.inputWrap button svg{width:16px}.agree{margin:3px 0 20px;display:flex;align-items:flex-start;gap:8px;color:#777;font-size:10px;line-height:1.5}.agree input{margin-top:2px;accent-color:var(--green)}.agree a{color:var(--green-dark)}.submit{width:100%;height:49px;border:0;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:#fff;font-size:12px;font-weight:500}.submit:hover{background:var(--green-dark)}.submit svg{width:14px}.signin{margin-top:23px;text-align:center;color:#888;font-size:11px}.signin a{color:var(--green-dark);font-weight:500}@media(max-width:850px){.page{grid-template-columns:1fr}.visual{display:none}.formSide{padding:35px 24px;display:block}.mobileBrand{width:150px;margin:5px auto 45px;display:block}.card{margin:0 auto}}@media(max-width:480px){.formSide{padding:25px 20px}.mobileBrand{margin-bottom:36px}.heading h2{font-size:25px}.accountTypes{grid-template-columns:1fr}}
+/* Registration uses the shared site header as its only logo. */
+.page{--accent:#c8102e;--ink:#061e53;min-height:calc(100dvh - 72px);display:grid;grid-template-columns:46% 54%;background:#f4f8fc;color:#31435b}
+.visual{position:relative;display:flex;align-items:flex-end;padding:clamp(32px,4vw,64px);background:linear-gradient(90deg,#001a49d9,#001a4944),url("/images/grow-team-hero.png") 65% center/cover no-repeat}
+.visualContent{max-width:500px;color:white;padding-bottom:24px}
+.visualContent>span{font-size:12px;font-weight:700;letter-spacing:1.8px}
+.visualContent h1{margin:18px 0;font-size:clamp(32px,3vw,50px);line-height:1.15;font-weight:800;color:white}
+.visualContent p{max-width:455px;margin:0;color:#e0e9fa;font-size:16px;line-height:1.75}
+.formSide{display:flex;align-items:center;justify-content:center;padding:40px 32px}
+.card{width:min(560px,100%);padding:36px 38px;background:#fff;border:1px solid #dce3ed;border-radius:14px;box-shadow:0 10px 35px #001e4a08}
+.heading>span{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:1.4px}
+.heading h2{margin:10px 0;color:var(--ink);font-size:32px;line-height:1.2;font-weight:800}
+.heading p{margin:0 0 24px;color:#526078;font-size:16px;line-height:1.6}
+.accountTypes{margin:0 0 22px;padding:0;border:0;display:grid;grid-template-columns:1fr 1fr;gap:12px;min-width:0}
+.accountLegend{padding:0;margin-bottom:10px;font-size:14px;font-weight:600;color:var(--ink)}
+.accountOption{position:relative;min-height:100px;padding:15px 12px;display:flex;align-items:center;gap:10px;border:1px solid #bac5d5;border-radius:8px;background:white;cursor:pointer}
+.accountOption input{width:17px;height:17px;margin:0;accent-color:var(--accent);flex-shrink:0}
+.accountOption>svg{width:21px;height:21px;flex-shrink:0;color:#526078}
+.accountText{min-width:0}.accountText strong{display:block;margin-bottom:5px;color:var(--ink);font-size:15px;font-weight:700}
+.accountText>span{display:block;color:#526078;font-size:13px;line-height:1.5}
+.selected{border-color:var(--accent);background:#fff5f7;box-shadow:inset 0 0 0 1px var(--accent)}
+.selected>svg,.selected strong{color:var(--accent)}
+.accountOption:focus-within{outline:3px solid #1975ee55;outline-offset:3px}
+.notice{margin-bottom:20px;padding:13px;display:flex;gap:10px;border-left:3px solid var(--accent);background:#f4f7fc;border-radius:4px}
+.notice svg{width:20px;flex-shrink:0;color:var(--accent)}.notice p{margin:0;color:#40516c;font-size:14px;line-height:1.6}
+.label{display:block;margin:0 0 8px;color:var(--ink);font-size:15px;font-weight:600}
+.inputWrap{height:52px;margin-bottom:18px;padding:0 13px;display:flex;align-items:center;gap:10px;border:1px solid #bac5d5;border-radius:7px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.inputWrap:focus-within{border-color:#1975ee;box-shadow:0 0 0 3px #1975ee20}
+.inputWrap>svg{width:18px;height:18px;flex-shrink:0;color:#64748b}
+.inputWrap input{width:100%;min-width:0;height:100%;padding:0;border:0;outline:0;background:transparent;color:#253650;font-size:16px}
+.inputWrap input::placeholder{color:#67758a;opacity:1}
+.inputWrap button{width:38px;height:42px;flex-shrink:0;border:0;background:transparent;color:#526078;display:grid;place-items:center;cursor:pointer}
+.inputWrap button svg{width:19px;height:19px}
+.passwordHelp{margin:-8px 0 20px;color:#526078;font-size:14px;line-height:1.5}
+.agree{margin:0 0 22px;display:flex;align-items:flex-start;gap:10px;color:#46556c;font-size:14px;line-height:1.65;cursor:pointer}
+.agree input{width:18px;height:18px;flex-shrink:0;margin:3px 0 0;accent-color:var(--accent)}
+.agree a,.signin a{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.submit{width:100%;min-height:52px;padding:12px;border:0;border-radius:7px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--accent);color:white;font-size:16px;font-weight:700;cursor:pointer}
+.submit:hover{background:#a50d26}.submit svg{width:18px;height:18px}.submit:disabled{opacity:.65;cursor:wait}
+.signin{margin-top:24px;text-align:center;color:#526078;font-size:15px;line-height:1.6}
+.card button:focus-visible,.card a:focus-visible{outline:3px solid #1975ee;outline-offset:3px}
+@media(max-width:1100px){.page{grid-template-columns:42% 58%}.formSide{padding:30px 22px}.card{padding:28px}.accountOption{gap:8px}.accountOption>svg{display:none}}
+@media(max-width:850px){.page{grid-template-columns:1fr;min-height:calc(100dvh - 68px)}.visual{display:none}.formSide{padding:32px 20px}.card{width:min(560px,100%)}.accountOption>svg{display:block}}
+@media(max-width:480px){.formSide{padding:24px 14px}.card{padding:25px 20px}.heading h2{font-size:28px}.accountTypes{grid-template-columns:1fr;gap:10px}.accountOption{min-height:76px;padding:14px}.visualContent{padding:0}}

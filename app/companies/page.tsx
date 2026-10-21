@@ -94,29 +94,6 @@ export default function CompaniesPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.topbar}>
-        <div className={styles.container}>
-          <div className={styles.nav}>
-            <Link href="/" className={styles.logo}>
-              <img src="/images/ukjobalert-logo.png" alt="UKJobAlert" />
-            </Link>
-
-            <nav className={styles.desktopNav}>
-              <Link href="/">Home</Link>
-              <Link href="/jobs">Jobs <ChevronDown /></Link>
-              <Link href="/companies" className={styles.active}>Employers <ChevronDown /></Link>
-              <Link href="/candidates">Candidates</Link>
-              <Link href="/about">Pages <ChevronDown /></Link>
-            </nav>
-
-            <div className={styles.navActions}>
-              <button className={styles.bell} aria-label="Notifications"><Bell /></button>
-              <Link href="/login" className={styles.login}>Login / Register</Link>
-              <Link href="/post-job" className={styles.postJob}>Post a Job</Link>
-            </div>
-          </div>
-        </div>
-      </header>
 
       <section className={styles.pageHero}>
         <div className={styles.container}>

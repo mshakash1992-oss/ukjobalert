@@ -4,10 +4,6 @@ import styles from "./page.module.css";
 
 export default function Page() {
   return <main className={styles.page}>
-    <header className={styles.header}><div className={`${styles.container} ${styles.nav}`}>
-      <Link href="/" className={styles.logo}><img src="/images/ukjobalert-logo.png" alt="UKJobAlert"/></Link>
-      <Link href="/" className={styles.back}>Back to Home</Link>
-    </div></header>
     <section className={styles.hero}><div className={styles.container}>
       <span>NAVIGATION</span><h1>Site Map</h1><p>Find the main areas of UKJobAlert.</p>
     </div></section>

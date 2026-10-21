@@ -4,10 +4,6 @@ import styles from "./page.module.css";
 
 export default function Page() {
   return <main className={styles.page}>
-    <header className={styles.header}><div className={`${styles.container} ${styles.nav}`}>
-      <Link href="/" className={styles.logo}><img src="/images/ukjobalert-logo.png" alt="UKJobAlert"/></Link>
-      <Link href="/" className={styles.back}>Back to Home</Link>
-    </div></header>
     <section className={styles.hero}><div className={styles.container}>
       <span>TRUST & SAFETY</span><h1>Security & Privacy</h1><p>How UKJobAlert approaches account security, employer verification and safer recruitment.</p>
     </div></section>
@@ -20,7 +16,7 @@ export default function Page() {
 <section id="accounts"><h2>3. Account Safety</h2><ul><li>Use a strong, unique password for your account.</li><li>Do not share login codes, reset links or passwords.</li><li>Be cautious of messages asking for money or sensitive credentials.</li><li>Report suspicious vacancies or account activity through the appropriate support channel.</li></ul></section>
 <section id="jobseekers"><h2>4. Safety for Job Seekers</h2><p>Job seekers should verify unusual requests before providing sensitive personal or financial information. Legitimate recruitment should not require users to disclose passwords or unrelated account credentials.</p></section>
 <section id="privacy"><h2>5. Privacy by Feature</h2><p>Profile and recruitment information should only be exposed where required by the relevant feature and the user's chosen settings. Candidate contact information should be used only for legitimate recruitment purposes.</p></section>
-<section id="report"><h2>6. Reporting Security Concerns</h2><p>A dedicated official security/support email has not yet been added to the new theme. Until the final address is selected, the Contact page should be used as the visible support route.</p></section></article>
+<section id="report"><h2>6. Reporting Security Concerns</h2><p>Visit the Contact page for available support options. Do not include passwords or login codes in a report.</p></section></article>
       </div>
     </div></section>
     <footer className={styles.footer}><div className={styles.container}>© UKJobAlert · <Link href="/">Home</Link></div></footer>
