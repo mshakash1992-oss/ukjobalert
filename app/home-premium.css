@@ -73,3 +73,15 @@
 @media(max-width:700px){.grow-home .gh-hero-image{object-position:62% center}.grow-home .gh-premium-hero-overlay{background:linear-gradient(90deg,#001a49f2,#001a4977)}.grow-home .gh-reference-category-card{height:128px}.grow-home .gh-reference-category-icon svg{width:32px;height:32px}}
 
 .grow-footer-post{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;background:#f00025;color:white;border-radius:6px;font-size:14px;font-weight:600}.grow-footer-post:hover{background:#c8102e}
+
+/* A landscape photo needs its own landscape area on narrow screens. */
+@media(max-width:700px){
+ .grow-home .gh-premium-hero{background:#082e61}
+ .grow-home .gh-hero-image{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:3 / 1;object-fit:contain;object-position:center}
+ .grow-home .gh-premium-hero-overlay{display:none}
+ .grow-home .gh-premium-hero-content{padding-top:24px;padding-bottom:24px}
+ .grow-home .grow-title{font-size:clamp(40px,12vw,56px);line-height:.94;letter-spacing:-2px}
+ .grow-home .grow-post-cta{font-size:clamp(17px,5vw,22px);margin-top:16px}
+ .grow-home .grow-subtitle{font-size:16px;line-height:1.5;margin-top:12px}
+ .grow-home .gh-premium-search-box{margin-top:24px}
+}

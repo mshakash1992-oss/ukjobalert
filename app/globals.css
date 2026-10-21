@@ -2468,3 +2468,20 @@ input,select,textarea{max-width:100%}button:disabled{cursor:not-allowed}a,button
 @media(max-width:1150px){.grow-brand img.grow-custom-logo{width:200px}}
 @media(max-width:480px){.grow-brand img.grow-custom-logo{width:160px;max-height:44px}.grow-header-actions{gap:8px}}
 @media(max-width:360px){.grow-brand img.grow-custom-logo{width:140px}}
+
+/* Mobile navigation occupies its own row, so it cannot cover the hero. */
+.grow-mobile-controls,.grow-mobile-panel{display:none}
+@media(max-width:950px){
+ .grow-nav-inner{display:grid;grid-template-columns:minmax(0,1fr) 44px;column-gap:12px;row-gap:0}
+ .grow-brand{min-height:68px}
+ .grow-mobile-controls{display:block}
+ .grow-menu-toggle{width:44px;height:44px;padding:10px;display:grid;place-items:center;background:white;color:#061e53;border:1px solid #dce3ed;border-radius:8px;cursor:pointer}
+ .grow-menu-toggle svg{width:22px;height:22px}
+ .grow-menu-toggle[aria-expanded=true]{background:#eff5fc;border-color:#b7c9e0}
+ .grow-mobile-panel{grid-column:1 / -1;display:flex;flex-direction:column;border-top:1px solid #e1e7ef;padding:8px 0 16px}
+ .grow-mobile-panel>a{display:block;padding:12px 14px;color:#061e53;font-size:15px;font-weight:500;border-radius:6px;line-height:1.4}
+ .grow-mobile-panel>a:hover,.grow-mobile-panel>a[aria-current=page]{background:#eff5fc;color:#0055b8}
+ .grow-mobile-account-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #e1e7ef;margin-top:8px;padding-top:16px}
+ .grow-mobile-account-actions>a,.grow-mobile-account-actions>button{display:block;padding:12px;text-align:center;border:1px solid #c8102e;border-radius:7px;color:#c8102e;background:white;font:inherit;font-size:14px;cursor:pointer}
+ .grow-mobile-account-actions>a.grow-mobile-register{background:#c8102e;color:white}
+}
