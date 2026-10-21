@@ -62,7 +62,7 @@
 
 .pageHero { background: #f7f8f9; border-bottom: 1px solid #eee; }
 .heroRow {
-  min-height: 174px;
+  min-height: 145px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -386,7 +386,7 @@
 .container{width:min(1366px,calc(100% - 64px));margin-inline:auto;}
 .pageHero{background:linear-gradient(115deg,#031b4b,#0b3b75);border-bottom:3px solid #f00025;color:white;}
 .pageHero h1,.pageHero h2{color:#fff;font-weight:800;letter-spacing:-.7px;}.pageHero p{color:#dce7fa;font-size:15px;line-height:1.7;}.pageHero a{color:inherit;}
-.heroRow{min-height:174px;}
+.heroRow{min-height:145px;}
 .content{color:#31435b;}
 .companyCard,.sidebar{border-color:#e1e7ef;border-radius:8px;}
 .companyCard{background:#fff;box-shadow:0 3px 16px #001e4a05;}
