@@ -211,9 +211,10 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
                 {categories.map(category => <option key={category.name} value={category.name}>{category.name}</option>)}
               </select>
             </label>
-            <button type="submit" className="gh-premium-search-button">
+            
               <Search size={18} strokeWidth={2.4} />
-            </button>
+              <span>Search Jobs</span>
+            
           </form>
 
         </div>
