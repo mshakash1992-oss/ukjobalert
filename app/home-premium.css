@@ -80,6 +80,11 @@
  .grow-home .gh-premium-hero{background:#082e61}
  .grow-home .gh-hero-image{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:1231 / 1278;object-fit:cover;object-position:center}
  .grow-home .gh-premium-hero-overlay{display:none}
- .grow-home .gh-premium-hero-content{padding-top:20px;padding-bottom:24px}
- .grow-home .gh-premium-search-box{margin-top:24px}
+ .grow-home .gh-premium-hero-content{position:static;padding:0 0 24px;z-index:2}
+ .grow-home .grow-title{position:absolute;left:4.7%;top:8.8%;width:58%;font-size:clamp(50px,14vw,78px);line-height:.83;letter-spacing:-.065em;color:#061e53}
+ .grow-home .grow-title .grow-title-team{color:#061e53}
+ .grow-home .grow-title .grow-title-dot{color:#f00025}
+ .grow-home .grow-post-cta{position:absolute;left:4.7%;top:44.1%;width:58.4%;height:7.4%;display:flex;align-items:center;justify-content:center;margin:0;padding:0;background:transparent;color:#fff;font-size:clamp(17px,4.8vw,26px);line-height:1.1;letter-spacing:-.03em;text-align:center}
+ .grow-home .grow-subtitle{position:absolute;left:4.8%;top:52.2%;margin:0;color:#061e53;font-size:clamp(13px,3.4vw,19px);font-weight:700;line-height:1.2}
+ .grow-home .gh-premium-search-box{position:relative;left:auto;right:auto;bottom:auto;width:100%;margin:0;padding:10px;grid-template-columns:1fr}
 }

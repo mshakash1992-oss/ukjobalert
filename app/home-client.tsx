@@ -167,7 +167,7 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
         <div className="gh-premium-hero-overlay" />
 
         <div className="container gh-premium-hero-content">
-          <h1 className="grow-title">GROW<br />YOUR<br /><span>TEAM.</span></h1>
+          <h1 className="grow-title">GROW<br />YOUR<br /><span className="grow-title-team">TEAM<span className="grow-title-dot">.</span></span></h1>
           <Link href="/post-job" className="grow-post-cta">POST JOBS FOR FREE</Link>
           <p className="grow-subtitle">For UK employers &amp; recruiters</p>
 
