@@ -50,3 +50,7 @@
 @media(max-width:760px){.container{width:calc(100% - 32px)}.hero{padding-bottom:20px}.hero p{font-size:15px}.breadcrumb{margin-bottom:16px}.content{padding:28px 0 40px}.layout{grid-template-columns:1fr;gap:26px}.info>p{max-width:none}.info h2{font-size:25px}.formCard{padding:24px}.formBottom{flex-direction:row;align-items:center}.footer>.container{align-items:flex-start;flex-direction:column;gap:10px}}
 @media(max-width:520px){.twoColumns{grid-template-columns:1fr;gap:0}.formCard{padding:22px 18px}.formHeading h2{font-size:21px}.formBottom{flex-direction:column;align-items:stretch;gap:16px}.formBottom button{width:100%}.formBottom p{max-width:none}.footer nav{gap:18px}.hero h1{letter-spacing:-.7px}}
 @media(prefers-reduced-motion:reduce){.page *{transition:none}}
+
+.hero{padding:18px 0 32px!important}
+.breadcrumb{margin-bottom:16px!important}
+@media(max-width:760px){.hero{padding-bottom:20px!important}}
