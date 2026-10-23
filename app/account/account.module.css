@@ -9,4 +9,24 @@
 .panelHead h2{font-size:20px;color:#061e53;font-weight:700}
 .sidebar h2,.sidebar h3{color:#061e53}
 
-.topbar{background:white;color:#061e53;border-bottom:1px solid #e1e7ef;height:64px}.headerInner{max-width:1366px;margin:auto}.headerInner>.logo{display:none}.headerSearch{margin-left:0}.headerSearch input{color:#31435b}.userMini strong,.userMini span,.mobileMenu,.notification{color:#061e53}.sidebar{background:white;border-right:1px solid #e1e7ef;top:137px;height:calc(100vh - 137px)}.content{background:#f7faff}.shell{min-height:calc(100dvh - 137px)}.panel{border:1px solid #e1e7ef}.welcome h1{color:#061e53;font-weight:800}.sideNav a{border-radius:6px}.sideNav .active{background:#fff0f3;color:#c8102e}@media(max-width:800px){.sidebar{top:133px;height:calc(100dvh - 133px)}.headerSearch{display:none}.mobileMenu{margin-left:auto;color:#061e53}}
+.topbar{display:none}
+.shell{min-height:calc(100dvh - 72px)}
+.sidebar{top:72px;height:calc(100dvh - 72px);background:#fff;border-right:1px solid #e1e7ef}
+.content{background:#f7faff}
+.panel{border:1px solid #e1e7ef}
+.welcome h1{color:#061e53;font-weight:800}
+.sideNav a{border-radius:6px}
+.sideNav .active{background:#fff0f3;color:#c8102e}
+.profileAvatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.progressRing{border:0;padding:6px}
+.progressRing span{width:100%;height:100%;display:grid;place-items:center;border-radius:50%;background:#fff}
+.emptyState{padding:24px;color:#63748c;font-size:14px}
+.loadError{margin-top:18px;padding:12px 14px;border:1px solid #f2c7ce;border-radius:6px;background:#fff5f6;color:#a50d26;font-size:13px}
+.mobileMenu{display:none}
+@media(max-width:800px){
+  .sidebar{top:68px;height:calc(100dvh - 68px)}
+  .shell{min-height:calc(100dvh - 68px)}
+  .content{padding:24px 22px 50px}
+  .mobileMenu{display:inline-flex;align-items:center;gap:8px;margin:0 0 20px;padding:9px 12px;border:1px solid #d5ddeb;border-radius:6px;background:#fff;color:#061e53;font-size:13px;cursor:pointer}
+  .mobileMenu svg{width:17px;height:17px}
+}
