@@ -226,12 +226,12 @@
 .container{width:min(1366px,calc(100% - 64px));margin-inline:auto;}
 .pageHero{background:linear-gradient(115deg,#031b4b,#0b3b75);border-bottom:3px solid #f00025;color:white;}
 .pageHero h1,.pageHero h2{color:#fff;font-weight:800;letter-spacing:-.7px;}.pageHero p{color:#dce7fa;font-size:15px;line-height:1.7;}.pageHero a{color:inherit;}
-.heroRow{min-height:138px;}
+.heroRow{min-height:100px;}
 .jobCard,.sidebar{border-color:#e1e7ef;border-radius:8px;}
 .jobCard{background:#fff;box-shadow:0 3px 16px #001e4a05;}
 .searchButton,.postJob{background:#f00025;color:white;border:1px solid #f00025;border-radius:6px;font-size:14px;font-weight:600;}
 .sidebar h2,.sidebar h3{color:#061e53}
 @media(max-width:700px){.container{width:calc(100% - 32px)}}
 
-@media(max-width:800px){.heroRow{min-height:124px}}
+@media(max-width:800px){.heroRow{min-height:112px}}
 @media(max-width:600px){.heroRow{min-height:116px}}
