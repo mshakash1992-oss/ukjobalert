@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 const SITE = "https://www.ukjobalert.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const paths = ["", "/jobs", "/companies", "/about", "/contact", "/faq", "/privacy-policy", "/terms", "/security-privacy", "/how-it-works", "/jobs/remote", "/jobs/visa-sponsorship", "/guides/jobs-in-uk-for-foreigners"];
+  const paths = ["", "/jobs", "/companies", "/about", "/contact", "/faq", "/privacy-policy", "/terms", "/security-privacy", "/how-it-works", "/jobs/remote", "/jobs/visa-sponsorship", "/guides/jobs-in-uk-for-foreigners", "/employers", "/site-map"];
   const staticPages: MetadataRoute.Sitemap = paths.map((path) => ({
     url: `${SITE}${path || "/"}`,
     changeFrequency: path === "/jobs" ? "daily" : "weekly",
