@@ -98,3 +98,42 @@
   }
   .grow-home .gh-premium-search-box { border-top:0!important; box-shadow:none!important; }
 }
+
+
+/* Keep the desktop homepage search fields balanced and the location action anchored. */
+@media (min-width: 1101px) {
+  .grow-home .gh-premium-search-box {
+    grid-template-columns: minmax(0, 1.35fr) minmax(230px, .9fr) minmax(0, 1.1fr) minmax(220px, .82fr);
+    padding-inline: 14px;
+    align-items: center;
+  }
+
+  .grow-home .gh-premium-search-field {
+    padding-inline: 14px;
+    box-sizing: border-box;
+  }
+
+  .grow-home .gh-location-field {
+    gap: 8px;
+  }
+
+  .grow-home .gh-location-field input {
+    width: 0;
+    flex: 1 1 auto;
+  }
+
+  .grow-home .gh-premium-location-detect {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: #05205b;
+    cursor: pointer;
+    transition: background-color .18s ease, color .18s ease;
+  }
+
+  .grow-home .gh-premium-location-detect:hover,
+  .grow-home .gh-premium-location-detect:focus-visible {
+    background: #eef3fc;
+    color: #f00025;
+  }
+}
