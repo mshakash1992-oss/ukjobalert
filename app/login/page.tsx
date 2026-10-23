@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   AlertCircle,
   ArrowRight,
@@ -15,6 +15,7 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 import styles from "./login.module.css";
+import { GoogleAuthButton } from "@/components/GoogleAuthButton";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,6 +31,12 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("oauth_error") === "google") {
+      setError("Google sign-in could not be completed. Please try again.");
+    }
+  }, []);
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -124,6 +131,8 @@ export default function LoginPage() {
               Sign in to manage your career and discover what’s next.
             </p>
           </div>
+
+          <GoogleAuthButton onError={setError} disabled={loading} />
 
           <form onSubmit={handleLogin}>
             <label

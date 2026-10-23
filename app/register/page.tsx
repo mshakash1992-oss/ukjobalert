@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { GoogleAuthButton } from "@/components/GoogleAuthButton";
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -124,6 +125,8 @@ export default function RegisterPage() {
               </p>
             </div>
           )}
+
+          <GoogleAuthButton accountType={accountType} termsAccepted={agreed} onError={setError} disabled={loading} />
 
           <form onSubmit={handleRegister}>
             <label htmlFor="register-name" className={styles.label}>Full Name</label>

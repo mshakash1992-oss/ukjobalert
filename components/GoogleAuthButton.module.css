@@ -1,0 +1,8 @@
+.wrapper{width:100%;margin:18px 0 0}
+.button{width:100%;min-height:48px;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid #d0d7e2;border-radius:8px;background:#fff;color:#24334c;font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background .18s,border-color .18s}
+.button:hover:not(:disabled){background:#f8fafc;border-color:#9aa8ba}
+.button:focus-visible{outline:3px solid #2878ed55;outline-offset:2px}
+.button:disabled{opacity:.65;cursor:wait}
+.icon{width:19px;height:19px;flex:none}
+.divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:#8792a3;font-size:12px}
+.divider::before,.divider::after{content:"";height:1px;flex:1;background:#e3e8ef}
