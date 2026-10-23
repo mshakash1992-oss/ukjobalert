@@ -137,3 +137,18 @@
     color: #f00025;
   }
 }
+
+
+/* Put keyboard focus on the complete search field, not only its text input. */
+.grow-home .gh-premium-search-field input:focus-visible,
+.grow-home .gh-premium-search-field select:focus-visible {
+  outline: none;
+}
+
+.grow-home .gh-premium-search-field:focus-within {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid #2878ed;
+  outline-offset: 0;
+  border-radius: 4px;
+}
