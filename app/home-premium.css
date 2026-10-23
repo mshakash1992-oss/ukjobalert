@@ -152,3 +152,29 @@
   outline-offset: 0;
   border-radius: 4px;
 }
+
+
+/* Light-grey surfaces make each search control read as a separate box. */
+@media (min-width: 701px) {
+  .grow-home .gh-premium-search-box {
+    column-gap: 12px;
+  }
+
+  .grow-home .gh-premium-search-field {
+    height: 48px;
+    margin: 0;
+    padding-inline: 14px;
+    border: 1px solid #e2e7ef;
+    border-radius: 6px;
+    background: #f3f5f8;
+  }
+
+  .grow-home .gh-premium-search-field input,
+  .grow-home .gh-premium-search-field select {
+    background: transparent;
+  }
+
+  .grow-home .gh-premium-search-button {
+    margin-left: 0;
+  }
+}
