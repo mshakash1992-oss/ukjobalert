@@ -1,10 +1,10 @@
-import CompaniesClient from "./companies-client";
+import CompaniesClient, { type PublicCompany } from "./companies-client";
 import { getPublicCompanies } from "@/lib/public-companies";
 
 export const dynamic = "force-dynamic";
 
 export default async function CompaniesPage() {
-  let companies = [];
+  let companies: PublicCompany[] = [];
   try {
     companies = await getPublicCompanies();
   } catch (error) {
