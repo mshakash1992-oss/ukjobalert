@@ -428,6 +428,8 @@
 /* Public job search: keep filters available without showing account navigation. */
 .layoutWithPreview { grid-template-columns: minmax(0, 1.4fr) minmax(310px, .8fr); }
 .layoutNoPreview { grid-template-columns: minmax(0, 1fr); }
+.layoutWithWorkspace { grid-template-columns: 252px minmax(0, 1.15fr) minmax(300px, .85fr); }
+.filterHead a { color: #596b86; font-size: 11px; }
 .filterToolbar {
   margin-bottom: 14px;
   padding: 13px 15px;
@@ -460,10 +462,13 @@
 @media (max-width: 1100px) and (min-width: 801px) {
   .layoutWithPreview { grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr); }
   .layoutNoPreview { grid-template-columns: minmax(0, 1fr); }
+  .layoutWithWorkspace { grid-template-columns: 220px minmax(0, 1fr); }
+  .layoutWithWorkspace .selectedPanel { grid-column: 2; }
   .selectedPanel { grid-column: auto; }
 }
 @media (max-width: 800px) {
-  .layoutWithPreview, .layoutNoPreview { display: block; }
+  .layoutWithPreview, .layoutNoPreview, .layoutWithWorkspace { display: block; }
+  .layoutWithWorkspace .sidebar { display: none; }
   .filterToolbar { padding: 11px; }
   .filterLine { align-items: flex-start; flex-direction: column; gap: 7px; }
   .filterLabel { flex-basis: auto; }
