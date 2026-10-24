@@ -2,8 +2,9 @@ import CompanyLogo from "@/components/CompanyLogo";
 import { pageMetadata } from "@/lib/seo";
 import { isPublicJob } from "@/lib/job-publication";
 import Link from "next/link";
-import { Activity, ArrowRight, BriefcaseBusiness, Clock3, MapPin, Search } from "lucide-react";
+import { Activity, ArrowRight, BriefcaseBusiness, Clock3, FileText, Heart, LayoutDashboard, MapPin, MessageSquareText, Search, UserRound } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./jobs.module.css";
 
 export const dynamic = "force-dynamic";
@@ -70,6 +71,9 @@ export default async function JobsPage({ searchParams }: Props) {
   const sort = param(p.sort) === "salary" ? "salary" : "newest";
   const selected = param(p.selected);
   const current = { keyword, location, category, type, sort: sort === "salary" ? "salary" : "", selected };
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const showWorkspace = Boolean(user && user.user_metadata?.account_type !== "employer");
 
   let jobs: JobRow[] = [];
   let companies = new Map<string, string>();
@@ -141,7 +145,7 @@ export default async function JobsPage({ searchParams }: Props) {
 
       <section className={styles.jobsArea}>
         <div className={styles.container}>
-          <div className={styles.filterToolbar} aria-label="Filter jobs">
+          {!showWorkspace && <div className={styles.filterToolbar} aria-label="Filter jobs">
             <div className={styles.filterLine}>
               <span className={styles.filterLabel}>Category</span>
               <div className={styles.filterChips}>
@@ -156,8 +160,32 @@ export default async function JobsPage({ searchParams }: Props) {
                 {types.map((item) => <Link key={item} className={type === item ? styles.filterChipActive : styles.filterChip} href={buildUrl(current, { type: item })}>{item}</Link>)}
               </div>
             </div>
-          </div>
-          <div className={`${styles.layout} ${selectedJob ? styles.layoutWithPreview : styles.layoutNoPreview}`}>
+          </div>}
+          <div className={`${styles.layout} ${showWorkspace ? styles.layoutWithWorkspace : selectedJob ? styles.layoutWithPreview : styles.layoutNoPreview}`}>
+            {showWorkspace && <aside className={styles.sidebar} aria-label="Job seeker workspace">
+              <div className={styles.workspaceNav}>
+                <p>JOB SEEKER WORKSPACE</p>
+                <nav>
+                  <Link href="/account"><LayoutDashboard />Home</Link>
+                  <Link href="/jobs" className={styles.workspaceActive} aria-current="page"><BriefcaseBusiness />Find Work</Link>
+                  <Link href="/account/applications"><FileText />My Jobs</Link>
+                  <Link href="/account/saved-jobs"><Heart />Saved Jobs</Link>
+                  <Link href="/account/messages"><MessageSquareText />Messages</Link>
+                  <Link href="/account/profile"><UserRound />My Profile</Link>
+                </nav>
+              </div>
+              <div className={styles.filterHead}><h2>Filter Jobs</h2><Link href="/jobs">Clear All</Link></div>
+              <div className={styles.filterGroup}>
+                <h3>Category</h3>
+                <Link className={styles.radioRow} href={buildUrl(current, { category: "" })}><span>{!category ? "◉" : "○"}</span>All Categories</Link>
+                {categories.map(item => <Link key={item} className={styles.radioRow} href={buildUrl(current, { category: item })}><span>{category === item ? "◉" : "○"}</span>{item}</Link>)}
+              </div>
+              <div className={styles.filterGroup}>
+                <h3>Job type</h3>
+                <Link className={styles.radioRow} href={buildUrl(current, { type: "" })}><span>{!type ? "◉" : "○"}</span>All types</Link>
+                {types.map(item => <Link key={item} className={styles.radioRow} href={buildUrl(current, { type: item })}><span>{type === item ? "◉" : "○"}</span>{item}</Link>)}
+              </div>
+            </aside>}
             <div className={styles.results}>
               <div className={styles.resultsHead}>
                 <div><h2>Latest Jobs</h2><p>{loadError ? "Vacancies temporarily unavailable" : `${filtered.length} jobs found`}</p></div>
@@ -215,6 +243,7 @@ export default async function JobsPage({ searchParams }: Props) {
               </section>
               <Link href={"/jobs/" + encodeURIComponent(selectedJob.slug || selectedJob.id)} className={styles.applyNow}>View Job &amp; Apply <ArrowRight /></Link>
             </aside>}
+            {showWorkspace && !selectedJob && <aside className={`${styles.selectedPanel} ${styles.selectedEmpty}`} aria-label="Job details"><Search /><h2>Select a job</h2><p>Choose a vacancy from the list to see its details here.</p></aside>}
           </div>
         </div>
       </section>
