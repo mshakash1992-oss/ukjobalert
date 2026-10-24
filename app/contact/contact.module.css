@@ -52,7 +52,8 @@
 @media(prefers-reduced-motion:reduce){.page *{transition:none}}
 
 /* Match the homepage's clean search and featured-card surfaces. */
-.helpCard,.formCard{border:1px solid #e1e7ef;border-radius:7px;box-shadow:none}
+.helpCard{border:1px solid #e1e7ef;border-radius:6px;box-shadow:none}
+.formCard{border:1px solid #e1e7ef;border-radius:6px;box-shadow:none}
 .helpCard:hover{border-color:#0a57b9;box-shadow:0 6px 18px #001a450d}
 .formCard{padding:30px}
 .formCard input,.formCard textarea{border-color:#e1e7ef;border-radius:6px}
