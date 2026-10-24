@@ -2,7 +2,7 @@ import CompanyLogo from "@/components/CompanyLogo";
 import { pageMetadata } from "@/lib/seo";
 import { isPublicJob } from "@/lib/job-publication";
 import Link from "next/link";
-import { Activity, ArrowRight, BriefcaseBusiness, Clock3, FileText, Heart, LayoutDashboard, MapPin, MessageSquareText, Search, SlidersHorizontal, UserRound } from "lucide-react";
+import { Activity, ArrowRight, BriefcaseBusiness, Clock3, MapPin, Search } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import styles from "./jobs.module.css";
 
