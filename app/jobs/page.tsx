@@ -141,50 +141,23 @@ export default async function JobsPage({ searchParams }: Props) {
 
       <section className={styles.jobsArea}>
         <div className={styles.container}>
-          <nav className={styles.mobileWorkspaceNav} aria-label="Job seeker workspace">
-            <Link href="/account"><LayoutDashboard />Home</Link>
-            <Link href="/jobs" aria-current="page"><BriefcaseBusiness />Find Work</Link>
-            <Link href="/account/applications"><FileText />My Jobs</Link>
-            <Link href="/account/saved-jobs"><Heart />Saved Jobs</Link>
-            <Link href="/account/messages"><MessageSquareText />Messages</Link>
-          </nav>
-          <details className="uja-native-mobile-filters">
-            <summary><SlidersHorizontal size={17} /> Filters</summary>
-            <div className="uja-native-mobile-filter-links">
-              <strong>Category</strong>
-              <Link href={buildUrl(current, { category: "" })}>All Categories</Link>
-              {categories.map((c) => <Link key={c} href={buildUrl(current, { category: c })}>{c}</Link>)}
-              <strong>Job Type</strong>
-              <Link href={buildUrl(current, { type: "" })}>All Job Types</Link>
-              {types.map((t) => <Link key={t} href={buildUrl(current, { type: t })}>{t}</Link>)}
+          <div className={styles.filterToolbar} aria-label="Filter jobs">
+            <div className={styles.filterLine}>
+              <span className={styles.filterLabel}>Category</span>
+              <div className={styles.filterChips}>
+                <Link className={!category ? styles.filterChipActive : styles.filterChip} href={buildUrl(current, { category: "" })}>All</Link>
+                {categories.map((item) => <Link key={item} className={category === item ? styles.filterChipActive : styles.filterChip} href={buildUrl(current, { category: item })}>{item}</Link>)}
+              </div>
             </div>
-          </details>
-          <div className={styles.layout}>
-            <aside className={styles.sidebar}>
-              <div className={styles.workspaceNav}>
-                <p>JOB SEEKER WORKSPACE</p>
-                <nav aria-label="Job seeker workspace">
-                  <Link href="/account"><LayoutDashboard />Home</Link>
-                  <Link href="/jobs" className={styles.workspaceActive} aria-current="page"><BriefcaseBusiness />Find Work</Link>
-                  <Link href="/account/applications"><FileText />My Jobs</Link>
-                  <Link href="/account/saved-jobs"><Heart />Saved Jobs</Link>
-                  <Link href="/account/messages"><MessageSquareText />Messages</Link>
-                  <Link href="/account/profile"><UserRound />My Profile</Link>
-                </nav>
+            <div className={styles.filterLine}>
+              <span className={styles.filterLabel}>Job type</span>
+              <div className={styles.filterChips}>
+                <Link className={!type ? styles.filterChipActive : styles.filterChip} href={buildUrl(current, { type: "" })}>All</Link>
+                {types.map((item) => <Link key={item} className={type === item ? styles.filterChipActive : styles.filterChip} href={buildUrl(current, { type: item })}>{item}</Link>)}
               </div>
-              <div className={styles.filterHead}><h2>Filter Jobs</h2><Link href="/jobs">Clear All</Link></div>
-              <div className={styles.filterGroup}>
-                <h3>Category</h3>
-                <Link className={styles.radioRow} href={buildUrl(current, { category: "" })}>{!category ? "◉" : "○"} All Categories</Link>
-                {categories.map((c) => <Link key={c} className={styles.radioRow} href={buildUrl(current, { category: c })}>{category === c ? "◉" : "○"} {c}</Link>)}
-              </div>
-              <div className={styles.filterGroup}>
-                <h3>Job Type</h3>
-                <Link className={styles.radioRow} href={buildUrl(current, { type: "" })}>{!type ? "◉" : "○"} All Job Types</Link>
-                {types.map((t) => <Link key={t} className={styles.radioRow} href={buildUrl(current, { type: t })}>{type === t ? "◉" : "○"} {t}</Link>)}
-              </div>
-            </aside>
-
+            </div>
+          </div>
+          <div className={`${styles.layout} ${selectedJob ? styles.layoutWithPreview : styles.layoutNoPreview}`}>
             <div className={styles.results}>
               <div className={styles.resultsHead}>
                 <div><h2>Latest Jobs</h2><p>{loadError ? "Vacancies temporarily unavailable" : `${filtered.length} jobs found`}</p></div>
@@ -222,42 +195,30 @@ export default async function JobsPage({ searchParams }: Props) {
                 )}
               </div>
             </div>
-            <aside className={styles.selectedPanel} aria-label="Selected job details">
-              {selectedJob ? <>
-                <div className={styles.selectedTop}>
-                  <div className={styles.selectedLogo}><CompanyLogo src={selectedJob.company_logo_url} name={companies.get(String(selectedJob.employer_id)) ?? "Verified employer"} /></div>
-                  <span className={styles.verifiedBadge}>Verified employer</span>
-                </div>
-                <p className={styles.selectedEyebrow}>JOB DETAILS</p>
-                <h2>{selectedJob.title || "Job opportunity"}</h2>
-                <p className={styles.selectedCompany}>{companies.get(String(selectedJob.employer_id))}</p>
-                <div className={styles.selectedMeta}>
-                  <span><MapPin />{selectedJob.location || "United Kingdom"}</span>
-                  <span><BriefcaseBusiness />{selectedJob.job_type || "Job type not specified"}</span>
-                  {selectedJob.category && <span><Activity />{selectedJob.category}</span>}
-                </div>
-                <div className={styles.salaryCard}><small>Salary</small><strong>{salaryText(selectedJob.salary)}</strong></div>
-                <section className={styles.aboutJob}>
-                  <h3>About the job</h3>
-                  {selectedJob.description ? <p>{selectedJob.description.replace(/<[^>]*>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/\s+/g, " ").trim().slice(0, 900)}</p> : <p>Open the full vacancy to review the employer’s role description and application details.</p>}
-                </section>
-                <Link href={`/jobs/${encodeURIComponent(selectedJob.slug || selectedJob.id)}`} className={styles.applyNow}>View Job &amp; Apply <ArrowRight /></Link>
-              </> : <div className={styles.selectedEmpty}><Search /><h2>Select a job</h2><p>Choose a vacancy from the list to see its details here.</p></div>}
-            </aside>
+            {selectedJob && <aside className={styles.selectedPanel} aria-label="Selected job details">
+              <div className={styles.selectedTop}>
+                <div className={styles.selectedLogo}><CompanyLogo src={selectedJob.company_logo_url} name={companies.get(String(selectedJob.employer_id)) ?? "Verified employer"} /></div>
+                <span className={styles.verifiedBadge}>Verified employer</span>
+              </div>
+              <p className={styles.selectedEyebrow}>JOB DETAILS</p>
+              <h2>{selectedJob.title || "Job opportunity"}</h2>
+              <p className={styles.selectedCompany}>{companies.get(String(selectedJob.employer_id))}</p>
+              <div className={styles.selectedMeta}>
+                <span><MapPin />{selectedJob.location || "United Kingdom"}</span>
+                <span><BriefcaseBusiness />{selectedJob.job_type || "Job type not specified"}</span>
+                {selectedJob.category && <span><Activity />{selectedJob.category}</span>}
+              </div>
+              <div className={styles.salaryCard}><small>Salary</small><strong>{salaryText(selectedJob.salary)}</strong></div>
+              <section className={styles.aboutJob}>
+                <h3>About the job</h3>
+                {selectedJob.description ? <p>{selectedJob.description.replace(/<[^>]*>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/\s+/g, " ").trim().slice(0, 900)}</p> : <p>Open the full vacancy to review the employer’s role description and application details.</p>}
+              </section>
+              <Link href={"/jobs/" + encodeURIComponent(selectedJob.slug || selectedJob.id)} className={styles.applyNow}>View Job &amp; Apply <ArrowRight /></Link>
+            </aside>}
           </div>
         </div>
       </section>
-      <style>{`
-        .uja-native-mobile-filters{display:none}
-        @media(max-width:800px){
-          .uja-native-mobile-filters{display:block;margin-bottom:18px;background:#fff;border:1px solid #e2e5ea}
-          .uja-native-mobile-filters>summary{display:flex;align-items:center;gap:9px;padding:13px 16px;cursor:pointer;color:#012169;font-weight:600;list-style:none}
-          .uja-native-mobile-filters>summary::-webkit-details-marker{display:none}
-          .uja-native-mobile-filter-links{padding:10px 16px 18px;display:flex;flex-direction:column;gap:12px}
-          .uja-native-mobile-filter-links strong{margin-top:8px;color:#012169}
-          .uja-native-mobile-filter-links a{color:#4b5563;font-size:13px}
-        }
-      `}</style>
+
     </main>
   );
 }
