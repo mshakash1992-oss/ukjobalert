@@ -449,6 +449,12 @@
 .salaryCard strong, .selectedEyebrow { color: #4e5deb; }
 .applyNow { background: #5865f2; border-radius: 22px; }
 .applyNow:hover { background: #4653db; }
+.searchBar { border: 1px solid #e9edf3; border-radius: 8px; box-shadow: 0 8px 20px #001e4a1a; overflow: hidden; }
+.searchBar label { border-right-color: #edf0f5; }
+.jobCard { border-color: #e1e7ef; border-radius: 7px; box-shadow: none; }
+.jobCard:hover { border-color: #0a57b9; box-shadow: 0 6px 18px #001a450d; }
+.sidebar,.selectedPanel,.empty { border-radius: 7px; box-shadow: none; }
+.filterToolbar { border-color: #e1e7ef; border-radius: 7px; box-shadow: none; }
 .layoutNoPreview { grid-template-columns: minmax(0, 1fr); }
 .filterHead a { color: #596b86; font-size: 11px; }
 .filterToolbar {
