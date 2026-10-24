@@ -441,6 +441,10 @@
 .previewAction svg { width: 15px; height: 15px; }
 .empty { border-radius: 10px; border-color: #e4e7f0; }
 .empty button { border-radius: 6px; background: #5865f2; }
+.searchBar { border: 1px solid #e9edf3; border-radius: 8px; box-shadow: 0 8px 20px #001e4a1a; overflow: hidden; }
+.searchBar label { border-right-color: #edf0f5; }
+.sidebar,.companyPreview,.companyCard,.empty { border-color: #e1e7ef; border-radius: 7px; box-shadow: none; }
+.companyCard:hover { border-color: #0a57b9; box-shadow: 0 6px 18px #001a450d; }
 
 @media (max-width: 1100px) and (min-width: 851px) {
   .layout { grid-template-columns: 220px minmax(0, 1fr); }
