@@ -2,7 +2,7 @@ import CompanyLogo from "@/components/CompanyLogo";
 import { pageMetadata } from "@/lib/seo";
 import { isPublicJob } from "@/lib/job-publication";
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, Clock3, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { Activity, ArrowRight, BriefcaseBusiness, Clock3, FileText, Heart, LayoutDashboard, MapPin, MessageSquareText, Search, SlidersHorizontal, UserRound } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import styles from "./jobs.module.css";
 
@@ -23,6 +23,7 @@ type JobRow = {
   employer_id: string | null;
   created_at: string | null;
   expires_at: string | null;
+  description: string | null;
 };
 
 const types = ["Full Time", "Part Time", "Remote"];
@@ -44,8 +45,9 @@ function salaryNumber(value: string | number | null): number {
   const match = String(value ?? "").replace(/,/g, "").match(/\d+(?:\.\d+)?/);
   return match ? Number(match[0]) : -1;
 }
-function buildUrl(current: { keyword: string; location: string; category: string; type: string; sort: string }, changes: Record<string, string>) {
+function buildUrl(current: { keyword: string; location: string; category: string; type: string; sort: string; selected: string }, changes: Record<string, string>) {
   const next = { ...current, ...changes };
+  if (!("selected" in changes)) next.selected = "";
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(next)) if (value) query.set(key, value);
   const suffix = query.toString();
@@ -54,7 +56,7 @@ function buildUrl(current: { keyword: string; location: string; category: string
 
 export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams;
-  const filtered = ["keyword", "location", "category", "type", "sort"].some(key => Boolean(param(params[key])));
+  const filtered = ["keyword", "location", "category", "type", "sort", "selected"].some(key => Boolean(param(params[key])));
   return { ...pageMetadata("Find UK Jobs & Current Vacancies", "Browse current UK vacancies by job title, location, category and employment type. Apply directly to verified employers.", "/jobs"),
     robots: { index: !filtered, follow: true } };
 }
@@ -66,7 +68,8 @@ export default async function JobsPage({ searchParams }: Props) {
   const category = param(p.category);
   const type = param(p.type);
   const sort = param(p.sort) === "salary" ? "salary" : "newest";
-  const current = { keyword, location, category, type, sort: sort === "salary" ? "salary" : "" };
+  const selected = param(p.selected);
+  const current = { keyword, location, category, type, sort: sort === "salary" ? "salary" : "", selected };
 
   let jobs: JobRow[] = [];
   let companies = new Map<string, string>();
@@ -76,7 +79,7 @@ export default async function JobsPage({ searchParams }: Props) {
     const db = createAdminClient();
     const { data, error } = await db
       .from("jobs")
-      .select("id,slug,title,location,category,job_type,salary,employer_id,created_at,expires_at,company_logo_url")
+      .select("id,slug,title,location,category,job_type,salary,employer_id,created_at,expires_at,company_logo_url,description")
       .eq("status", "published")
       .order("created_at", { ascending: false })
       .limit(500);
@@ -110,6 +113,7 @@ export default async function JobsPage({ searchParams }: Props) {
       (!type || job.job_type === type);
   });
   if (sort === "salary") filtered.sort((a, b) => salaryNumber(b.salary) - salaryNumber(a.salary));
+  const selectedJob = filtered.find((job) => (job.slug || job.id) === selected) ?? filtered[0] ?? null;
 
   return (
     <main className={styles.page}>
@@ -137,6 +141,13 @@ export default async function JobsPage({ searchParams }: Props) {
 
       <section className={styles.jobsArea}>
         <div className={styles.container}>
+          <nav className={styles.mobileWorkspaceNav} aria-label="Job seeker workspace">
+            <Link href="/account"><LayoutDashboard />Home</Link>
+            <Link href="/jobs" aria-current="page"><BriefcaseBusiness />Find Work</Link>
+            <Link href="/account/applications"><FileText />My Jobs</Link>
+            <Link href="/account/saved-jobs"><Heart />Saved Jobs</Link>
+            <Link href="/account/messages"><MessageSquareText />Messages</Link>
+          </nav>
           <details className="uja-native-mobile-filters">
             <summary><SlidersHorizontal size={17} /> Filters</summary>
             <div className="uja-native-mobile-filter-links">
@@ -150,6 +161,17 @@ export default async function JobsPage({ searchParams }: Props) {
           </details>
           <div className={styles.layout}>
             <aside className={styles.sidebar}>
+              <div className={styles.workspaceNav}>
+                <p>JOB SEEKER WORKSPACE</p>
+                <nav aria-label="Job seeker workspace">
+                  <Link href="/account"><LayoutDashboard />Home</Link>
+                  <Link href="/jobs" className={styles.workspaceActive} aria-current="page"><BriefcaseBusiness />Find Work</Link>
+                  <Link href="/account/applications"><FileText />My Jobs</Link>
+                  <Link href="/account/saved-jobs"><Heart />Saved Jobs</Link>
+                  <Link href="/account/messages"><MessageSquareText />Messages</Link>
+                  <Link href="/account/profile"><UserRound />My Profile</Link>
+                </nav>
+              </div>
               <div className={styles.filterHead}><h2>Filter Jobs</h2><Link href="/jobs">Clear All</Link></div>
               <div className={styles.filterGroup}>
                 <h3>Category</h3>
@@ -175,11 +197,11 @@ export default async function JobsPage({ searchParams }: Props) {
               </div>
               <div className={styles.jobList}>
                 {filtered.map((job) => (
-                  <article className={styles.jobCard} key={job.id}>
+                  <article className={`${styles.jobCard} ${selectedJob?.id === job.id ? styles.jobCardSelected : ""}`} key={job.id}>
                     <div className={styles.companyLogo} aria-label="Company"><CompanyLogo src={job.company_logo_url} name={companies.get(String(job.employer_id)) ?? "Verified employer"} /></div>
                     <div className={styles.jobInfo}>
                       <div className={styles.jobTop}><span className={styles.jobType}>{job.job_type || "Not specified"}</span></div>
-                      <Link href={`/jobs/${encodeURIComponent(job.slug || job.id)}`} className={styles.jobTitle}>{job.title || "Untitled job"}</Link>
+                      <Link href={buildUrl(current, { selected: job.slug || job.id })} className={styles.jobTitle} aria-current={selectedJob?.id === job.id ? "true" : undefined}>{job.title || "Untitled job"}</Link>
                       <p className={styles.company}>{companies.get(String(job.employer_id))}</p>
                       <div className={styles.meta}>
                         <span><MapPin />{job.location || "United Kingdom"}</span>
@@ -200,6 +222,28 @@ export default async function JobsPage({ searchParams }: Props) {
                 )}
               </div>
             </div>
+            <aside className={styles.selectedPanel} aria-label="Selected job details">
+              {selectedJob ? <>
+                <div className={styles.selectedTop}>
+                  <div className={styles.selectedLogo}><CompanyLogo src={selectedJob.company_logo_url} name={companies.get(String(selectedJob.employer_id)) ?? "Verified employer"} /></div>
+                  <span className={styles.verifiedBadge}>Verified employer</span>
+                </div>
+                <p className={styles.selectedEyebrow}>JOB DETAILS</p>
+                <h2>{selectedJob.title || "Job opportunity"}</h2>
+                <p className={styles.selectedCompany}>{companies.get(String(selectedJob.employer_id))}</p>
+                <div className={styles.selectedMeta}>
+                  <span><MapPin />{selectedJob.location || "United Kingdom"}</span>
+                  <span><BriefcaseBusiness />{selectedJob.job_type || "Job type not specified"}</span>
+                  {selectedJob.category && <span><Activity />{selectedJob.category}</span>}
+                </div>
+                <div className={styles.salaryCard}><small>Salary</small><strong>{salaryText(selectedJob.salary)}</strong></div>
+                <section className={styles.aboutJob}>
+                  <h3>About the job</h3>
+                  {selectedJob.description ? <p>{selectedJob.description.replace(/<[^>]*>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/\\s+/g, " ").trim().slice(0, 900)}</p> : <p>Open the full vacancy to review the employer’s role description and application details.</p>}
+                </section>
+                <Link href={`/jobs/${encodeURIComponent(selectedJob.slug || selectedJob.id)}`} className={styles.applyNow}>View Job &amp; Apply <ArrowRight /></Link>
+              </> : <div className={styles.selectedEmpty}><Search /><h2>Select a job</h2><p>Choose a vacancy from the list to see its details here.</p></div>}
+            </aside>
           </div>
         </div>
       </section>
