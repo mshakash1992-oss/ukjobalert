@@ -394,4 +394,66 @@
 .sidebar h2,.sidebar h3{color:#061e53}
 @media(max-width:700px){.container{width:calc(100% - 32px)}}
 
-.heroRow{min-height:100px!important}
+/* Dashboard view aligned with the supplied three-panel job-search reference. */
+.page { --green: #5865f2; --green-dark: #4653db; }
+.content { padding: 30px 0 60px; background: #f4f5fb; }
+.layout { grid-template-columns: 245px minmax(0, 1fr); gap: 16px; }
+.layoutWithPreview { grid-template-columns: 245px minmax(0, 1.2fr) minmax(285px, .82fr); }
+.sidebar, .companyPreview { border: 1px solid #e1e5f0; border-radius: 10px; background: #fff; box-shadow: 0 4px 16px rgba(25, 38, 80, .04); }
+.filterHead { border-bottom-color: #eceef4; }
+.filterHead button, .industry, .cardFooter a { color: #4e5deb; }
+.radioRow input { accent-color: #5865f2; }
+.companyGrid { grid-template-columns: 1fr; gap: 11px; }
+.companyCard {
+  min-height: 0;
+  padding: 17px;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 4px 14px;
+  border-color: #e4e7f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(25, 38, 80, .025);
+}
+.companyCard:hover { transform: none; border-color: #b7befb; box-shadow: 0 5px 16px rgba(82, 98, 239, .09); }
+.companyCardSelected { border-color: #6674f5; box-shadow: 0 0 0 2px rgba(88, 101, 242, .12); }
+.cardTop { grid-column: 1; grid-row: 1 / span 2; }
+.companyLogo { width: 58px; height: 58px; border-radius: 10px; color: #4e5deb; background: #f0f1ff; }
+.verified { background: #eef0ff; color: #4e5deb; border-radius: 16px; }
+.companyInfo { min-width: 0; margin-top: 0; }
+.companyName { font-weight: 700; }
+.description { display: none; }
+.cardFooter { grid-column: 2; margin-top: 5px; padding-top: 9px; border-top-color: #eceef4; }
+.cardFooter > span { color: #727d91; }
+.previewCompany { border: 0; display: inline-flex; align-items: center; gap: 5px; background: transparent; color: #4e5deb; font: inherit; font-size: 12px; cursor: pointer; }
+.previewCompany svg { width: 14px; height: 14px; }
+.companyPreview { position: sticky; top: 84px; min-width: 0; min-height: 430px; padding: 20px; }
+.previewHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.previewEyebrow { display: block; margin-top: 20px; color: #6974ee; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.companyPreview h2 { margin: 7px 0 0; color: #202b45; font-size: 21px; line-height: 1.25; }
+.companyPreview .industry { margin-top: 5px; }
+.previewMeta { margin-top: 17px; display: grid; gap: 11px; }
+.previewMeta span { display: flex; align-items: center; gap: 9px; color: #68748a; font-size: 12px; }
+.previewMeta svg { width: 15px; height: 15px; color: #8792a8; }
+.previewAbout { margin-top: 22px; }
+.previewAbout h3 { margin: 0 0 8px; color: #2b3650; font-size: 14px; }
+.previewAbout p { margin: 0; color: #737e92; font-size: 12px; line-height: 1.7; }
+.previewAction { min-height: 42px; margin-top: 24px; padding: 0 16px; display: flex; justify-content: center; align-items: center; gap: 8px; border-radius: 22px; background: #5865f2; color: #fff; font-size: 12px; font-weight: 700; }
+.previewAction svg { width: 15px; height: 15px; }
+.empty { border-radius: 10px; border-color: #e4e7f0; }
+.empty button { border-radius: 6px; background: #5865f2; }
+
+@media (max-width: 1100px) and (min-width: 851px) {
+  .layout { grid-template-columns: 220px minmax(0, 1fr); }
+  .layoutWithPreview { grid-template-columns: 220px minmax(0, 1fr); }
+  .layoutWithPreview .companyPreview { grid-column: 2; position: static; min-height: 0; }
+}
+@media (max-width: 850px) {
+  .layout, .layoutWithPreview { display: block; }
+  .companyPreview { position: static; min-height: 0; margin-top: 14px; }
+}
+@media (max-width: 650px) {
+  .companyCard { grid-template-columns: 48px minmax(0, 1fr); padding: 13px; gap: 4px 11px; }
+  .companyLogo { width: 48px; height: 48px; }
+  .cardFooter { flex-wrap: wrap; gap: 8px; }
+  .previewCompany { display: none; }
+}
