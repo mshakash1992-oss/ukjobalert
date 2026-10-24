@@ -239,7 +239,7 @@ export default async function JobsPage({ searchParams }: Props) {
                 <div className={styles.salaryCard}><small>Salary</small><strong>{salaryText(selectedJob.salary)}</strong></div>
                 <section className={styles.aboutJob}>
                   <h3>About the job</h3>
-                  {selectedJob.description ? <p>{selectedJob.description.replace(/<[^>]*>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/\\s+/g, " ").trim().slice(0, 900)}</p> : <p>Open the full vacancy to review the employer’s role description and application details.</p>}
+                  {selectedJob.description ? <p>{selectedJob.description.replace(/<[^>]*>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/\s+/g, " ").trim().slice(0, 900)}</p> : <p>Open the full vacancy to review the employer’s role description and application details.</p>}
                 </section>
                 <Link href={`/jobs/${encodeURIComponent(selectedJob.slug || selectedJob.id)}`} className={styles.applyNow}>View Job &amp; Apply <ArrowRight /></Link>
               </> : <div className={styles.selectedEmpty}><Search /><h2>Select a job</h2><p>Choose a vacancy from the list to see its details here.</p></div>}
