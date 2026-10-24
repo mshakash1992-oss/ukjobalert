@@ -51,11 +51,11 @@
 @media(max-width:520px){.twoColumns{grid-template-columns:1fr;gap:0}.formCard{padding:22px 18px}.formHeading h2{font-size:21px}.formBottom{flex-direction:column;align-items:stretch;gap:16px}.formBottom button{width:100%}.formBottom p{max-width:none}.footer nav{gap:18px}.hero h1{letter-spacing:-.7px}}
 @media(prefers-reduced-motion:reduce){.page *{transition:none}}
 
-.hero{padding:10px 0 14px!important}
-.breadcrumb{margin-bottom:8px!important}
-@media(max-width:760px){
-.hero{padding:8px 0 8px!important}
-.breadcrumb{margin-bottom:6px!important}
-.hero h1{margin:3px 0 6px!important;font-size:30px!important}
-.hero p{font-size:14px!important;line-height:1.45!important}
-}
+/* Match the homepage's clean search and featured-card surfaces. */
+.helpCard,.formCard{border:1px solid #e1e7ef;border-radius:7px;box-shadow:none}
+.helpCard:hover{border-color:#0a57b9;box-shadow:0 6px 18px #001a450d}
+.formCard{padding:30px}
+.formCard input,.formCard textarea{border-color:#e1e7ef;border-radius:6px}
+.formCard input:focus,.formCard textarea:focus{border-color:#0a57b9;box-shadow:0 0 0 3px #0a57b918}
+@media(max-width:1000px){.formCard{padding:24px}}
+@media(max-width:520px){.formCard{padding:22px 18px}}
