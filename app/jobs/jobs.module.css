@@ -425,11 +425,30 @@
 }
 
 
-/* Match the Companies listing layout: filter sidebar and one results column. */
-.layout { grid-template-columns: 265px minmax(0, 1fr); gap: 30px; }
+/* Three-column job seeker dashboard inspired by the supplied reference. */
+.page { --green: #5865f2; --green-dark: #4653db; }
+.jobsArea { padding: 30px 0 60px; background: #f4f5fb; }
+.layout { grid-template-columns: 245px minmax(0, 1fr); gap: 16px; }
 .sidebar { border-radius: 8px; }
-.filterToolbar { display: none; }
-.layoutWithPreview { grid-template-columns: minmax(0, 1.4fr) minmax(310px, .8fr); }
+.filterToolbar { display: grid; background: #fff; }
+.layoutWithPreview { grid-template-columns: 245px minmax(0, 1.2fr) minmax(285px, .82fr); }
+.layoutWithWorkspace { grid-template-columns: 220px minmax(0, 1.2fr) minmax(285px, .82fr); }
+.layoutWithWorkspace .sidebar { position: sticky; top: 84px; }
+.workspaceNav { padding: 18px 14px; }
+.workspaceNav > p { margin: 0 8px 12px; color: #8490a4; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.workspaceNav nav { display: grid; gap: 4px; }
+.workspaceNav nav a { min-height: 40px; padding: 0 10px; display: flex; align-items: center; gap: 10px; border-radius: 8px; color: #59667b; font-size: 13px; }
+.workspaceNav nav a svg { width: 16px; height: 16px; color: #98a1b2; }
+.workspaceNav nav a:hover, .workspaceNav nav .workspaceActive { background: #eef0ff; color: #4858e8; }
+.workspaceNav nav .workspaceActive svg { color: #4858e8; }
+.jobCardSelected { border-color: #6573f5; box-shadow: 0 0 0 2px #5865f21c; }
+.jobTitle[aria-current="true"] { color: #4354e8; }
+.selectedPanel { position: sticky; top: 84px; min-height: 470px; border-radius: 10px; }
+.verifiedBadge { background: #eef0ff; color: #4858e8; }
+.salaryCard { background: #f5f6ff; border-color: #e6e8ff; }
+.salaryCard strong, .selectedEyebrow { color: #4e5deb; }
+.applyNow { background: #5865f2; border-radius: 22px; }
+.applyNow:hover { background: #4653db; }
 .layoutNoPreview { grid-template-columns: minmax(0, 1fr); }
 .filterHead a { color: #596b86; font-size: 11px; }
 .filterToolbar {
@@ -462,13 +481,15 @@
 .filterChip:hover { border-color: #a9b6fb; color: #4259d8; }
 .filterChipActive { border-color: #5269e8; background: #5269e8; color: #fff; }
 @media (max-width: 1100px) and (min-width: 801px) {
-  .layout { grid-template-columns: 235px minmax(0, 1fr); gap: 22px; }
-  .layoutWithPreview { grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr); }
+  .layout { grid-template-columns: 220px minmax(0, 1fr); gap: 16px; }
+  .layoutWithPreview { grid-template-columns: 220px minmax(0, 1fr); }
+  .layoutWithWorkspace { grid-template-columns: 205px minmax(0, 1fr); }
+  .layoutWithPreview .selectedPanel { grid-column: 2; position: static; min-height: auto; }
   .layoutNoPreview { grid-template-columns: minmax(0, 1fr); }
   .selectedPanel { grid-column: auto; }
 }
 @media (max-width: 800px) {
-  .layout, .layoutWithPreview, .layoutNoPreview { display: block; }
+  .layout, .layoutWithPreview, .layoutWithWorkspace, .layoutNoPreview { display: block; }
   .sidebar { display: none; }
   .filterToolbar { display: grid; }
   .filterToolbar { padding: 11px; }
