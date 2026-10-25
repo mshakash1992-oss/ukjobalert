@@ -1,13 +1,44 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isPublicJob } from "@/lib/job-publication";
+
+type SupabaseQueryResult<T> = {
+  data: T | null;
+  error: { code?: string; message?: string } | null;
+};
+
+async function withFutureJwtRetry<T>(
+  request: () => PromiseLike<SupabaseQueryResult<T>>
+): Promise<SupabaseQueryResult<T>> {
+  const delays = [250, 1000, 2000];
+  let result: SupabaseQueryResult<T> | undefined;
+
+  for (let attempt = 0; attempt < delays.length; attempt += 1) {
+    result = await request();
+    const transient =
+      result.error?.code === "PGRST303" &&
+      /JWT issued at future/i.test(result.error.message || "");
+
+    if (!transient) return result;
+    if (attempt < delays.length - 1) {
+      await new Promise((resolve) => setTimeout(resolve, delays[attempt]));
+    }
+  }
+
+  return result!;
+}
+
 export async function getPublicJobs() {
   const db = createAdminClient();
-  const { data: jobs, error } = await db.from("jobs").select("id,slug,title,location,job_type,category,salary,created_at,expires_at,employer_id,company_logo_url").eq("status", "published").order("created_at", { ascending: false }).limit(100);
+  const { data: jobs, error } = await withFutureJwtRetry(() =>
+    db.from("jobs").select("id,slug,title,location,job_type,category,salary,created_at,expires_at,employer_id,company_logo_url").eq("status", "published").order("created_at", { ascending: false }).limit(100)
+  );
   if (error) throw error;
   const valid = (jobs ?? []).filter(j => isPublicJob(j));
   const owners = [...new Set(valid.map(j => j.employer_id).filter(Boolean))];
   if (!owners.length) return [];
-  const { data: verified, error: verificationError } = await db.from("employer_verifications").select("user_id,company_name").in("user_id", owners).eq("verification_status", "verified");
+  const { data: verified, error: verificationError } = await withFutureJwtRetry(() =>
+    db.from("employer_verifications").select("user_id,company_name").in("user_id", owners).eq("verification_status", "verified")
+  );
   if (verificationError) throw verificationError;
   const companies = new Map((verified ?? []).map(v => [v.user_id, v.company_name]));
   return valid.filter(j => companies.has(j.employer_id)).map(j => ({
@@ -20,7 +51,6 @@ export async function getPublicJobs() {
   }));
 }
 
-
 export type PublicJobMode = "remote" | "visa";
 
 /**
@@ -32,17 +62,18 @@ export async function hasPublicJobs(mode?: PublicJobMode): Promise<boolean> {
   const pageSize = 500;
 
   for (let offset = 0; ; offset += pageSize) {
-    let query = db
-      .from("jobs")
-      .select("slug,expires_at,employer_id,status,workplace_type,visa_sponsorship_available")
-      .eq("status", "published")
-      .order("created_at", { ascending: false })
-      .range(offset, offset + pageSize - 1);
+    const { data, error } = await withFutureJwtRetry(() => {
+      let pageQuery = db
+        .from("jobs")
+        .select("slug,expires_at,employer_id,status,workplace_type,visa_sponsorship_available")
+        .eq("status", "published")
+        .order("created_at", { ascending: false })
+        .range(offset, offset + pageSize - 1);
 
-    if (mode === "remote") query = query.eq("workplace_type", "Remote");
-    if (mode === "visa") query = query.eq("visa_sponsorship_available", true);
-
-    const { data, error } = await query;
+      if (mode === "remote") pageQuery = pageQuery.eq("workplace_type", "Remote");
+      if (mode === "visa") pageQuery = pageQuery.eq("visa_sponsorship_available", true);
+      return pageQuery;
+    });
     if (error) throw error;
 
     const rows = data ?? [];
@@ -50,11 +81,13 @@ export async function hasPublicJobs(mode?: PublicJobMode): Promise<boolean> {
     const ownerIds = [...new Set(candidates.map((job) => job.employer_id).filter(Boolean))];
 
     if (ownerIds.length) {
-      const { data: verified, error: verificationError } = await db
-        .from("employer_verifications")
-        .select("user_id")
-        .in("user_id", ownerIds)
-        .eq("verification_status", "verified");
+      const { data: verified, error: verificationError } = await withFutureJwtRetry(() =>
+        db
+          .from("employer_verifications")
+          .select("user_id")
+          .in("user_id", ownerIds)
+          .eq("verification_status", "verified")
+      );
       if (verificationError) throw verificationError;
 
       const verifiedIds = new Set((verified ?? []).map((employer) => String(employer.user_id)));
