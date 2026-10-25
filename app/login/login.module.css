@@ -509,6 +509,6 @@
 
 /* Recruitment identity shared with homepage */
 .page{min-height:calc(100dvh - 73px);background:#f4f8fc;}
-.visual{min-height:calc(100dvh - 73px);background:linear-gradient(90deg,#001a49d9,#001a4944),url("/images/grow-team-hero-2172.webp") 65% center/cover no-repeat;} .visual:before,.visual:after{display:none}.visual h1{color:white!important;font-size:clamp(32px,3vw,50px);font-weight:800}.visual p{color:#e0e9fa!important;font-size:15px;}
+.visual{min-height:calc(100dvh - 73px);background:linear-gradient(90deg,#001a49d9,#001a4944),url("https://images.pexels.com/photos/8353769/pexels-photo-8353769.jpeg?auto=compress&cs=tinysrgb&w=1800") 65% center/cover no-repeat;} .visual:before,.visual:after{display:none}.visual h1{color:white!important;font-size:clamp(32px,3vw,50px);font-weight:800}.visual p{color:#e0e9fa!important;font-size:15px;}
 .formSide{min-height:calc(100dvh - 73px);background:#f4f8fc;}
 .card{padding:32px;border:1px solid #e1e7ef;background:white;border-radius:12px;box-shadow:0 10px 35px #001e4a08;}@media(max-width:600px){.card{padding:24px 18px}}
