@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
 
 import SeoJobResults from "@/components/seo-job-results";
+import { hasPublicJobs } from "@/lib/public-jobs";
 
-export const metadata: Metadata = {
-  title: "Remote Jobs in the UK",
-  description:
-    "Find current remote jobs in the UK from verified employers. Browse work-from-home vacancies by role, sector and employment type on UKJobAlert.",
-  alternates: { canonical: "/jobs/remote" },
-  openGraph: {
-    title: "Remote Jobs in the UK | UKJobAlert",
-    description: "Browse current remote UK jobs from verified employers.",
-    url: "/jobs/remote",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const hasVacancies = await hasPublicJobs("remote");
+  return {
+    title: "Remote Jobs in the UK",
+    description:
+      "Find current remote jobs in the UK from verified employers. Browse work-from-home vacancies by role, sector and employment type on UKJobAlert.",
+    alternates: { canonical: "/jobs/remote" },
+    openGraph: {
+      title: "Remote Jobs in the UK | UKJobAlert",
+      description: "Browse current remote UK jobs from verified employers.",
+      url: "/jobs/remote",
+      type: "website",
+    },
+    robots: { index: hasVacancies, follow: true },
+  };
+}
 
 export default function RemoteJobsPage() {
   return (

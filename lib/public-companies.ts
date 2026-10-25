@@ -1,68 +1,108 @@
-import { createAdminClient } from "@/lib/supabase/admin";
+import { cache } from "react";
+
 import { isPublicJob } from "@/lib/job-publication";
+import { createAdminClient } from "@/lib/supabase/admin";
 
-type Row = Record<string, unknown>;
-const text = (value: unknown) =>
-  typeof value === "string" ? value.trim() : typeof value === "number" ? String(value) : "";
-const first = (row: Row, keys: string[]) => keys.map((key) => text(row[key])).find(Boolean) || "";
-const plainText = (value: string) =>
-  value.replace(/<[^>]*>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/\s+/g, " ").trim();
+export type PublicCompany = {
+  id: string;
+  name: string;
+  initial: string;
+  industry: string;
+  location: string;
+  jobs: number;
+  size?: string;
+  verified: boolean;
+  description?: string;
+};
 
-export async function getPublicCompanies() {
+type CompanyRow = Record<string, unknown> & { user_id?: string | null };
+type JobRow = {
+  employer_id: string | null;
+  expires_at: string | null;
+  slug: string | null;
+  status: string | null;
+};
+
+const value = (input: unknown): string =>
+  typeof input === "string" ? input.trim() : typeof input === "number" ? String(input) : "";
+
+function firstValue(row: CompanyRow, keys: string[]): string {
+  for (const key of keys) {
+    const result = value(row[key]);
+    if (result) return result;
+  }
+  return "";
+}
+
+function plainText(input: string): string {
+  const text = input
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return text.length > 220 ? `${text.slice(0, 217).trimEnd()}…` : text;
+}
+
+export const getPublicCompanies = cache(async (): Promise<PublicCompany[]> => {
   const db = createAdminClient();
-  const { data: employerRows, error: employerError } = await db
+  const { data: employers, error: employersError } = await db
     .from("employer_verifications")
     .select("*")
-    .eq("verification_status", "verified");
-  if (employerError) throw employerError;
+    .eq("verification_status", "verified")
+    .limit(500);
 
-  const employers = (employerRows ?? []) as Row[];
-  const ids = employers.map((row) => text(row.user_id)).filter(Boolean);
-  if (!ids.length) return [];
+  if (employersError) throw employersError;
 
-  const { data: jobRows, error: jobsError } = await db
-    .from("jobs")
-    .select("id,employer_id,slug,title,location,category,industry,expires_at,created_at,status")
-    .in("employer_id", ids)
-    .eq("status", "published")
-    .order("created_at", { ascending: false });
-  if (jobsError) throw jobsError;
+  const verifiedEmployers = (employers ?? []) as CompanyRow[];
+  const ownerIds = [...new Set(verifiedEmployers.map((employer) => value(employer.user_id)).filter(Boolean))];
+  if (!ownerIds.length) return [];
 
-  const counts = new Map<string, number>();
-  const latestJob = new Map<string, Row>();
-  for (const job of ((jobRows ?? []) as Row[]).filter((row) => isPublicJob(row))) {
-    const id = text(job.employer_id);
-    if (!id) continue;
-    counts.set(id, (counts.get(id) ?? 0) + 1);
-    if (!latestJob.has(id)) latestJob.set(id, job);
+  const jobCounts = new Map<string, number>();
+  const pageSize = 500;
+
+  for (let offset = 0; ; offset += pageSize) {
+    const { data: jobs, error: jobsError } = await db
+      .from("jobs")
+      .select("employer_id,expires_at,slug,status")
+      .in("employer_id", ownerIds)
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .range(offset, offset + pageSize - 1);
+
+    if (jobsError) throw jobsError;
+
+    const rows = (jobs ?? []) as JobRow[];
+    for (const job of rows) {
+      if (!job.employer_id || !isPublicJob(job)) continue;
+      jobCounts.set(job.employer_id, (jobCounts.get(job.employer_id) ?? 0) + 1);
+    }
+
+    if (rows.length < pageSize) break;
   }
 
-  return employers.flatMap((employer) => {
-    const id = text(employer.user_id);
-    const jobs = counts.get(id) ?? 0;
-    const name = first(employer, ["company_name", "legal_name"]);
-    if (!id || !name || jobs === 0) return [];
-    const job = latestJob.get(id) ?? {};
-    const industry = first(employer, ["industry", "sector", "category", "company_industry"]) ||
-      first(job, ["category", "industry"]) || "Other";
-    const description = plainText(first(employer, [
-      "company_description", "description", "about", "about_company", "company_about",
-    ]));
-    const size = first(employer, ["company_size", "team_size", "employee_count"]) || "Not specified";
-    const location = first(employer, [
-      "location", "company_location", "city", "address", "registered_address",
-    ]) || text(job.location) || "United Kingdom";
+  return verifiedEmployers.flatMap((employer) => {
+    const id = value(employer.user_id);
+    const name = firstValue(employer, ["company_name", "legal_name"]);
+    const jobs = jobCounts.get(id) ?? 0;
+    if (!id || !name || !jobs) return [];
+
+    const location = firstValue(employer, ["company_location", "location", "city", "address"]);
+    const industry = firstValue(employer, ["industry", "sector", "category", "company_industry"]);
+    const size = firstValue(employer, ["company_size", "team_size", "employee_count"]);
+    const description = plainText(firstValue(employer, ["company_description", "description", "about_company", "about"]));
 
     return [{
       id,
       name,
-      initial: name.charAt(0).toUpperCase(),
+      initial: name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase(),
       industry,
       location,
       jobs,
-      size,
+      ...(size ? { size } : {}),
       verified: true,
-      description: description.slice(0, 220),
+      ...(description ? { description } : {}),
     }];
   }).sort((a, b) => b.jobs - a.jobs || a.name.localeCompare(b.name));
-}
+});

@@ -19,3 +19,48 @@ export async function getPublicJobs() {
     logo: typeof j.company_logo_url === "string" ? j.company_logo_url : "", featured: false, urgent: false,
   }));
 }
+
+
+export type PublicJobMode = "remote" | "visa";
+
+/**
+ * Return whether a searchable page has at least one current vacancy from a
+ * verified employer. The paged scan avoids indexing empty result pages.
+ */
+export async function hasPublicJobs(mode?: PublicJobMode): Promise<boolean> {
+  const db = createAdminClient();
+  const pageSize = 500;
+
+  for (let offset = 0; ; offset += pageSize) {
+    let query = db
+      .from("jobs")
+      .select("slug,expires_at,employer_id,status,workplace_type,visa_sponsorship_available")
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .range(offset, offset + pageSize - 1);
+
+    if (mode === "remote") query = query.eq("workplace_type", "Remote");
+    if (mode === "visa") query = query.eq("visa_sponsorship_available", true);
+
+    const { data, error } = await query;
+    if (error) throw error;
+
+    const rows = data ?? [];
+    const candidates = rows.filter((job) => job.employer_id && isPublicJob(job));
+    const ownerIds = [...new Set(candidates.map((job) => job.employer_id).filter(Boolean))];
+
+    if (ownerIds.length) {
+      const { data: verified, error: verificationError } = await db
+        .from("employer_verifications")
+        .select("user_id")
+        .in("user_id", ownerIds)
+        .eq("verification_status", "verified");
+      if (verificationError) throw verificationError;
+
+      const verifiedIds = new Set((verified ?? []).map((employer) => String(employer.user_id)));
+      if (candidates.some((job) => verifiedIds.has(String(job.employer_id)))) return true;
+    }
+
+    if (rows.length < pageSize) return false;
+  }
+}

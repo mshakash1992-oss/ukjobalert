@@ -1,6 +1,6 @@
 "use client";
 
-export type PublicCompany = {id:string;name:string;initial:string;industry:string;location:string;jobs:number;size:string;verified:boolean;description:string};
+export type PublicCompany = {id:string;name:string;initial:string;industry:string;location:string;jobs:number;size?:string;verified:boolean;description?:string};
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -17,17 +17,14 @@ import {
 } from "lucide-react";
 import styles from "./companies.module.css";
 
-const industries = [
-  "Technology",
-  "Healthcare",
-  "Health & Social Care",
-  "Finance",
-  "Construction",
-  "Hospitality",
-  "Education",
-];
+
 
 export default function CompaniesClient({ companies }: { companies: PublicCompany[] }) {
+  const industries = useMemo(
+    () => Array.from(new Set(companies.map((company) => company.industry).filter(Boolean)))
+      .sort((a, b) => a.localeCompare(b)),
+    [companies],
+  );
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
   const [industry, setIndustry] = useState("");
@@ -182,14 +179,14 @@ export default function CompaniesClient({ companies }: { companies: PublicCompan
                       <Link href={`/companies/${company.id}`} className={styles.companyName}>
                         {company.name}
                       </Link>
-                      <p className={styles.industry}>{company.industry}</p>
+                      {company.industry && <p className={styles.industry}>{company.industry}</p>}
 
                       <div className={styles.meta}>
-                        <span><MapPin />{company.location}</span>
-                        <span><UsersRound />{company.size} employees</span>
+                        {company.location && <span><MapPin />{company.location}</span>}
+                        {company.size && <span><UsersRound />{company.size} employees</span>}
                       </div>
 
-                      <p className={styles.description}>{company.description}</p>
+                      {company.description && <p className={styles.description}>{company.description}</p>}
                     </div>
 
                     <div className={styles.cardFooter}>

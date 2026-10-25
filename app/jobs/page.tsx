@@ -6,6 +6,7 @@ import { Activity, ArrowRight, BriefcaseBusiness, Clock3, FileText, Heart, Layou
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import styles from "./jobs.module.css";
+import { hasPublicJobs } from "@/lib/public-jobs";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -57,8 +58,9 @@ function buildUrl(current: { keyword: string; location: string; category: string
 export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams;
   const filtered = ["keyword", "location", "category", "type", "sort", "selected"].some(key => Boolean(param(params[key])));
+  const hasVacancies = filtered ? false : await hasPublicJobs();
   return { ...pageMetadata("Find UK Jobs & Current Vacancies", "Browse current UK vacancies by job title, location, category and employment type. Apply directly to verified employers.", "/jobs"),
-    robots: { index: !filtered, follow: true } };
+    robots: { index: !filtered && hasVacancies, follow: true } };
 }
 
 export default async function JobsPage({ searchParams }: Props) {

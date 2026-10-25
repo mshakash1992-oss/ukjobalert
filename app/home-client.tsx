@@ -167,9 +167,9 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
         <div className="gh-premium-hero-overlay" />
 
         <div className="container gh-premium-hero-content">
-          <h1 className="grow-title">GROW<br />YOUR<br /><span className="grow-title-team">TEAM<span className="grow-title-dot">.</span></span></h1>
-          <Link href="/post-job" className="grow-post-cta">POST JOBS FOR FREE</Link>
-          <p className="grow-subtitle">For UK employers &amp; recruiters</p>
+          <h1 className="grow-title">FIND<br />UK<br /><span className="grow-title-team">JOBS<span className="grow-title-dot">.</span></span></h1>
+          <Link href="/post-job" className="grow-post-cta">POST A FREE JOB</Link>
+          <p className="grow-subtitle">Search verified UK vacancies.</p>
 
           <form className="gh-premium-search-box" action="/jobs" method="get">
             <label className="gh-premium-search-field gh-keyword-field">
@@ -263,8 +263,15 @@ export default function Home({ initialJobs, loadError = false }: { initialJobs: 
                 href={`/jobs?location=${encodeURIComponent(city.name)}`}
                 className="gh-local-city-card"
                 key={city.name}
-                style={{ backgroundImage: `url("${city.image}")` }}
               >
+                <Image
+                  src={city.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 700px) 46vw, (max-width: 1100px) 30vw, 17vw"
+                  loading="lazy"
+                  style={{ objectFit: "cover", zIndex: 0 }}
+                />
                 <span className="gh-local-city-overlay" />
 
                 <div className="gh-local-city-content">

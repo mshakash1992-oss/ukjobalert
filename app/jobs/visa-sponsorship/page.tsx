@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
 
 import SeoJobResults from "@/components/seo-job-results";
+import { hasPublicJobs } from "@/lib/public-jobs";
 
-export const metadata: Metadata = {
-  title: "UK Jobs With Visa Sponsorship",
-  description:
-    "Browse current UK jobs where the employer has stated that visa sponsorship may be available. Check each vacancy carefully before applying.",
-  alternates: { canonical: "/jobs/visa-sponsorship" },
-  openGraph: {
-    title: "UK Jobs With Visa Sponsorship | UKJobAlert",
+export async function generateMetadata(): Promise<Metadata> {
+  const hasVacancies = await hasPublicJobs("visa");
+  return {
+    title: "UK Jobs With Visa Sponsorship",
     description:
-      "Browse UK vacancies where the employer has stated that visa sponsorship may be available.",
-    url: "/jobs/visa-sponsorship",
-    type: "website",
-  },
-};
+      "Browse current UK jobs where the employer has stated that visa sponsorship may be available. Check each vacancy carefully before applying.",
+    alternates: { canonical: "/jobs/visa-sponsorship" },
+    openGraph: {
+      title: "UK Jobs With Visa Sponsorship | UKJobAlert",
+      description:
+        "Browse UK vacancies where the employer has stated that visa sponsorship may be available.",
+      url: "/jobs/visa-sponsorship",
+      type: "website",
+    },
+    robots: { index: hasVacancies, follow: true },
+  };
+}
 
 export default function VisaSponsorshipJobsPage() {
   return (
