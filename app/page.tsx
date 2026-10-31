@@ -2,7 +2,7 @@ import Home, { type HomeJob } from "./home-client";
 import { getPublicJobs } from "@/lib/public-jobs";
 import { pageMetadata } from "@/lib/seo";
 export const dynamic = "force-dynamic";
-export const metadata = pageMetadata("Find the Latest UK Jobs, Vacancies & Careers", "Search UK vacancies by role, location and sector. Find verified full-time, part-time and remote jobs, and apply directly to employers on UKJobAlert.", "/");
+export const metadata = pageMetadata("Find the Latest UK Jobs, Vacancies & Career Opportunities", "Search UK vacancies by role, location and sector. Find verified full-time, part-time and remote jobs, and apply directly to employers on UKJobAlert today.", "/");
 export default async function Page() {
   let jobs: HomeJob[] = [];
   let loadError = false;
