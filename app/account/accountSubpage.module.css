@@ -5,3 +5,9 @@
 .content{color:#31435b;}
 .card{border-color:#e1e7ef;border-radius:8px;}
 .card{background:#fff;box-shadow:0 3px 16px #001e4a05;}
+
+/* Keep the account settings form compact */
+.content>.form{width:100%;max-width:760px;padding:20px;gap:16px;border-radius:12px}
+.content>.form input{height:44px;border-radius:6px}
+.content>.form button{min-height:42px;border-radius:6px}
+@media(max-width:800px){.content>.form{max-width:100%;padding:18px}}
