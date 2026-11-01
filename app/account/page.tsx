@@ -316,7 +316,11 @@ export default function AccountPage() {
                   <Link href="/account/applications">View All <ArrowRight /></Link>
                 </div>
                 <div className={styles.applicationList}>
-                  {loading ? <p className={styles.emptyState}>Loading applications…</p> : applications.length === 0 ? <p className={styles.emptyState}>No applications yet. Your tracked applications will appear here.</p> : applications.map((item) => (
+                  {loading ? <p className={styles.emptyLoading}>Loading applications…</p> : applications.length === 0 ? <div className={styles.emptyState}>
+                    <div className={styles.emptyStateIcon}><FileText aria-hidden="true" /></div>
+                    <div className={styles.emptyStateCopy}><strong>No applications yet</strong><p>Jobs you apply for will appear here so you can follow their progress.</p></div>
+                    <Link href="/jobs" className={styles.emptyAction}>Browse jobs <ArrowRight aria-hidden="true" /></Link>
+                  </div> : applications.map((item) => (
                     <article className={styles.application} key={item.id}>
                       <div className={styles.companyInitial}>{item.company.charAt(0)}</div>
                       <div className={styles.applicationInfo}><Link href={`/jobs/${item.slug}`}>{item.title}</Link><span>{item.company}</span></div>
@@ -333,7 +337,11 @@ export default function AccountPage() {
                   <Link href="/account/saved-jobs">View All <ArrowRight /></Link>
                 </div>
                 <div className={styles.savedList}>
-                  {loading ? <p className={styles.emptyState}>Loading saved jobs…</p> : savedJobs.length === 0 ? <p className={styles.emptyState}>No saved jobs yet. Save a vacancy to keep it here.</p> : savedJobs.map((job) => (
+                  {loading ? <p className={styles.emptyLoading}>Loading saved jobs…</p> : savedJobs.length === 0 ? <div className={styles.emptyState}>
+                    <div className={styles.emptyStateIcon}><Heart aria-hidden="true" /></div>
+                    <div className={styles.emptyStateCopy}><strong>No saved jobs yet</strong><p>Save vacancies you like and come back to them here.</p></div>
+                    <Link href="/jobs" className={styles.emptyAction}>Explore jobs <ArrowRight aria-hidden="true" /></Link>
+                  </div> : savedJobs.map((job) => (
                     <article className={styles.savedJob} key={job.id}>
                       <div className={styles.companyInitial}>{job.company.charAt(0)}</div>
                       <div className={styles.savedInfo}>
