@@ -98,3 +98,16 @@
 @media(max-width:800px){.sidebar{border-right:0;border-radius:0 14px 14px 0}.content{padding:24px 20px 42px}.welcome{min-height:0}}
 @media(max-width:580px){.content{padding:18px 13px 36px}.welcome{padding:23px 20px;border-radius:13px}.welcome h1{font-size:25px}.stats{margin-top:14px}.dashboardGrid{margin-top:15px;gap:15px}.mainColumn,.rightColumn{gap:15px}.stats article{padding:12px;border-radius:11px}.statIcon{width:36px;height:36px;border-radius:9px}.stats strong{font-size:19px}.panel,.profileCard,.tipCard{border-radius:12px}.panelHead{min-height:68px;padding:14px}.application,.savedJob{padding:13px}.rightColumn{display:flex}}
 @media(prefers-reduced-motion:reduce){.stats article,.sideNav a,.application,.savedJob,.welcome>a,.profileCard>a,.tipCard a{transition:none}}
+
+/* Useful empty states for new job seekers */
+.emptyState{min-height:112px;padding:22px!important;display:flex;align-items:center;gap:14px;color:#63748c!important;text-align:left}
+.emptyStateIcon{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:12px;background:#fff0f3;color:#c8102e}
+.emptyStateIcon svg{width:20px;height:20px}
+.emptyStateCopy{min-width:0;flex:1}
+.emptyStateCopy strong{display:block;color:#10264b;font-size:14px;font-weight:700}
+.emptyStateCopy p{margin:5px 0 0;color:#738198;font-size:12px;line-height:1.55}
+.emptyAction{min-height:36px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid #dce4ef;border-radius:8px;color:#0a3975;font-size:12px;font-weight:700;white-space:nowrap;transition:background .18s ease,border-color .18s ease,color .18s ease}
+.emptyAction svg{width:14px;height:14px}
+.emptyAction:hover{border-color:#c8102e;background:#fff0f3;color:#c8102e}
+.emptyLoading{min-height:90px;margin:0;padding:28px 22px;color:#738198;font-size:13px}
+@media(max-width:640px){.emptyState{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;padding:18px!important}.emptyStateIcon{width:40px;height:40px;flex-basis:40px}.emptyAction{grid-column:2;width:fit-content}}
