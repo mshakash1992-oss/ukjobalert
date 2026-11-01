@@ -111,3 +111,9 @@
 .emptyAction:hover{border-color:#c8102e;background:#fff0f3;color:#c8102e}
 .emptyLoading{min-height:90px;margin:0;padding:28px 22px;color:#738198;font-size:13px}
 @media(max-width:640px){.emptyState{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;padding:18px!important}.emptyStateIcon{width:40px;height:40px;flex-basis:40px}.emptyAction{grid-column:2;width:fit-content}}
+
+/* Compact desktop account sidebar to avoid a large empty gap */
+@media(min-width:801px){
+  .sidebar{height:fit-content;max-height:calc(100dvh - 88px);top:80px;align-self:start;border-radius:0 0 12px 12px;overflow-y:auto}
+  .sideBottom{margin-top:16px}
+}
