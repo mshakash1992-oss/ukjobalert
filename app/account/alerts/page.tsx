@@ -40,7 +40,25 @@ export default async function JobAlertsPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    return (
+      <main className="flex min-h-[70vh] items-center justify-center bg-[#f7f8fa] px-6 py-16">
+        <section className="w-full max-w-xl border border-[#e4e7ec] bg-white p-8 text-center sm:p-12">
+          <BellRing className="mx-auto h-10 w-10 text-[#d71920]" aria-hidden="true" />
+          <h1 className="mt-5 text-2xl font-bold text-[#101828]">
+            Sign in to manage your job alerts
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-[#667085]">
+            Your saved job searches are private to your account.
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-flex min-h-[46px] items-center justify-center rounded-[7px] bg-[#d71920] px-6 text-sm font-bold text-white transition hover:bg-[#b91319]"
+          >
+            Sign in
+          </Link>
+        </section>
+      </main>
+    );
   }
 
   const adminEmails = (process.env.ADMIN_EMAILS || "")
