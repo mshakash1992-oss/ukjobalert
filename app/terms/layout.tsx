@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service",
+  title: "Terms of Service for UK Job Seekers and Employers",
 
   description:
-    "Read the UKJobAlert Terms of Service covering the use of the platform, job listings, employer accounts and user responsibilities.",
+    "Read the terms for using UKJobAlert, including rules for job seekers and employers, job listings, applications, accounts and responsibilities on the platform.",
 
   alternates: {
     canonical: "/terms",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/terms",
-    title: "Terms of Service | UKJobAlert",
+    title: "Terms of Service for UK Job Seekers and Employers | UKJobAlert",
     description:
-      "Read the UKJobAlert Terms of Service for job seekers and employers using the platform.",
+      "Review the terms that apply when job seekers and employers use UKJobAlert and its recruitment services.",
   },
 
   robots: {
