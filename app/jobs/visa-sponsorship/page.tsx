@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 import SeoJobResults from "@/components/seo-job-results";
 
 export const metadata: Metadata = {
-  title: "UK Jobs With Visa Sponsorship",
+  title: "Visa Sponsorship Jobs in the UK",
   description:
     "Browse current UK jobs where the employer has stated that visa sponsorship may be available. Check each vacancy carefully before applying.",
   alternates: { canonical: "/jobs/visa-sponsorship" },
   openGraph: {
-    title: "UK Jobs With Visa Sponsorship | UKJobAlert",
+    title: "Visa Sponsorship Jobs in the UK | UKJobAlert",
     description:
       "Browse UK vacancies where the employer has stated that visa sponsorship may be available.",
     url: "/jobs/visa-sponsorship",
