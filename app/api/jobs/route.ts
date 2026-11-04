@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { jobIndexUrl, submitIndexNow } from "@/lib/indexnow";
 import {
   deleteJobMedia,
   mediaFileFromForm,
@@ -121,6 +122,7 @@ export async function POST(request: Request) {
       for (const url of uploadedUrls) await deleteJobMedia(admin, url);
       return NextResponse.json({ error: "Unable to publish this job." }, { status: 500 });
     }
+    await submitIndexNow([jobIndexUrl(job.slug)]);
     return NextResponse.json({ success: true, message: "Job published successfully.", job });
   } catch (error) {
     console.error("Post job error:", error);
