@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { jobIndexUrl, submitIndexNow } from "@/lib/indexnow";
 import {
   deleteJobMedia,
   mediaFileFromForm,
@@ -89,6 +90,9 @@ export async function POST(request: Request) {
     if ((removeCompanyLogo || companyLogo) && existingJob.company_logo_url && existingJob.company_logo_url !== companyLogoUrl) await deleteJobMedia(admin, existingJob.company_logo_url);
     if ((removeJobImage || jobImage) && existingJob.job_image_url && existingJob.job_image_url !== jobImageUrl) await deleteJobMedia(admin, existingJob.job_image_url);
 
+    if (updatedJob.slug && (existingJob.status === "published" || updatedJob.status === "published")) {
+      await submitIndexNow([jobIndexUrl(updatedJob.slug)]);
+    }
     return NextResponse.json({ success: true, message: "Job updated successfully.", job: updatedJob });
   } catch (error) {
     console.error("Employer edit job error:", error);
