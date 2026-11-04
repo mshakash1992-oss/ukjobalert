@@ -57,7 +57,7 @@ function buildUrl(current: { keyword: string; location: string; category: string
 export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams;
   const filtered = ["keyword", "location", "category", "type", "sort", "selected"].some(key => Boolean(param(params[key])));
-  return { ...pageMetadata("Find UK Jobs & Current Vacancies", "Browse current UK vacancies by job title, location, category and employment type. Apply directly to verified employers.", "/jobs"),
+  return { ...pageMetadata("Search UK Jobs and Current Vacancies by Role", "Search current UK job vacancies by role, location, category and employment type. Review employer details and apply directly to verified businesses on UKJobAlert.", "/jobs"),
     robots: { index: !filtered, follow: true } };
 }
 
