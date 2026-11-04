@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About UKJobAlert",
+  title: "About UKJobAlert: UK Jobs and Recruitment",
 
   description:
-    "Learn about UKJobAlert, a UK job discovery platform helping job seekers find current vacancies and connect with employers.",
+    "Learn how UKJobAlert helps people find UK vacancies and connects employers with candidates, with a focus on useful listings and safer recruitment.",
 
   alternates: {
     canonical: "/about",
@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/about",
-    title: "About UKJobAlert | UKJobAlert",
+    title: "About UKJobAlert: UK Jobs and Recruitment | UKJobAlert",
     description:
-      "Learn about UKJobAlert and how the platform helps job seekers discover current UK vacancies.",
+      "Find out how the platform supports job seekers and employers throughout the UK job search and recruitment process.",
   },
 
   robots: {
