@@ -2,6 +2,7 @@ import { jobContentError, QUARANTINED_JOB_SLUGS } from "@/lib/job-publication";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getVerifiedEmployer, validateJob } from "@/lib/employer-jobs";
+import { jobIndexUrl, submitIndexNow } from "@/lib/indexnow";
 
 export async function POST(request: Request) {
   try {
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
         if (!removed.data) {
           return NextResponse.json({ error: "Job was not deleted." }, { status: 404 });
         }
+        await submitIndexNow([jobIndexUrl(owned.data.slug)]);
         return NextResponse.json({ success: true, action });
       }
 
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
       if (!changed.data) {
         return NextResponse.json({ error: "Job was not updated." }, { status: 404 });
       }
+      await submitIndexNow([jobIndexUrl(owned.data.slug)]);
       return NextResponse.json({ success: true, job: changed.data });
     }
 
@@ -105,7 +108,7 @@ export async function POST(request: Request) {
         apply_method: checked.value.apply_email ? "email" : "url",
         workplace_type: "On-site",
       })
-      .select("slug")
+      .select("slug,status")
       .single();
 
     if (error) {
@@ -113,6 +116,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unable to save job. Check server logs for the database error." }, { status: 500 });
     }
 
+    if (data.status === "published") {
+      await submitIndexNow([jobIndexUrl(data.slug)]);
+    }
     return NextResponse.json({ job: data }, { status: 201 });
   } catch (error) {
     console.error("Job create request failed:", error);
