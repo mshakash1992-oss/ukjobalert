@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Companies Hiring in the UK",
+  title: "UK Companies Hiring: Browse Employers",
   description:
-    "Browse companies with current vacancies on UKJobAlert and view their active UK job listings.",
+    "Explore UK employers hiring now, review company profiles and browse current vacancies from businesses posting jobs on UKJobAlert.",
   alternates: { canonical: "/companies" },
   openGraph: {
     type: "website",
     url: "/companies",
-    title: "Companies Hiring in the UK | UKJobAlert",
+    title: "UK Companies Hiring: Browse Employers | UKJobAlert",
     description:
-      "Browse employers with current vacancies and open their active UK job listings.",
+      "Compare UK employer profiles and open current vacancies to review roles, locations and application details.",
   },
   robots: { index: true, follow: true },
 };
