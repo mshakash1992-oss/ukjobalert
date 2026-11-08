@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, BriefcaseBusiness, CheckCircle2, ExternalLink, FileText, MapPin, ShieldCheck } from "lucide-react";
 import styles from "./EmployerJobForm.module.css";
 
-type Job = {id?:string;title?:string;category?:string;job_type?:string;location?:string;salary?:string|null;description?:string;apply_url?:string|null;apply_email?:string|null;status?:string};
+type Job = {id?:string;title?:string;category?:string;job_type?:string;location?:string;salary?:string|null;description?:string;apply_url?:string|null;apply_email?:string|null;status?:string;expires_at?:string|null};
 const categories=["Accounting / Finance","Administration","Construction","Customer Service","Design & Multimedia","Education","Engineering","Healthcare","Hospitality","Human Resources","IT & Technology","Logistics","Marketing","Retail","Sales","Other"];
 const types=["Full Time","Part Time","Contract","Temporary","Remote","Internship","Apprenticeship"];
 const detailsMarker="\n\n--- Additional Job Details ---\n";
@@ -14,6 +14,8 @@ function parseDescription(value:string){const at=value.indexOf(detailsMarker);if
 export default function EmployerJobForm({initial,companyName}:{initial?:Job;companyName:string}){
  const router=useRouter();const formRef=useRef<HTMLFormElement>(null);
  const parsed=parseDescription(initial?.description||"");
+ const defaultExpiryDate=new Date();defaultExpiryDate.setDate(defaultExpiryDate.getDate()+30);
+ const defaultExpiry=[defaultExpiryDate.getFullYear(),String(defaultExpiryDate.getMonth()+1).padStart(2,"0"),String(defaultExpiryDate.getDate()).padStart(2,"0")].join("-");
  const [busy,setBusy]=useState(false);const [error,setError]=useState("");
  const [method,setMethod]=useState<"url"|"email">(initial?.apply_email?"email":"url");
  const [destination,setDestination]=useState(initial?.apply_email||initial?.apply_url||"");
@@ -22,6 +24,7 @@ export default function EmployerJobForm({initial,companyName}:{initial?:Job;comp
  const [minSalary,setMinSalary]=useState(parsed.extras["Minimum Salary"]||"");
  const [maxSalary,setMaxSalary]=useState(parsed.extras["Maximum Salary"]||"");
  const [salaryText,setSalaryText]=useState(initial?.salary||"");
+ const [deadline,setDeadline]=useState(initial?.expires_at?.slice(0,10)||parsed.extras["Application Deadline"]||defaultExpiry);
  const [description,setDescription]=useState(parsed.description);
  const [preview,setPreview]=useState(false);
  const [formatError,setFormatError]=useState("");
@@ -36,11 +39,11 @@ export default function EmployerJobForm({initial,companyName}:{initial?:Job;comp
   const form=formRef.current;if(!form||!form.reportValidity())return;
   setBusy(true);setError("");setFormatError("");
   const data=new FormData(form);
-  const extraKeys:[[string,string],...[string,string][]]=[["Application Deadline","deadline"],["Minimum Salary","minSalary"],["Maximum Salary","maxSalary"],["Salary Type","salaryType"],["Experience","experience"],["Industry","industry"],["Qualification","qualification"],["Career Level","careerLevel"],["Full Address","address"],["Tags","tags"]];
+  const extraKeys:[[string,string],...[string,string][]]=[["Minimum Salary","minSalary"],["Maximum Salary","maxSalary"],["Salary Type","salaryType"],["Experience","experience"],["Industry","industry"],["Qualification","qualification"],["Career Level","careerLevel"],["Full Address","address"],["Tags","tags"]];
   const extras=extraKeys.map(([label,key])=>[label,key==="minSalary"?minSalary:key==="maxSalary"?maxSalary:key==="salaryType"?salaryType:String(data.get(key)||"").trim()] as const).filter(([,value])=>value);
   const finalDescription=description.trim()+(extras.length?detailsMarker+extras.map(([key,value])=>`${key}: ${value}`).join("\n"):"");
   if(finalDescription.length>30000){setFormatError("Description and additional details must be under 30,000 characters.");setBusy(false);return;}
-  const body={title:String(data.get("title")||"").trim(),category:String(data.get("category")||"").trim(),job_type:String(data.get("job_type")||"").trim(),location:location.trim(),salary:salaryText.trim()||null,description:finalDescription,apply_url:method==="url"?destination.trim():null,apply_email:method==="email"?destination.trim():null,status};
+  const body={title:String(data.get("title")||"").trim(),category:String(data.get("category")||"").trim(),job_type:String(data.get("job_type")||"").trim(),location:location.trim(),salary:salaryText.trim()||null,description:finalDescription,expires_at:String(data.get("deadline")||"").trim(),apply_url:method==="url"?destination.trim():null,apply_email:method==="email"?destination.trim():null,status};
   try{const response=await fetch(initial?.id?`/api/employer/jobs/${encodeURIComponent(initial.id)}`:"/api/employer/jobs",{method:initial?.id?"PATCH":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const result=await response.json();if(!response.ok)throw new Error(result.error||"Unable to save job");router.push("/employer/jobs");router.refresh();}
   catch(err){setError(err instanceof Error?err.message:"Unable to save job");}finally{setBusy(false);}
  }
@@ -51,7 +54,7 @@ export default function EmployerJobForm({initial,companyName}:{initial?:Job;comp
  <section className={styles.card}><div className={styles.sectionTitle}><BriefcaseBusiness/><div><h2>Job Information</h2><p>Describe the vacancy clearly and accurately.</p></div></div>
  <div className={styles.two}><div className={styles.field}><label htmlFor="title">Job Title <b>*</b></label><input id="title" name="title" required maxLength={160} defaultValue={initial?.title||""} placeholder="e.g. Finance Manager"/></div>{field("job_type","Job Type *",types,initial?.job_type||"")}</div>
  <div className={styles.field}><label htmlFor="job-description">Description <b>*</b></label><div className={styles.editor}><div className={styles.toolbar}><button type="button" onClick={()=>editor("bold")} title="Bold"><strong>B</strong></button><button type="button" onClick={()=>editor("italic")} title="Italic"><em>I</em></button><button type="button" onClick={()=>editor("list")} title="Bullet list">☷</button><span className={styles.toolbarSpacer}/><button type="button" onClick={()=>setPreview(!preview)}>{preview?"Edit":"Preview"}</button></div>{preview?<div className={styles.preview}>{description||"Nothing to preview"}</div>:<textarea id="job-description" name="description" required minLength={30} maxLength={29000} rows={9} value={description} onChange={e=>setDescription(e.target.value)} placeholder="Responsibilities, requirements, benefits and how to succeed in this role..."/>}</div><small>Use the formatting buttons for simple Markdown. Minimum 30 characters.</small></div>
- <div className={styles.two}>{field("category","Categories *",categories,initial?.category||"")}<div className={styles.field}><label htmlFor="deadline">Application Deadline</label><input type="date" id="deadline" name="deadline" defaultValue={parsed.extras["Application Deadline"]||""}/></div></div>
+ <div className={styles.two}>{field("category","Categories *",categories,initial?.category||"")}<div className={styles.field}><label htmlFor="deadline">Application Deadline</label><input type="date" id="deadline" name="deadline" required value={deadline} onChange={e=>setDeadline(e.target.value)}/></div></div>
  <div className={styles.two}><div className={styles.field}><label htmlFor="salaryText">Salary / Pay</label><input id="salaryText" value={salaryText} onChange={e=>setSalaryText(e.target.value)} maxLength={120} placeholder="e.g. £30,000–£40,000 per year"/></div><div className={styles.field}><label htmlFor="salaryType">Salary Type</label><select id="salaryType" value={salaryType} onChange={e=>setSalaryType(e.target.value)}>{["Yearly","Monthly","Weekly","Daily","Hourly"].map(x=><option key={x}>{x}</option>)}</select></div></div>
  <div className={styles.two}><div className={styles.field}><label htmlFor="minSalary">Min. Salary (£)</label><input id="minSalary" inputMode="decimal" value={minSalary} onChange={e=>setMinSalary(e.target.value)} placeholder="e.g. 30000"/></div><div className={styles.field}><label htmlFor="maxSalary">Max. Salary (£)</label><input id="maxSalary" inputMode="decimal" value={maxSalary} onChange={e=>setMaxSalary(e.target.value)} placeholder="e.g. 40000"/></div></div>
  <div className={styles.two}>{field("experience","Experience",["Fresh","Less than 1 year","1–2 years","3–5 years","5–10 years","10+ years"],parsed.extras.Experience)}<div className={styles.field}><label htmlFor="tags">Tags</label><input id="tags" name="tags" defaultValue={parsed.extras.Tags||""} placeholder="e.g. PHP, Developer, CSS"/></div></div>
