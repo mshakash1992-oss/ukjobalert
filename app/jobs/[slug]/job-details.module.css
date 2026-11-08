@@ -126,3 +126,35 @@
 .container{width:min(1366px,calc(100% - 64px));margin-inline:auto;}
 .applyButton{background:#f00025;color:white;border:1px solid #f00025;border-radius:6px;font-size:14px;font-weight:600;}
 @media(max-width:700px){.container{width:calc(100% - 32px)}}
+
+
+/* Readable job description typography and safe markdown rendering */
+.description{
+  white-space:normal;
+  overflow-wrap:anywhere;
+  padding:20px 22px;
+  background:#fff;
+  border:1px solid #e3eaf3;
+  border-radius:10px;
+  box-shadow:0 3px 12px rgba(16,42,76,.035);
+  color:#52637a;
+  font-size:14px;
+  line-height:1.8;
+}
+.descriptionParagraph{margin:0 0 12px}
+.descriptionParagraph:last-child{margin-bottom:0}
+.descriptionHeading{
+  margin:18px 0 9px;
+  color:#102a4c;
+  font-size:16px;
+  font-weight:700;
+  line-height:1.45;
+}
+.descriptionHeading:first-child{margin-top:0}
+.descriptionList{display:grid;gap:7px;margin:5px 0 17px;padding-left:22px}
+.descriptionList li{padding-left:3px}
+.descriptionList li::marker{color:#c8102e}
+.description strong{color:#31435b;font-weight:700}
+.description a{color:#c8102e;text-decoration:underline;text-underline-offset:2px}
+.description a:hover{color:#a50d25}
+@media(max-width:720px){.description{padding:16px;font-size:13.5px}}
