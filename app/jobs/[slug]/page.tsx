@@ -43,7 +43,23 @@ function detailFromDescription(description: string, label: string) {
   return match ? match.replace(new RegExp(`^\\s*${label}\\s*:`, "i"), "").trim() : "";
 }
 function plainText(input: string) {
-  return input.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
+  return input
+    .replace(/<br\s*\/?\s*>/gi, "\n")
+    .replace(/<li\b[^>]*>/gi, "\n• ")
+    .replace(/<\/(?:p|div|section|article|h[1-6]|li|ul|ol|tr|table)>/gi, "\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCharCode(Number(code)))
+    .replace(/&#x([\da-f]+);/gi, (_, code: string) => String.fromCharCode(parseInt(code, 16)))
+    .replace(/[ \t]*\n[ \t]*/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
 }
 
 // Some older posts appended structured job fields inside description.
@@ -52,7 +68,7 @@ function cleanDescription(input: string) {
   const text = plainText(input);
   const lines = text.split(/\r?\n/);
   const heading = lines.findIndex(line =>
-    /^\s*(?:[-–—]+\s*)?Additional Job Details\s*(?:[-–—]+)?\s*$/i.test(line)
+    /^\s*(?:[-–—]+\s*)?(?:\*\*|__)?Additional Job Details(?:\*\*|__)?\s*(?:[-–—]+)?\s*$/i.test(line)
   );
   if (heading < 0) return text.trim();
   const tail = lines.slice(heading + 1).filter(line => line.trim());
@@ -62,6 +78,39 @@ function cleanDescription(input: string) {
     return lines.slice(0, heading).join("\n").trim();
   }
   return text.trim();
+}
+
+function renderInline(text: string, keyPrefix: string) {
+  const tokens = text.split(/(\*\*[^*]+\*\*|__[^_]+__|\[[^\]]+\]\(https?:\/\/[^)\s]+\))/g);
+  return tokens.map((token, index) => {
+    const key = keyPrefix + "-" + index;
+    const bold = token.match(/^\*\*(.+)\*\*$/) || token.match(/^__(.+)__$/);
+    if (bold) return <strong key={key}>{bold[1]}</strong>;
+    const link = token.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/i);
+    if (link) return <a key={key} href={link[2]} target="_blank" rel="noopener noreferrer">{link[1]}</a>;
+    return token;
+  });
+}
+
+function renderDescription(input: string) {
+  const blocks = cleanDescription(input).split(/\n\s*\n/);
+  return blocks.flatMap((block, blockIndex) => {
+    const lines = block.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    if (!lines.length) return [];
+    const bullets = lines.map(line => line.match(/^(?:[-*•●▪◦]|\d+[.)])\s+(.+)$/));
+    if (bullets.every(Boolean)) {
+      const numbered = lines.every(line => /^\d+[.)]\s+/.test(line));
+      const List = numbered ? "ol" : "ul";
+      return [<List className={styles.descriptionList} key={"list-" + blockIndex}>
+        {bullets.map((item, index) => <li key={index}>{renderInline(item![1], "li-" + blockIndex + "-" + index)}</li>)}
+      </List>];
+    }
+    return lines.map((line, lineIndex) => {
+      const heading = line.match(/^(?:#{1,3}\s+|\*\*|__)(.+?)(?:\*\*|__)?$/);
+      if (heading) return <h3 className={styles.descriptionHeading} key={"heading-" + blockIndex + "-" + lineIndex}>{heading[1].replace(/\*\*|__/g, "")}</h3>;
+      return <p className={styles.descriptionParagraph} key={"paragraph-" + blockIndex + "-" + lineIndex}>{renderInline(line, "p-" + blockIndex + "-" + lineIndex)}</p>;
+    });
+  });
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -79,7 +128,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   const title = value(job.title) || "Job Opportunity";
   const location = value(job.location);
-  const summary = plainText(value(job.description)).replace(/\s+/g, " ").slice(0, 150);
+  const summary = plainText(value(job.description)).replace(/\*\*|__/g, "").replace(/\s+/g, " ").slice(0, 150);
   const description = summary || `Apply for ${title}${location ? ` in ${location}` : ""} on UKJobAlert.`;
   const canonical = `/jobs/${encodeURIComponent(slug)}`;
   return {
@@ -149,7 +198,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title,
-    description: cleanDescription(description),
+    description: cleanDescription(description).replace(/\*\*|__/g, ""),
     datePosted: postedDate.toISOString(),
     ...(expiresDate && !Number.isNaN(expiresDate.getTime()) ? { validThrough: expiresDate.toISOString() } : {}),
     hiringOrganization: { "@type": "Organization", name: companyName },
@@ -212,7 +261,7 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
 
             <section className={styles.descriptionSection}>
               <h2>Job Description</h2>
-              {description ? <div className={styles.description}>{cleanDescription(description)}</div> :
+              {description ? <div className={styles.description}>{renderDescription(description)}</div> :
                 <p className={styles.muted}>The employer has not provided a job description.</p>}
               <div className={styles.disclaimer}><ShieldCheck size={19}/><p>Employer verification checks company information; it does not guarantee a vacancy or employment outcome. Always assess opportunities carefully.</p></div>
             </section>
