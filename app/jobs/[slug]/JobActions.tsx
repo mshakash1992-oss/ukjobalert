@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Bookmark, Share2 } from "lucide-react";
+import { MousePointer2, Bookmark, Share2 } from "lucide-react";
 import styles from "./job-details.module.css";
 
 type Props = { title: string; company: string; url: string; email: string; jobId: string; compact?: boolean; deadline?: string };
@@ -28,7 +28,7 @@ export default function JobActions({ title, company, url, email, jobId, compact 
   };
   return <div className={`${styles.actions} ${compact ? styles.actionsCompact : ""}`}>
     <div className={styles.actionPrimary}>
-      {href ? <a className={styles.applyButton} href={href} target={url ? "_blank" : undefined} rel={url ? "noopener noreferrer" : undefined}>Apply Now <ArrowRight size={17}/></a> : <span className={styles.noApply}>Application details unavailable</span>}
+      {href ? <a className={styles.applyButton} href={href} target={url ? "_blank" : undefined} rel={url ? "noopener noreferrer" : undefined}>Apply Now <MousePointer2 size={17} aria-hidden="true"/></a> : <span className={styles.noApply}>Application details unavailable</span>}
       {deadline && <span className={styles.deadline}>Application ends: <strong>{deadline}</strong></span>}
     </div>
     <div className={styles.secondaryActions}>
