@@ -25,7 +25,7 @@ export async function getVerifiedEmployer() {
 }
 
 function expiryTimestamp(dateOnly: string) {
-  const match = dateOnly.match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);
+  const match = dateOnly.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return null;
   const [, year, month, day] = match.map(Number);
   const date = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
@@ -74,7 +74,7 @@ export function validateJob(body: Record<string, unknown>) {
       return { error: "Enter a valid HTTPS/HTTP application URL" };
     }
   }
-  if (apply_email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(apply_email)) {
+  if (apply_email && !/^[^\s@]+@[^\s@]+\\.[^\s@]+$/.test(apply_email)) {
     return { error: "Invalid application email" };
   }
   if (!expires_at) return { error: "Enter a valid application end date." };
