@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 
 import { ArrowRight, BriefcaseBusiness, FileSearch, ShieldCheck } from "lucide-react";
@@ -6,15 +7,16 @@ import { ArrowRight, BriefcaseBusiness, FileSearch, ShieldCheck } from "lucide-r
 import MainHeader from "@/components/main-header";
 import { createClient } from "@/lib/supabase/server";
 
+const guideMetadata = pageMetadata(
+  "Jobs in the UK for Foreigners: How to Search",
+  "A practical guide to searching for UK jobs as an international applicant, including roles where an employer has stated visa sponsorship may be available.",
+  "/guides/jobs-in-uk-for-foreigners"
+);
+
 export const metadata: Metadata = {
-  title: "Jobs in the UK for Foreigners: How to Search",
-  description:
-    "A practical guide to searching for UK jobs as an international applicant, including roles where an employer has stated visa sponsorship may be available.",
-  alternates: { canonical: "/guides/jobs-in-uk-for-foreigners" },
+  ...guideMetadata,
   openGraph: {
-    title: "Jobs in the UK for Foreigners | UKJobAlert",
-    description: "A practical guide for international applicants searching for UK jobs.",
-    url: "/guides/jobs-in-uk-for-foreigners",
+    ...guideMetadata.openGraph,
     type: "article",
   },
 };

@@ -508,3 +508,9 @@
 .filterToolbar { border: 1px solid #e1e7ef; border-radius: 6px; background: #fff; box-shadow: none; }
 .jobCard,.sidebar,.selectedPanel,.empty { border-color: #e1e7ef; border-radius: 7px; box-shadow: none; }
 .searchBar { border: 1px solid #e9edf3; border-radius: 8px; background: #fff; box-shadow: 0 8px 20px #001e4a1a; overflow: hidden; }
+
+.searchGuide { margin-block: 24px 40px; padding: 24px; border: 1px solid #dfe6ef; border-radius: 12px; background: #fff; color: #31435b; box-sizing: border-box; }
+.searchGuide h2 { margin: 0 0 12px; font-size: 22px; }
+.searchGuide h3 { margin: 20px 0 8px; font-size: 17px; }
+.searchGuide p { margin: 0; line-height: 1.75; }
+.searchGuide a { color: #a70d29; text-decoration: underline; text-underline-offset: 3px; }

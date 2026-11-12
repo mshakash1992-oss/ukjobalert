@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "UK Job Search FAQs: Accounts, Jobs and Alerts",
-  description:
+  ...pageMetadata(
+    "UK Job Search FAQs: Accounts, Jobs and Alerts",
     "Get answers about finding UK jobs, applying for vacancies, employer checks, saved jobs, account settings and job alerts on UKJobAlert.",
-  alternates: { canonical: "/faq" },
+    "/faq"
+  ),
   robots: { index: true, follow: true },
 };
 

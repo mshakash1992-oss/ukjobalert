@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import GlobalNavigationLoader from "@/components/GlobalNavigationLoader";
 import { Roboto } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
+import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -13,9 +14,9 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.ukjobalert.com"),
-  title: { default: "UKJobAlert", template: "%s | UKJobAlert" },
-  description: "Find jobs across the United Kingdom from verified employers.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_TITLE, template: "%s | UKJobAlert" },
+  description: SITE_DESCRIPTION,
   robots: { index: true, follow: true },
   icons: {
     icon: [{ url: "/icon.png", type: "image/png" }],
@@ -25,9 +26,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "UKJobAlert",
-    title: "UKJobAlert",
-    description: "Find jobs across the United Kingdom from verified employers.",
-    url: "https://www.ukjobalert.com/",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: `${SITE_URL}/`,
   },
 };
 

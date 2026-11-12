@@ -66,8 +66,8 @@ export default function CompaniesClient({ companies }: { companies: PublicCompan
         <div className={styles.container}>
           <div className={styles.heroRow}>
             <div>
-              <h1>Browse Employers</h1>
-              <p>Explore verified employers and discover their latest UK job opportunities.</p>
+              <h1>UK Companies and Employer Profiles</h1>
+              <p>Find companies hiring in the UK. Review employer profiles, locations and available vacancies.</p>
             </div>
             <div className={styles.breadcrumb}>
               <Link href="/">Home</Link><span>/</span><strong>Employers</strong>

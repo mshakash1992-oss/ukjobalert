@@ -1,5 +1,6 @@
 import CompanyLogo from "@/components/CompanyLogo";
 import { isPublicJob, schemaEmploymentType } from "@/lib/job-publication";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -116,7 +117,7 @@ function renderDescription(input: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const db = createAdminClient();
-  const { data: job } = await db.from("jobs").select("slug,title,description,location,employer_id,expires_at")
+  const { data: job } = await db.from("jobs").select("slug,title,location,employer_id,expires_at")
     .eq("slug", slug).eq("status", "published").maybeSingle();
   if (!job || !isPublicJob(job)) {
     return { title: "Job Not Found", robots: { index: false, follow: false } };
@@ -128,15 +129,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   const title = value(job.title) || "Job Opportunity";
   const location = value(job.location);
-  const summary = plainText(value(job.description)).replace(/\*\*|__/g, "").replace(/\s+/g, " ").slice(0, 150);
-  const description = summary || `Apply for ${title}${location ? ` in ${location}` : ""} on UKJobAlert.`;
+  const searchTitle = `${title}${location ? ` in ${location}` : ""}`;
+  const description = `View the ${title} vacancy${location ? ` in ${location}` : ""}. Read the job description and application details, then apply through UKJobAlert.`;
   const canonical = `/jobs/${encodeURIComponent(slug)}`;
-  return {
-    title,
-    description,
-    alternates: { canonical },
-    openGraph: { title, description, url: canonical, type: "website" },
-  };
+  return pageMetadata(searchTitle, description, canonical);
 }
 
 export default async function JobDetails({ params }: { params: Promise<{ slug: string }> }) {

@@ -35,7 +35,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!/^[0-9a-f-]{36}$/i.test(slug)) return { title: "Company not found", robots: { index: false } };
   const { data } = await createAdminClient().from("employer_verifications").select("company_name,verification_status").eq("user_id", slug).maybeSingle();
   if (!data || data.verification_status !== "verified") return { title: "Company not found", robots: { index: false } };
-  return pageMetadata(`${data.company_name} Jobs`, `Browse current vacancies and employer information for ${data.company_name}.`, `/companies/${encodeURIComponent(slug)}`);
+  return pageMetadata(
+    `${data.company_name} Jobs and Company Profile`,
+    `Explore ${data.company_name}'s company profile and current vacancies on UKJobAlert. Review job descriptions, locations and application details for available roles.`,
+    `/companies/${encodeURIComponent(slug)}`
+  );
 }
 export default async function CompanyProfile({params}:{params:Promise<{slug:string}>}) {
   const {slug: employerId} = await params;

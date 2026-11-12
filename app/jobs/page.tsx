@@ -122,7 +122,7 @@ export default async function JobsPage({ searchParams }: Props) {
       <section className={styles.pageHero}>
         <div className={styles.container}>
           <div className={styles.heroRow}>
-            <div><h1>Find Jobs</h1><p>Discover opportunities from verified employers across the United Kingdom.</p></div>
+            <div><h1>Find Jobs in the UK</h1><p>Search current UK vacancies by role, location and employment type.</p></div>
             <div className={styles.breadcrumb}><Link href="/">Home</Link><span>/</span><strong>Jobs</strong></div>
           </div>
         </div>
@@ -247,6 +247,16 @@ export default async function JobsPage({ searchParams }: Props) {
         </div>
       </section>
 
+      {!keyword && !location && !category && !type && !selected && (
+        <section className={`${styles.container} ${styles.searchGuide}`} aria-labelledby="job-search-guide">
+          <h2 id="job-search-guide">Find the right UK vacancy</h2>
+          <p>Use the employment type filter to find full-time or part-time jobs, and enter a town or city to narrow your search. Open each vacancy to check the duties, pay, working hours and application deadline before applying.</p>
+          <h3>Looking for flexible work or employer information?</h3>
+          <p>Explore <Link href="/jobs/remote">remote jobs in the UK</Link> or compare <Link href="/companies">UK company profiles and vacancies</Link>. For sponsorship, check <Link href="/jobs/visa-sponsorship">jobs that mention visa sponsorship</Link> and read the employer’s eligibility requirements carefully.</p>
+          <h3>How do I apply for a job?</h3>
+          <p>Read the full job description and follow the application route shown on the vacancy. Check that your experience matches the requirements and tailor your application to the role. Available vacancies change as employers publish or close their listings.</p>
+        </section>
+      )}
     </main>
   );
 }
