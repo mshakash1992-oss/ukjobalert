@@ -282,7 +282,25 @@ export default async function JobDetails({ params }: { params: Promise<{ slug: s
             </section>
             <section className={`${styles.sideCard} ${styles.mapSection}`}>
               <h2>Job Location</h2>
-              <div className={styles.locationBox}><MapPin size={25}/><strong>{location || "United Kingdom"}</strong><span>Location provided by the employer</span></div>
+              {location && !/^(remote|work from home|anywhere)$/i.test(location) ? (
+                <div className={styles.locationMap}>
+                  <iframe
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(location)}&output=embed`}
+                    title={`Job location map: ${location}`}
+                    width="100%"
+                    height="240"
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                  <div className={styles.mapCaption}>
+                    <strong>{location}</strong>
+                    <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`} target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.locationBox}><MapPin size={25}/><strong>{location || "Location not specified"}</strong><span>Location provided by the employer</span></div>
+              )}
               {expiry && <p className={styles.sidebarDeadline}>Application ends: {expiry}</p>}
               <JobActions title={title} company={companyName} url={safeUrl} email={safeEmail} jobId={value(job.id) || slug} compact />
             </section>
