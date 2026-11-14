@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import GlobalNavigationLoader from "@/components/GlobalNavigationLoader";
 import { Roboto } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
+import WhatsAppChat from "@/components/whatsapp-chat";
 import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({
         <Suspense fallback={null}><GlobalNavigationLoader /></Suspense>
         <SiteHeader />
         {children}
+        <WhatsAppChat />
       </body>
     </html>
   );
